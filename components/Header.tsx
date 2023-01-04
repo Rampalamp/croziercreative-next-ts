@@ -3,13 +3,14 @@ import Image from "next/image";
 import { useEffect, useContext } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
 
+//variables to be reused in useEffect
+let gitSvg: HTMLElement | null,
+    linkedSvg: HTMLElement | null,
+    rootDiv: HTMLElement | null,
+    themeToggleSvg: HTMLElement | null;
+
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
-
-    let gitSvg: HTMLElement | null,
-        linkedSvg: HTMLElement | null,
-        rootDiv: HTMLElement | null,
-        themeToggleSvg: HTMLElement | null;
 
     useEffect(() => {
         //init elements if required.
@@ -41,12 +42,12 @@ export default function Header() {
     }, [theme]);
 
     return (
-        <nav className="flex items-center justify-between flex-nowrap p-6 bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
+        <nav className="flex items-center justify-between flex-nowrap p-4 bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
             <div className="flex items-center flex-shrink-0 mr-6">
                 <span className="font-extrabold text-xl">
                     <Link href="/">CrozierCreative</Link>
                 </span>
-                <div className="flex ml-3 space-x-2">
+                <div className="flex ml-3 space-x-2 min-h-fit min-w-fit">
                     <a
                         target="_blank"
                         href="https://www.linkedin.com/in/matthew-rampen-7883b5b1/"
@@ -76,14 +77,14 @@ export default function Header() {
                 </div>
             </div>
 
-            <div className="font-bold space-x-4 text-lg">
+            <div className="font-bold space-x-10 text-lg">
                 <Link href="/skills">Skills</Link>
                 <Link href="/audits">Audits</Link>
                 <Link href="/dapp">dApp</Link>
             </div>
 
             <div className="flex space-x-2"></div>
-            <div className="flex items-center">
+            <div className="flex items-center min-h-fit min-w-fit">
                 <button
                     className="rounded-md p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                     onClick={toggleTheme}

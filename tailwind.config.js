@@ -33,8 +33,8 @@ module.exports = {
             "ls-back": "#f97316",
             //light secondary foreground orange-100
             "ls-fore": "#ffedd5",
-            //light button hover blue-50
-            "lbtn-hov": "#eff6ff",
+            //light button hover orange-50
+            "lbtn-hov": "#fff7ed",
         },
         extend: {},
     },
