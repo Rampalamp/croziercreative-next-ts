@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
 
 //variables to be reused in useEffect
@@ -11,6 +11,7 @@ let gitSvg: HTMLElement | null,
 
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
+    const [openNav, setOpenNav] = useState<boolean>(false);
 
     useEffect(() => {
         //init elements if required.
@@ -42,7 +43,7 @@ export default function Header() {
     }, [theme]);
 
     return (
-        <nav className="flex items-center justify-between flex-nowrap p-4 bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
+        <nav className="flex items-center justify-between flex-nowrap p-3 drop-shadow-xl bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
             <div className="flex items-center flex-shrink-0 mr-6">
                 <span className="font-extrabold text-xl">
                     <Link href="/">CrozierCreative</Link>
@@ -56,7 +57,7 @@ export default function Header() {
                         <Image
                             id="linkedSvg"
                             src="/linkedin-dark.svg"
-                            alt="Linked In URL"
+                            alt="LinkedIn URL"
                             width={20}
                             height={20}
                         />
@@ -77,10 +78,18 @@ export default function Header() {
                 </div>
             </div>
 
-            <div className="font-bold space-x-10 text-lg">
-                <Link href="/skills">Skills</Link>
-                <Link href="/audits">Audits</Link>
-                <Link href="/dapp">dApp</Link>
+            <div className="font-bold  text-lg">
+                <ul className="flex space-x-10">
+                    <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                        <Link href="/skills">Skills</Link>
+                    </li>
+                    <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                        <Link href="/audits">Audits</Link>
+                    </li>
+                    <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                        <Link href="/dapp">dApp</Link>
+                    </li>
+                </ul>
             </div>
 
             <div className="flex space-x-2"></div>
