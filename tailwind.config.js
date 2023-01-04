@@ -23,6 +23,8 @@ module.exports = {
             "ds-back": "#0f172a",
             //dark secondary foreground green-200
             "ds-fore": "#bbf7d0",
+            //dark button hover slate-50
+            "dbtn-hov": "#f8fafc",
             //light primary background sky-50
             "lp-back": "#f0f9ff",
             //light primary foreground blue-700
@@ -31,6 +33,8 @@ module.exports = {
             "ls-back": "#93c5fd",
             //light secondary foreground indigo-800
             "ls-fore": "#3730a3",
+            //light button hover blue-50
+            "lbtn-hov": "#eff6ff",
         },
         extend: {},
     },
