@@ -1,3 +1,4 @@
+import { Darker_Grotesque } from "@next/font/google";
 import { createContext, SetStateAction, useEffect, useState } from "react";
 import { Dispatch } from "react";
 
@@ -24,25 +25,18 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children }) => {
             ).matches;
             //check systemTheme value, if true user prefers dark, which is the default for theme provider.
             //so no need to toggle
-            systemTheme
-                ? () => {
-                      localStorage.setItem("theme", "dark");
-                      storedTheme = "dark";
-                  }
-                : () => {
-                      localStorage.setItem("theme", "light");
-                      storedTheme = "light";
-                  };
+            if (systemTheme) {
+                localStorage.setItem("theme", "dark");
+                storedTheme = "dark";
+            } else {
+                localStorage.setItem("theme", "light");
+                storedTheme = "light";
+            }
         }
-
         storedTheme === "dark" ? setTheme("dark") : setTheme("light");
     }, []);
-    // console.log(storedTheme!);
-    // storedTheme! === "dark" ? (userTheme = "dark") : (userTheme = "light");
-    // console.log(userTheme);
 
     const toggleTheme = () => {
-        console.log(theme);
         if (theme === "light") {
             setTheme("dark");
             localStorage.setItem("theme", "dark");

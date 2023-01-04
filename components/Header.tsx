@@ -6,99 +6,96 @@ import { ThemeContext } from "./context/ThemeProvider";
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
 
+    let gitSvg: HTMLElement | null,
+        linkedSvg: HTMLElement | null,
+        rootDiv: HTMLElement | null,
+        themeToggleSvg: HTMLElement | null;
+
     useEffect(() => {
-        //set rootDiv accordingly with dark class or not.
-        theme === "dark"
-            ? document.getElementById("rootDiv")?.classList.add("dark")
-            : document.getElementById("rootDiv")?.classList.remove("dark");
+        //init elements if required.
+        gitSvg === undefined
+            ? (gitSvg = document.getElementById("gitSvg"))
+            : {};
+        linkedSvg === undefined
+            ? (linkedSvg = document.getElementById("linkedSvg"))
+            : {};
+        rootDiv === undefined
+            ? (rootDiv = document.getElementById("rootDiv"))
+            : {};
+        themeToggleSvg === undefined
+            ? (themeToggleSvg = document.getElementById("themeToggleSvg"))
+            : {};
+
+        //adjust element attributes accordingly.
+        if (theme === "dark") {
+            rootDiv!.classList.add("dark");
+            linkedSvg!.setAttribute("src", "/linkedin-dark.svg");
+            gitSvg!.setAttribute("src", "/github-dark.svg");
+            themeToggleSvg!.setAttribute("src", "/sun.svg");
+        } else {
+            rootDiv!.classList.remove("dark");
+            linkedSvg!.setAttribute("src", "/linkedin.svg");
+            gitSvg!.setAttribute("src", "/github.svg");
+            themeToggleSvg!.setAttribute("src", "/moon.svg");
+        }
     }, [theme]);
 
     return (
         <nav className="flex items-center justify-between flex-nowrap p-6 bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
             <div className="flex items-center flex-shrink-0 mr-6">
-                <span className="">
+                <span className="font-extrabold text-xl">
                     <Link href="/">CrozierCreative</Link>
                 </span>
-            </div>
-
-            <div>
-                <Link href="/skills">Skills</Link>
-                <Link href="/audits">Audits</Link>
-                <Link href="/dapp">dApp</Link>
-            </div>
-
-            <div className="flex space-x-2">
-                <a
-                    target="_blank"
-                    href="https://www.linkedin.com/in/matthew-rampen-7883b5b1/"
-                    rel="noopener noreferrer"
-                >
-                    {theme === "dark" ? (
+                <div className="flex ml-3 space-x-2">
+                    <a
+                        target="_blank"
+                        href="https://www.linkedin.com/in/matthew-rampen-7883b5b1/"
+                        rel="noopener noreferrer"
+                    >
                         <Image
+                            id="linkedSvg"
                             src="/linkedin-dark.svg"
                             alt="Linked In URL"
                             width={20}
                             height={20}
                         />
-                    ) : (
+                    </a>
+                    <a
+                        target="_blank"
+                        href="https://github.com/Rampalamp"
+                        rel="noopener noreferrer"
+                    >
                         <Image
-                            src="/linkedin.svg"
-                            alt="Linked In URL"
-                            width={20}
-                            height={20}
-                        />
-                    )}
-                </a>
-                <a
-                    target="_blank"
-                    href="https://github.com/Rampalamp"
-                    rel="noopener noreferrer"
-                >
-                    {theme === "dark" ? (
-                        <Image
+                            id="gitSvg"
                             src="/github-dark.svg"
                             alt="GitHub URL"
                             width={20}
                             height={20}
                         />
-                    ) : (
-                        <Image
-                            src="/github.svg"
-                            alt="GitHub URL"
-                            width={20}
-                            height={20}
-                        />
-                    )}
-                </a>
+                    </a>
+                </div>
             </div>
+
+            <div className="font-bold space-x-4 text-lg">
+                <Link href="/skills">Skills</Link>
+                <Link href="/audits">Audits</Link>
+                <Link href="/dapp">dApp</Link>
+            </div>
+
+            <div className="flex space-x-2"></div>
             <div className="flex items-center">
-                {theme === "dark" ? (
-                    <button
-                        className="bg-ls-back dark:bg-ds-back hover:bg-dbtn-hov hover:bg-opacity-50 rounded-md p-3"
-                        onClick={toggleTheme}
-                    >
-                        <Image
-                            className="sun"
-                            src="/sun.svg"
-                            alt="Light mode toggle"
-                            width={20}
-                            height={20}
-                        />
-                    </button>
-                ) : (
-                    <button
-                        className="bg-ls-back dark:bg-ds-back hover:bg-lbtn-hov hover:bg-opacity-50 rounded-md p-3"
-                        onClick={toggleTheme}
-                    >
-                        <Image
-                            className="moon"
-                            src="/moon.svg"
-                            alt="Dark mode toggle"
-                            width={20}
-                            height={20}
-                        />
-                    </button>
-                )}
+                <button
+                    className="rounded-md p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                    onClick={toggleTheme}
+                >
+                    <Image
+                        id="themeToggleSvg"
+                        src="/sun.svg"
+                        alt="Theme toggler"
+                        width={20}
+                        height={20}
+                    />
+                </button>
             </div>
         </nav>
     );

@@ -1,8 +1,9 @@
 ## ToDO
 
-1. Sun SVG in dark theme is not getting a hover background effect for some reason.
-2. Finish up Header.tsx
+1. Sort out fonts
+2. Spacing between objects
+3. Collapse to menu toggle at certain screen size
 
 ## Added
 
-1. Theme toggling
+1. Theme toggling - Remember when changing theme colors, the SVGs need manual updating of their colors if wanting to match.

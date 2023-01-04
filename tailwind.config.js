@@ -25,14 +25,14 @@ module.exports = {
             "ds-fore": "#bbf7d0",
             //dark button hover slate-50
             "dbtn-hov": "#f8fafc",
-            //light primary background sky-50
-            "lp-back": "#f0f9ff",
-            //light primary foreground blue-700
-            "lp-fore": "#1d4ed8",
-            //light secondary background blue-300
-            "ls-back": "#93c5fd",
-            //light secondary foreground indigo-800
-            "ls-fore": "#3730a3",
+            //light primary background amber-100
+            "lp-back": "#fef3c7",
+            //light primary foreground amber-600
+            "lp-fore": "#d97706",
+            //light secondary background orange-500
+            "ls-back": "#f97316",
+            //light secondary foreground orange-100
+            "ls-fore": "#ffedd5",
             //light button hover blue-50
             "lbtn-hov": "#eff6ff",
         },
