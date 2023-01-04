@@ -1,8 +1,7 @@
 ## ToDO
 
-1. Sort out the SVGs not rendering
-2. Add display:none when necessary depending which theme is activated
-3. Finish up Header.tsx adding in Svgs for a LinkedIn/Github Icon, and eventually a resume download?
+1. Sun SVG in dark theme is not getting a hover background effect for some reason.
+2. Finish up Header.tsx
 
 ## Added
 

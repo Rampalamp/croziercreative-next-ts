@@ -33,26 +33,42 @@ export default function Header() {
                     href="https://www.linkedin.com/in/matthew-rampen-7883b5b1/"
                     rel="noopener noreferrer"
                 >
-                    <Image
-                        className="sun"
-                        src="/linkedin.svg"
-                        alt="Light mode toggle"
-                        width={20}
-                        height={20}
-                    />
+                    {theme === "dark" ? (
+                        <Image
+                            src="/linkedin-dark.svg"
+                            alt="Linked In URL"
+                            width={20}
+                            height={20}
+                        />
+                    ) : (
+                        <Image
+                            src="/linkedin.svg"
+                            alt="Linked In URL"
+                            width={20}
+                            height={20}
+                        />
+                    )}
                 </a>
                 <a
                     target="_blank"
                     href="https://github.com/Rampalamp"
                     rel="noopener noreferrer"
                 >
-                    <Image
-                        className="sun"
-                        src="/github.svg"
-                        alt="Github"
-                        width={20}
-                        height={20}
-                    />
+                    {theme === "dark" ? (
+                        <Image
+                            src="/github-dark.svg"
+                            alt="GitHub URL"
+                            width={20}
+                            height={20}
+                        />
+                    ) : (
+                        <Image
+                            src="/github.svg"
+                            alt="GitHub URL"
+                            width={20}
+                            height={20}
+                        />
+                    )}
                 </a>
             </div>
             <div className="flex items-center">
