@@ -1,8 +1,8 @@
-export default function Home() {
+export default function Audits() {
     return (
         <>
             <div>
-                <span>HOME</span>
+                <span>AUDITS</span>
             </div>
         </>
     );

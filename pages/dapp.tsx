@@ -1,8 +1,8 @@
-export default function Home() {
+export default function dApp() {
     return (
         <>
             <div>
-                <span>HOME</span>
+                <span>dApp</span>
             </div>
         </>
     );

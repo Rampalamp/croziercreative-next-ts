@@ -1,8 +1,8 @@
-export default function Home() {
+export default function Skills() {
     return (
         <>
             <div>
-                <span>HOME</span>
+                <span>SKILLS</span>
             </div>
         </>
     );

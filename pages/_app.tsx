@@ -6,7 +6,7 @@ import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <div id="rootDiv" className="font-mono">
+        <div id="rootDiv" className="font-mono ">
             <Head>
                 <title>Crozier Creative</title>
                 <meta
@@ -19,10 +19,11 @@ export default function App({ Component, pageProps }: AppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <ThemeProvider>
-                <Header />
-            </ThemeProvider>
-            <div className="h-screen bg-lp-back text-lp-fore dark:bg-dp-back dark:text-dp-fore">
+            <div className="w-screen h-screen bg-lp-back text-lp-fore dark:bg-dp-back dark:text-dp-fore">
+                <ThemeProvider>
+                    <Header />
+                </ThemeProvider>
+
                 <Component {...pageProps} />
             </div>
         </div>

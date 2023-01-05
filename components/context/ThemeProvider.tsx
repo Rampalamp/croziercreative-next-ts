@@ -20,17 +20,24 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children }) => {
         if (!storedTheme) {
             console.log("No theme found. Creating localStorage theme");
             //no theme found in local storage
-            const systemTheme: boolean = window.matchMedia(
+            const darkTheme: boolean = window.matchMedia(
                 "(prefers-color-scheme: dark)"
+            ).matches;
+            const lightTheme: boolean = window.matchMedia(
+                "(prefers-color-scheme: light)"
             ).matches;
             //check systemTheme value, if true user prefers dark, which is the default for theme provider.
             //so no need to toggle
-            if (systemTheme) {
+            if (darkTheme) {
                 localStorage.setItem("theme", "dark");
                 storedTheme = "dark";
-            } else {
+            } else if (lightTheme) {
                 localStorage.setItem("theme", "light");
                 storedTheme = "light";
+            } else {
+                //default dark if no these match
+                localStorage.setItem("theme", "dark");
+                storedTheme = "dark";
             }
         }
         storedTheme === "dark" ? setTheme("dark") : setTheme("light");
