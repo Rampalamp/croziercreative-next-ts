@@ -1,7 +1,7 @@
 //Figure out the content/text of the home page, something interactive as well.
 export default function Home() {
     return (
-        <div className="">
+        <div className="text-center sm:pt-0 pt-10">
             <span>
                 Hey. Hello. Hi there. My name is Matthew and this is my website,
                 I hope you enjoy and interact (Look for INSERTIMAGE to view the
@@ -18,7 +18,7 @@ export default function Home() {
                 Audits(LINK) for more details.
                 <br />
                 <br />I have experience working with a variety of technologies
-                including C#, JavaScript/Typescript, SQL, GraphQL, and more(Set
+                including C#, JavaScript/TypeScript, SQL, GraphQL, and more(Set
                 this as a link to the skills page). I am comfortable working on
                 both the front-end and back-end aspects of an application and
                 have an understanding of the entire development process, from

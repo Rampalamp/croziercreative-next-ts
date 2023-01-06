@@ -156,7 +156,7 @@ export default function Header() {
                     id="sideNav"
                     className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
                 >
-                    <ul className="rounded space-y-10 p-7  bg-opacity-75 bg-ls-back dark:bg-ds-back">
+                    <ul className="rounded space-y-10 p-7  bg-opacity-90 dark:bg-opacity-90 bg-ls-back dark:bg-ds-back">
                         <NavOptions />
                     </ul>
                 </div>
