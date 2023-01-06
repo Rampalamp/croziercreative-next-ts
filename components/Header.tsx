@@ -55,9 +55,12 @@ export default function Header() {
         sideNav?.classList.toggle("-left-36");
     };
 
-    const mainNavOptions = () => {
+    const NavOptions = () => {
         return (
             <>
+                <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                    <Link href="/">Home</Link>
+                </li>
                 <li className="hover:text-dp-back hover:dark:text-ls-fore">
                     <Link href="/skills">Skills</Link>
                 </li>
@@ -110,7 +113,9 @@ export default function Header() {
 
                 {/**Nav options for medium and up screen sizes */}
                 <div className="font-bold text-lg hidden sm:block">
-                    <ul className="flex space-x-10">{mainNavOptions()}</ul>
+                    <ul className="flex space-x-10">
+                        <NavOptions />
+                    </ul>
                 </div>
 
                 {/**Menu icon for small screen size */}
@@ -151,7 +156,7 @@ export default function Header() {
                     className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
                 >
                     <ul className="rounded space-y-10 p-7  bg-opacity-75 bg-ls-back dark:bg-ds-back">
-                        {mainNavOptions()}
+                        <NavOptions />
                     </ul>
                 </div>
             </nav>
