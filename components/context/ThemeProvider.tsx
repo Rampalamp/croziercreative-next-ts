@@ -1,6 +1,4 @@
-import { Darker_Grotesque } from "@next/font/google";
-import { createContext, SetStateAction, useEffect, useState } from "react";
-import { Dispatch } from "react";
+import { createContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 type ThemeContext = { theme: Theme; toggleTheme: () => void };
@@ -35,7 +33,7 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children }) => {
                 localStorage.setItem("theme", "light");
                 storedTheme = "light";
             } else {
-                //default dark if no these match
+                //default dark if none are true
                 localStorage.setItem("theme", "dark");
                 storedTheme = "dark";
             }
@@ -43,7 +41,7 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children }) => {
         storedTheme === "dark" ? setTheme("dark") : setTheme("light");
     }, []);
 
-    const toggleTheme = () => {
+    function toggleTheme() {
         if (theme === "light") {
             setTheme("dark");
             localStorage.setItem("theme", "dark");
@@ -51,7 +49,7 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children }) => {
             setTheme("light");
             localStorage.setItem("theme", "light");
         }
-    };
+    }
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>

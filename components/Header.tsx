@@ -11,6 +11,31 @@ let rootDiv: HTMLElement | null,
     menuSvg: HTMLElement | null,
     sideNav: HTMLElement | null;
 
+function toggleSideNav() {
+    //for some strange reason toggling for left-0 wasn't working
+    //toggling -left-36 did work though, not sure why its acting like this.
+    sideNav?.classList.toggle("-left-36");
+}
+
+function NavOptions() {
+    return (
+        <>
+            <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                <Link href="/">Home</Link>
+            </li>
+            <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                <Link href="/skills">Skills</Link>
+            </li>
+            <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                <Link href="/dapp">dApp</Link>
+            </li>
+            <li className="hover:text-dp-back hover:dark:text-ls-fore">
+                <Link href="/audits">Audits</Link>
+            </li>
+        </>
+    );
+}
+
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -48,31 +73,6 @@ export default function Header() {
             themeToggleSvg!.setAttribute("src", "/moon.svg");
         }
     }, [theme]);
-
-    const toggleSideNav = () => {
-        //for some strange reason toggling for left-0 wasn't working
-        //toggling -left-36 did work though, not sure why its acting like this.
-        sideNav?.classList.toggle("-left-36");
-    };
-
-    const NavOptions = () => {
-        return (
-            <>
-                <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                    <Link href="/">Home</Link>
-                </li>
-                <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                    <Link href="/skills">Skills</Link>
-                </li>
-                <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                    <Link href="/dapp">dApp</Link>
-                </li>
-                <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                    <Link href="/audits">Audits</Link>
-                </li>
-            </>
-        );
-    };
 
     return (
         <div className="bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
