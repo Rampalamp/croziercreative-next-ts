@@ -31,7 +31,6 @@ export default function Header() {
         menuSvg === undefined
             ? (menuSvg = document.getElementById("menuSvg"))
             : {};
-
         sideNav === undefined
             ? (sideNav = document.getElementById("sideNav"))
             : {};
@@ -110,14 +109,14 @@ export default function Header() {
                 </div>
 
                 {/**Nav options for medium and up screen sizes */}
-                <div className="font-bold  text-lg hidden sm:block">
+                <div className="font-bold text-lg hidden sm:block">
                     <ul className="flex space-x-10">{mainNavOptions()}</ul>
                 </div>
 
                 {/**Menu icon for small screen size */}
                 <div className="flex items-center min-h-fit min-w-fit sm:hidden">
                     <button
-                        className="rounded-md p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                        className="rounded-md shadow-lg p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                         onClick={toggleSideNav}
                     >
                         <Image
@@ -132,7 +131,7 @@ export default function Header() {
 
                 <div className="flex items-center min-h-fit min-w-fit">
                     <button
-                        className="rounded-md p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                        className="rounded-md shadow-lg p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                         onClick={toggleTheme}
                     >
                         <Image
@@ -151,7 +150,7 @@ export default function Header() {
                     id="sideNav"
                     className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
                 >
-                    <ul className="rounded space-y-10 p-7  bg-opacity-75 bg-ds-back">
+                    <ul className="rounded space-y-10 p-7  bg-opacity-75 bg-ls-back dark:bg-ds-back">
                         {mainNavOptions()}
                     </ul>
                 </div>
