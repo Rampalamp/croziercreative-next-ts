@@ -19,12 +19,16 @@ export default function App({ Component, pageProps }: AppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="w-screen h-screen bg-lp-back text-lp-fore dark:bg-dp-back dark:text-dp-fore">
+            <div className="flex flex-col w-screen h-screen bg-lp-back text-lp-fore dark:bg-dp-back dark:text-dp-fore">
+                {/**Header Section */}
                 <ThemeProvider>
                     <Header />
                 </ThemeProvider>
-
-                <Component {...pageProps} />
+                {/**Main body of app */}
+                <div className="flex flex-1 items-center justify-center">
+                    <Component {...pageProps} />
+                </div>
+                {/**Eventual footer */}
             </div>
         </div>
     );
