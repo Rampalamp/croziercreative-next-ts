@@ -34,7 +34,7 @@ module.exports = {
             //light secondary foreground orange-100
             "ls-fore": "#ffedd5",
             //light button hover orange-50
-            "lbtn-hov": "#fff7ed",
+            "lbtn-hov": "#78716c",
         },
         extend: {},
     },

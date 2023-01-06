@@ -65,10 +65,10 @@ export default function Header() {
                     <Link href="/skills">Skills</Link>
                 </li>
                 <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                    <Link href="/audits">Audits</Link>
+                    <Link href="/dapp">dApp</Link>
                 </li>
                 <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                    <Link href="/dapp">dApp</Link>
+                    <Link href="/audits">Audits</Link>
                 </li>
             </>
         );
@@ -76,8 +76,8 @@ export default function Header() {
 
     return (
         <div className="bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
-            <nav className=" flex items-center justify-between flex-nowrap p-3 drop-shadow-xl">
-                <div className="flex items-center flex-shrink-0 mr-6">
+            <nav className="flex items-center flex-nowrap p-3 drop-shadow-xl">
+                <div className="flex grow items-center mr-4">
                     <span className="font-extrabold text-xl">
                         <Link href="/">CrozierCreative</Link>
                     </span>
@@ -112,14 +112,15 @@ export default function Header() {
                 </div>
 
                 {/**Nav options for medium and up screen sizes */}
-                <div className="font-bold text-lg hidden sm:block">
-                    <ul className="flex space-x-10">
+                <div className="font-bold text-lg mr-3 md:mr-16 hidden sm:block">
+                    <ul className="flex space-x-10 lg:space-x-20">
                         <NavOptions />
                     </ul>
                 </div>
 
                 {/**Menu icon for small screen size */}
-                <div className="flex items-center min-h-fit min-w-fit sm:hidden">
+
+                <div className="mr-4 min-h-fit min-w-fit sm:hidden">
                     <button
                         className="rounded-md shadow-lg p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                         onClick={toggleSideNav}
@@ -134,7 +135,7 @@ export default function Header() {
                     </button>
                 </div>
 
-                <div className="flex items-center min-h-fit min-w-fit">
+                <div className="min-h-fit min-w-fit">
                     <button
                         className="rounded-md shadow-lg p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                         onClick={toggleTheme}
