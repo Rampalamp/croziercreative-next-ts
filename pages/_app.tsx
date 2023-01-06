@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     <Header />
                 </ThemeProvider>
                 {/**Main body of app */}
-                <div className="flex flex-1 items-center justify-center">
+                <div className="flex flex-1 items-center justify-center font-bold text-lg">
                     <Component {...pageProps} />
                 </div>
                 {/**Eventual footer */}

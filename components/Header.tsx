@@ -76,7 +76,7 @@ export default function Header() {
 
     return (
         <div className="bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
-            <nav className="flex items-center flex-nowrap p-3 drop-shadow-xl">
+            <nav className="flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
                 <div className="flex grow items-center mr-4">
                     <span className="font-extrabold text-xl">
                         <Link href="/">CrozierCreative</Link>
@@ -113,7 +113,7 @@ export default function Header() {
 
                 {/**Nav options for medium and up screen sizes */}
                 <div className="font-bold text-lg mr-3 md:mr-16 hidden sm:block">
-                    <ul className="flex space-x-10 lg:space-x-20">
+                    <ul className="flex space-x-10 2xl:space-x-20 xl:space-x-12 lg:space-x-10">
                         <NavOptions />
                     </ul>
                 </div>
