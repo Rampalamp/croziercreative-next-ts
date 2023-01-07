@@ -1,7 +1,7 @@
 //Figure out the content/text of the home page, something interactive as well.
 export default function Home() {
     return (
-        <div className=" text-center sm:pt-0 pt-24">
+        <div className=" text-center ">
             <p>
                 Hey. Hello. Hi there. My name is Matthew and this is my website,
                 I hope you enjoy and interact (Look for INSERTIMAGE to view the
