@@ -31,7 +31,7 @@ export default function Header() {
     const linkedSvg = useRef<HTMLImageElement>(null);
     const themeToggleSvg = useRef<HTMLImageElement>(null);
     const menuSvg = useRef<HTMLImageElement>(null);
-    const sideNav = useRef<HTMLElement>(null);
+    const sideNav = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         rootDiv === undefined
@@ -59,7 +59,7 @@ export default function Header() {
     }
 
     return (
-        <div className="bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
+        <div className="bg-gradient-to-r from-lt-fore to-ls-back dark:from-dt-back dark:to-ds-back bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
             <nav className="flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
                 <div className="flex grow items-center mr-4">
                     <span className="font-extrabold text-xl">
@@ -106,7 +106,7 @@ export default function Header() {
 
                 <div className="mr-4 min-h-fit min-w-fit sm:hidden">
                     <button
-                        className="rounded-md shadow-lg p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                         onClick={toggleSideNav}
                     >
                         <Image
@@ -121,7 +121,7 @@ export default function Header() {
 
                 <div className="min-h-fit min-w-fit">
                     <button
-                        className="rounded-md shadow-lg p-3 hover:bg-opacity-50 hover:dark:bg-opacity-50 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
                         onClick={toggleTheme}
                     >
                         <Image
@@ -134,10 +134,13 @@ export default function Header() {
                     </button>
                 </div>
             </nav>
-            <nav ref={sideNav} className="relative drop-shadow-xl">
+            <nav className="relative drop-shadow-xl">
                 {/**Nav options for small screen format */}
-                <div className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0">
-                    <ul className="rounded space-y-10 p-7  bg-opacity-90 dark:bg-opacity-90 bg-ls-back dark:bg-ds-back">
+                <div
+                    ref={sideNav}
+                    className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
+                >
+                    <ul className="rounded space-y-10 p-7   bg-gradient-to-b opacity-90 dark:opacity-90 from-ls-back to-lt-fore dark:from-ds-back dark:to-dt-back">
                         <NavOptions />
                     </ul>
                 </div>

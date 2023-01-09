@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="flex flex-col w-screen h-screen min-w-[380px] bg-lp-back text-lp-fore dark:bg-dp-back dark:text-dp-fore">
+            <div className="flex flex-col w-screen h-screen min-w-[380px] bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back  text-lp-fore  dark:text-dp-fore">
                 {/**Header Section */}
                 <ThemeProvider>
                     <Header />
