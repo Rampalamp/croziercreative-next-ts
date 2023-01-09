@@ -106,7 +106,7 @@ export default function Header() {
 
                 <div className="mr-4 min-h-fit min-w-fit sm:hidden">
                     <button
-                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
                         onClick={toggleSideNav}
                     >
                         <Image
@@ -121,7 +121,7 @@ export default function Header() {
 
                 <div className="min-h-fit min-w-fit">
                     <button
-                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-ds-back"
+                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
                         onClick={toggleTheme}
                     >
                         <Image
