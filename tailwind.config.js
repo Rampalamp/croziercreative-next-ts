@@ -13,7 +13,6 @@ module.exports = {
             xl: "1280px",
             "2xl": "1536px",
         },
-
         colors: {
             //dark primary background slate-800
             "dp-back": "#1e293b",
