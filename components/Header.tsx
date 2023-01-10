@@ -137,7 +137,7 @@ export default function Header() {
                     </button>
                 </div>
             </nav>
-            <nav className="relative drop-shadow-xl">
+            <nav className="relative drop-shadow-xl z-10">
                 {/**Nav options for small screen format */}
                 <div
                     ref={sideNav}
