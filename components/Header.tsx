@@ -44,11 +44,13 @@ export default function Header() {
             rootDiv!.classList.add("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin-dark.svg");
             gitSvg.current!.setAttribute("src", "/github-dark.svg");
+            menuSvg.current!.setAttribute("src", "menu-dark.svg");
             themeToggleSvg.current!.setAttribute("src", "/sun.svg");
         } else {
             rootDiv!.classList.remove("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin.svg");
             gitSvg.current!.setAttribute("src", "/github.svg");
+            menuSvg.current!.setAttribute("src", "menu.svg");
             themeToggleSvg.current!.setAttribute("src", "/moon.svg");
         }
     }, [theme]);
