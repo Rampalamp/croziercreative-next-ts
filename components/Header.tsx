@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
+import ShowCode from "./ShowCode";
 
 let rootDiv: HTMLElement | null;
 
@@ -99,42 +100,46 @@ export default function Header() {
                 </div>
 
                 {/**Nav options for medium and up screen sizes */}
-                <div className="font-bold text-lg mr-3 md:mr-16 hidden sm:block">
-                    <ul className="flex space-x-10 2xl:space-x-20 xl:space-x-12 lg:space-x-10">
+                <div className="font-bold text-lg mr-1 md:mr-12 hidden sm:block">
+                    <ul className="flex space-x-5 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8">
                         <NavOptions />
                     </ul>
                 </div>
 
                 {/**Menu icon for small screen size */}
 
-                <div className="mr-4 min-h-fit min-w-fit sm:hidden">
-                    <button
-                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                        onClick={toggleSideNav}
-                    >
-                        <Image
-                            ref={menuSvg}
-                            src="/menu-dark.svg"
-                            alt="Menu drop down"
-                            width={20}
-                            height={20}
-                        />
-                    </button>
-                </div>
-
-                <div className="min-h-fit min-w-fit">
-                    <button
-                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                        onClick={toggleTheme}
-                    >
-                        <Image
-                            ref={themeToggleSvg}
-                            src="/sun.svg"
-                            alt="Theme toggler"
-                            width={20}
-                            height={20}
-                        />
-                    </button>
+                <div className="flex space-x-3">
+                    <div className="min-h-fit min-w-fit sm:hidden">
+                        <button
+                            className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
+                            onClick={toggleSideNav}
+                        >
+                            <Image
+                                ref={menuSvg}
+                                src="/menu-dark.svg"
+                                alt="Menu drop down"
+                                width={20}
+                                height={20}
+                            />
+                        </button>
+                    </div>
+                    <div className="min-h-fit min-w-fit">
+                        <button
+                            className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
+                            onClick={toggleTheme}
+                        >
+                            <Image
+                                ref={themeToggleSvg}
+                                src="/sun.svg"
+                                alt="Theme toggler"
+                                width={20}
+                                height={20}
+                            />
+                        </button>
+                    </div>
+                    <div className="min-h-fit min-w-fit">
+                        <ShowCode codeToShow="Header" />
+                    </div>
                 </div>
             </nav>
             <nav className="relative drop-shadow-xl z-10">

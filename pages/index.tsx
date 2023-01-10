@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ShowCode from "../components/ShowCode";
 
 export default function Home() {
     return (
@@ -34,14 +35,8 @@ export default function Home() {
                 <span className="font-extrabold text-xl ">
                     My name is Matthew, thats my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
-                    <Image
-                        className="inline"
-                        src="/code.svg"
-                        width={20}
-                        height={20}
-                        alt="Code svg"
-                    />{" "}
-                    to view the component source code, or visit my{" "}
+                    <ShowCode codeToShow={""} className="inline" /> to view the
+                    component source code, or visit my{" "}
                     <a
                         className="underline hover:text-dp-back hover:dark:text-ls-fore"
                         target="_blank"
