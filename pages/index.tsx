@@ -5,36 +5,35 @@ export default function Home() {
     return (
         <div className="mt-5 sm:mt-0 text-left items-center ">
             <div className="">
-                <div className="grid grid-cols-2">
-                    <div className="col-span-1">
-                        <span className="text-6xl sm:text-8xl uppercase text-transparent">
+                <div className="grid grid-cols-2 p-3">
+                    <div className="col-span-1 skew-y-12 m-auto">
+                        <span className="make-transparent text-6xl sm:text-8xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore">
                             Hey.
                         </span>
                         <br />
-                        <span className="text-5xl sm:text-7xl uppercase">
+                        <span className="make-transparent text-5xl sm:text-7xl uppercase bg-clip-text bg-gradient-to-r from-ds-back to-ds-fore dark:from-ls-back dark:to-ls-fore">
                             Hello.
                         </span>
                         <br />
-                        <span className="text-4xl sm:text-6xl uppercase whitespace-nowrap">
+                        <span className="make-transparent text-4xl sm:text-6xl uppercase whitespace-nowrap bg-clip-text bg-gradient-to-r from-dt-back to-dt-fore dark:from-lt-back dark:to-lt-fore">
                             Hi there.
                         </span>
                     </div>
-                    <div className="col-span-1">
+                    <div className="col-span-1 m-auto">
                         <Image
-                            className="rounded-full sm:mt-10"
+                            className="rounded-full"
                             src="/zuko.png"
-                            height={200}
-                            width={200}
+                            width={250}
+                            height={250}
                             alt="Menu drop down"
                         />
                     </div>
                 </div>
                 <br />
 
-                <span>
-                    My name is Matthew, this is my website, and thats my dog
-                    Zuko (if you were wondering). I hope you enjoy and interact
-                    (Look for{" "}
+                <span className="font-extrabold text-xl ">
+                    My name is Matthew, thats my dog Zuko, and this is my
+                    website. I hope you enjoy and interact (Look for{" "}
                     <Image
                         className="inline"
                         src="/code.svg"

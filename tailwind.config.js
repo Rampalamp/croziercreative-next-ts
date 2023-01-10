@@ -24,14 +24,14 @@ module.exports = {
             "ds-fore": "#bbf7d0",
             //dark tertiary background stone-900
             "dt-back": "#1c1917",
-            //dark tertiary foreground violet-100
-            "dt-fore": "#ede9fe",
+            //dark tertiary foreground violet-300
+            "dt-fore": "#c4b5fd",
             //dark button hover slate-50
             "dbtn-hov": "#f8fafc",
             //light primary background amber-100
             "lp-back": "#fef3c7",
-            //light primary foreground amber-600
-            "lp-fore": "#d97706",
+            //light primary foreground amber-700
+            "lp-fore": "#b45309",
             //light secondary background orange-500
             "ls-back": "#f97316",
             //light secondary foreground orange-100

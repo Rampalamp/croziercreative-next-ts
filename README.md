@@ -3,6 +3,7 @@
 1. HOME
     1. Looking okay for now, if want to try a gradient on the large text, may need to add a color: transparent in the globals.css file, for some reason text-opacity isn't working as intended. Read online the issue is where the color of the text is being set, but after playing with that it still was not working as I hoped. However adding color: transparent directly to the element in the console seemed to do it. Essentially you make the text transparent, add the gradient to the background, and then bg-text-clip to show the gradient.
     2. Seems to respond in size well enough
+    3. Try out skewing the large text in different directions?
 2. SKILLS
     1. Create cloud of svgs with a grid maybe?
     2. Do something with the text blerb.

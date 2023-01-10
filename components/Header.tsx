@@ -62,8 +62,11 @@ export default function Header() {
         <div className="bg-gradient-to-r from-lt-fore to-ls-back dark:from-dt-back dark:to-ds-back bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
             <nav className="flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
                 <div className="flex grow items-center mr-4">
-                    <span className="font-extrabold text-xl">
+                    <span className="font-extrabold text-xl hidden sm:block">
                         <Link href="/">CrozierCreative</Link>
+                    </span>
+                    <span className="font-extrabold text-3xl block sm:hidden">
+                        <Link href="/">CC</Link>
                     </span>
                     <div className="flex  ml-3 space-x-2 min-h-fit min-w-fit">
                         <a
