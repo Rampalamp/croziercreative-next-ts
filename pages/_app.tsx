@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Header from "../components/Header";
 import { ThemeProvider } from "../components/context/ThemeProvider";
+import CodeOverlayProvider from "../components/context/CodeOverlayProvider";
 import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -19,17 +20,19 @@ export default function App({ Component, pageProps }: AppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="flex flex-col w-screen h-screen min-w-[380px] bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back  text-lp-fore  dark:text-dp-fore">
-                {/**Header Section */}
-                <ThemeProvider>
-                    <Header />
-                </ThemeProvider>
-                {/**Main body of app */}
-                <div className="overflow-auto m-auto font-bold text-lg p-3 2xl:px-96 xl:px-72 lg:px-40 md:px-32 sm:px-16 px-6">
-                    <Component {...pageProps} />
+            <CodeOverlayProvider>
+                <div className="flex flex-col w-screen h-screen min-w-[380px] bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back  text-lp-fore  dark:text-dp-fore">
+                    {/**Header Section */}
+                    <ThemeProvider>
+                        <Header />
+                    </ThemeProvider>
+                    {/**Main body of app */}
+                    <div className="overflow-auto m-auto font-bold text-lg p-3 2xl:px-96 xl:px-72 lg:px-40 md:px-32 sm:px-16 px-6">
+                        <Component {...pageProps} />
+                    </div>
+                    {/**Eventual footer */}
                 </div>
-                {/**Eventual footer */}
-            </div>
+            </CodeOverlayProvider>
         </div>
     );
 }

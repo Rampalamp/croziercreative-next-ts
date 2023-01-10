@@ -3,13 +3,13 @@ import { createContext, useEffect, useState } from "react";
 type Theme = "light" | "dark";
 type ThemeContext = { theme: Theme; toggleTheme: () => void };
 
-interface ProviderProps {
+interface IProviderProps {
     children: React.ReactNode;
 }
 
 export const ThemeContext = createContext<ThemeContext>({} as ThemeContext);
 
-export const ThemeProvider: React.FC<ProviderProps> = ({ children }) => {
+export const ThemeProvider: React.FC<IProviderProps> = ({ children }) => {
     const [theme, setTheme] = useState<Theme>("dark");
 
     useEffect(() => {

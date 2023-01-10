@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
-import ShowCode from "./ShowCode";
+import ShowCodeButton from "./ShowCodeButton";
 
 let rootDiv: HTMLElement | null;
 
@@ -140,7 +140,7 @@ export default function Header() {
                         </button>
                     </div>
                     <div className="min-h-fit min-w-fit">
-                        <ShowCode codeToShow="Header" />
+                        <ShowCodeButton codeToShow="header" />
                     </div>
                 </div>
             </nav>

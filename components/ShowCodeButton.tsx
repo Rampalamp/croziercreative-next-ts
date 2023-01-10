@@ -1,7 +1,8 @@
 import Image from "next/image";
-import React from "react";
+import React, { useContext, useState } from "react";
+import { CodeOverlayContext, CodeOverlay } from "./context/CodeOverlayProvider";
 
-interface IShowCodeProps
+interface IShowCodeButtonProps
     extends React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLDivElement>,
         HTMLDivElement
@@ -9,22 +10,16 @@ interface IShowCodeProps
     codeToShow: string;
 }
 
-export default function ShowCode({ codeToShow, className }: IShowCodeProps) {
+export default function ShowCodeButton({
+    codeToShow,
+    className,
+}: IShowCodeButtonProps) {
+    const { codeOverlay, toggleOverlay, setOverlay } =
+        useContext(CodeOverlayContext);
+
     function showCode() {
-        switch (codeToShow) {
-            case "": {
-                break;
-            }
-            case "": {
-                break;
-            }
-            case "": {
-                break;
-            }
-            default: {
-                break;
-            }
-        }
+        codeToShow !== codeOverlay ? setOverlay(codeToShow as CodeOverlay) : {};
+        toggleOverlay();
     }
     return (
         <div className={className}>

@@ -12,5 +12,5 @@
 4. DAPP
     1. Sort out which smart contract interactions to tap into.
 5. COMPONENTS
-    1. Create ShowCode component, make it button, and perhaps just have all the code in markdown format to display in a overlayed modal when clicked?
+    1. Finish up CodeOverlayProvider, looks like most of it is coming together pretty well. Just need to define the readable text area, then figure out the best way to drop some markdown into it. Also need to add an Exit (X) button so because the buttons become unusable when overlay is shown.
     2. Do I want different colors for the code.svg when toggling light/dark theme? Might be able to achieve this relatively painlessly if use ThemeContext inside the ShowCode.tsx component.
