@@ -4,19 +4,19 @@ import ShowCodeButton from "../components/ShowCodeButton";
 
 export default function Home() {
     return (
-        <div className="mt-5 sm:mt-0 text-left items-center ">
-            <div className="">
+        <div className="mt-5 sm:mt-0 text-center items-center ">
+            <div>
                 <div className="grid grid-cols-2 p-3">
-                    <div className="col-span-1 skew-y-12 m-auto">
-                        <span className="make-transparent text-6xl sm:text-8xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore">
+                    <div className="text-left col-span-1 skew-y-12 m-auto">
+                        <span className="make-transparent text-6xl sm:text-8xl lg:text-9xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore">
                             Hey.
                         </span>
                         <br />
-                        <span className="make-transparent text-5xl sm:text-7xl uppercase bg-clip-text bg-gradient-to-r from-ds-back to-ds-fore dark:from-ls-back dark:to-ls-fore">
+                        <span className="make-transparent text-5xl sm:text-7xl lg:text-8xl uppercase bg-clip-text bg-gradient-to-r from-ds-fore to-ds-back dark:from-ls-back dark:to-ls-fore">
                             Hello.
                         </span>
                         <br />
-                        <span className="make-transparent text-4xl sm:text-6xl uppercase whitespace-nowrap bg-clip-text bg-gradient-to-r from-dt-back to-dt-fore dark:from-lt-back dark:to-lt-fore">
+                        <span className="make-transparent text-4xl sm:text-6xl lg:text-7xl uppercase whitespace-nowrap bg-clip-text bg-gradient-to-r from-dt-back to-dt-fore dark:from-lt-back dark:to-lt-fore">
                             Hi there.
                         </span>
                     </div>
@@ -30,8 +30,10 @@ export default function Home() {
                         />
                     </div>
                 </div>
-                <br />
-
+            </div>
+            <br />
+            <br />
+            <div>
                 <span className="font-extrabold text-xl ">
                     My name is Matthew, thats my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
@@ -47,11 +49,9 @@ export default function Home() {
                     </a>
                     ).
                 </span>
-            </div>
-            <br />
-            <div>
-                I am a full stack software engineer with a passion for building
-                scalable and efficient applications, please navigate to{" "}
+                <br />
+                <br />I am a full stack software engineer with a passion for
+                building scalable and efficient applications, please navigate to{" "}
                 <Link
                     className="underline hover:text-dp-back hover:dark:text-ls-fore"
                     href="/skills"

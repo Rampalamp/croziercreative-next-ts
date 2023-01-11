@@ -20,8 +20,8 @@ module.exports = {
             "dp-fore": "#bef264",
             //dark secondary background slate-900
             "ds-back": "#0f172a",
-            //dark secondary foreground green-200
-            "ds-fore": "#bbf7d0",
+            //dark secondary foreground green-300
+            "ds-fore": "#86efac",
             //dark tertiary background stone-900
             "dt-back": "#1c1917",
             //dark tertiary foreground violet-300
