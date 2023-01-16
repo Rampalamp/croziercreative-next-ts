@@ -1,4 +1,4 @@
-export const HeaderCode = `<pre class="markdown-body"><code class="markdown-body">import Link from "next/link";
+export const HeaderCode = `<pre><code class="prettyprint">import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
@@ -158,5 +158,6 @@ export default function Header() {
         &#x3C;/div>
     );
 }
-</code></pre>
+</code>
+</pre>
 `;

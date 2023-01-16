@@ -10,6 +10,10 @@ async function CreateCodeSnippetFile() {
 
     const { content } = matter(file);
 
+    // const processedContent = (
+    //     await remark().use(html).process(content)
+    // ).toString();
+
     const processedContent = (
         await remark().use(html).process(content)
     ).toString();

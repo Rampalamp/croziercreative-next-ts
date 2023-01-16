@@ -1,6 +1,7 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { HeaderCode } from "../CodeSnippets";
+import Script from "next/script";
 
 export type CodeOverlay = "header" | "index" | null;
 
@@ -23,6 +24,13 @@ export default function CodeOverlayProvider({
 }: ICodeOverlayProviderProps) {
     const [codeOverlay, setCodeOverlay] = useState<CodeOverlay>(null);
     const [showOverlay, setShowOverlay] = useState(false);
+
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src =
+            "https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js";
+        document.body.append(script);
+    }, [showOverlay]);
 
     function setOverlay(codeOverlay: CodeOverlay) {
         setCodeOverlay(codeOverlay);
@@ -48,39 +56,37 @@ export default function CodeOverlayProvider({
             <div className="relative">
                 {showOverlay ? (
                     <div className="absolute z-20 h-screen w-screen items-center justify-center backdrop-blur-md">
-                        <div className="p-16">
-                            <div className="flex flex-col">
-                                <div className="flex space-x-3 justify-end">
-                                    <button
-                                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                                        onClick={copyCode}
-                                    >
-                                        <Image
-                                            src="/copy.svg"
-                                            width={20}
-                                            height={20}
-                                            alt="Copy svg"
-                                        />
-                                    </button>
-                                    <button
-                                        className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                                        onClick={toggleOverlay}
-                                    >
-                                        <Image
-                                            src="/x.svg"
-                                            width={20}
-                                            height={20}
-                                            alt="X(Close) svg"
-                                        />
-                                    </button>
-                                </div>
-                                <div className="markdown-body overflow-y-auto mt-3 p-4 rounded-md shadow-2xl bg-lt-back dark:bg-dt-back">
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: HeaderCode,
-                                        }}
+                        <div className="flex flex-col h-screen  p-16">
+                            <div className="flex space-x-3 justify-end">
+                                <button
+                                    className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
+                                    onClick={copyCode}
+                                >
+                                    <Image
+                                        src="/copy.svg"
+                                        width={20}
+                                        height={20}
+                                        alt="Copy svg"
                                     />
-                                </div>
+                                </button>
+                                <button
+                                    className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
+                                    onClick={toggleOverlay}
+                                >
+                                    <Image
+                                        src="/x.svg"
+                                        width={20}
+                                        height={20}
+                                        alt="X(Close) svg"
+                                    />
+                                </button>
+                            </div>
+                            <div className="mt-3 overflow-scroll p-4 rounded-md shadow-2xl bg-dp-back dark:bg-dt-back">
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: HeaderCode,
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>

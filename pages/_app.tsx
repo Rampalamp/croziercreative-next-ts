@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { ThemeProvider } from "../components/context/ThemeProvider";
 import CodeOverlayProvider from "../components/context/CodeOverlayProvider";
 import Head from "next/head";
+import Script from "next/script";
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
             <CodeOverlayProvider>
                 <div className="flex flex-col w-screen h-screen min-w-[380px] bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back  text-lp-fore  dark:text-dp-fore">
                     {/**Header Section */}
