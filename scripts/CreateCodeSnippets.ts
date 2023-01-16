@@ -14,13 +14,22 @@ async function CreateCodeSnippetFile() {
     //     await remark().use(html).process(content)
     // ).toString();
 
-    const processedContent = (
+    const processedContent: string = (
         await remark().use(html).process(content)
     ).toString();
+    //We want to add class="prettyprint" to the <code> tag that remark generates
+    const tag: string = "<code";
+    const index: number = processedContent.indexOf(tag) + tag.length;
+    const prettyprintClass: string = ` class="prettyprint"`;
+    const finalContent: string = [
+        processedContent.slice(0, index),
+        prettyprintClass,
+        processedContent.slice(index),
+    ].join("");
 
     fs.writeFileSync(
         "./components/CodeSnippets.tsx",
-        `export const HeaderCode = \`${processedContent}\`;`
+        `export const HeaderCode = \`${finalContent}\`;`
     );
 }
 

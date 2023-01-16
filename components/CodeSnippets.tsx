@@ -158,6 +158,5 @@ export default function Header() {
         &#x3C;/div>
     );
 }
-</code>
-</pre>
+</code></pre>
 `;
