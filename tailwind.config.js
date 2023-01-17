@@ -43,7 +43,12 @@ module.exports = {
             //light button hover stone-500
             "lbtn-hov": "#78716c",
         },
-        extend: {},
+        extend: {
+            backgroundImage: {
+                //grabbed from https://tailwindcss.com/_next/static/media/docs-dark@30.1a9f8cbf.avif
+                image: "url('/backimg.avif')",
+            },
+        },
     },
     plugins: [require("@tailwindcss/typography")],
 };

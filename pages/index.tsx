@@ -23,7 +23,7 @@ export default function Home() {
                     </div>
                     <div className="col-span-1 m-auto">
                         <Image
-                            className="rounded-full"
+                            className="rounded-full  w-auto h-auto"
                             src="/zuko.png"
                             width={250}
                             height={250}

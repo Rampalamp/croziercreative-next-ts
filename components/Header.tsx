@@ -141,6 +141,7 @@ export default function Header() {
             </nav>
             <nav className="relative">
                 {/**Nav options for small screen format */}
+
                 <div
                     ref={sideNav}
                     className="rounded-md backdrop-blur sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
