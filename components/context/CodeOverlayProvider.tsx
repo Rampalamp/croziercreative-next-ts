@@ -1,7 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { HeaderCode } from "../CodeSnippets";
-import Script from "next/script";
 
 export type CodeOverlay = "header" | "index" | null;
 
@@ -26,10 +25,12 @@ export default function CodeOverlayProvider({
     const [showOverlay, setShowOverlay] = useState(false);
 
     useEffect(() => {
-        const script = document.createElement("script");
-        script.src =
-            "https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js";
-        document.body.append(script);
+        if (showOverlay) {
+            const script = document.createElement("script");
+            script.src =
+                "https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js";
+            document.body.append(script);
+        }
     }, [showOverlay]);
 
     function setOverlay(codeOverlay: CodeOverlay) {

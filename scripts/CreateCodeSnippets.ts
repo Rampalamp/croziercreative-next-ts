@@ -1,26 +1,19 @@
 import fs from "fs";
-import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
+import { marked } from "marked";
 
 const mdFiles: string[] = ["./public/header.md"];
 
 async function CreateCodeSnippetFile() {
     const file = fs.readFileSync(mdFiles[0], "utf-8");
 
-    const { content } = matter(file);
+    const processedContent: string = marked(file);
+    //Insert the prettyprint class onto code tag
+    const insertAt: string = `<code class="`;
 
-    // const processedContent = (
-    //     await remark().use(html).process(content)
-    // ).toString();
+    const index: number = processedContent.indexOf(insertAt) + insertAt.length;
 
-    const processedContent: string = (
-        await remark().use(html).process(content)
-    ).toString();
-    //We want to add class="prettyprint" to the <code> tag that remark generates
-    const tag: string = "<code";
-    const index: number = processedContent.indexOf(tag) + tag.length;
-    const prettyprintClass: string = ` class="prettyprint"`;
+    const prettyprintClass: string = "prettyprint ";
+
     const finalContent: string = [
         processedContent.slice(0, index),
         prettyprintClass,
