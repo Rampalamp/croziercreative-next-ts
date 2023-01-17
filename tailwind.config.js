@@ -40,7 +40,7 @@ module.exports = {
             "lt-back": "#ffe4e6",
             //light tertiary foreground rose-700
             "lt-fore": "#be123c",
-            //light button hover orange-50
+            //light button hover stone-500
             "lbtn-hov": "#78716c",
         },
         extend: {},

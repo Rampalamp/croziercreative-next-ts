@@ -64,7 +64,7 @@ export default function CodeOverlayProvider({
             <div className="relative">
                 <div
                     ref={overlayDiv}
-                    className="absolute z-20 h-screen w-screen items-center justify-center backdrop-blur-md hidden"
+                    className="absolute z-50 h-screen w-screen items-center justify-center backdrop-blur-md hidden"
                 >
                     <div className="flex flex-col h-screen min-w-[380px] p-3 sm:py-24 sm:px-28 xl:px-52 2xl:py-24 2xl:px-80">
                         <div className="flex space-x-3 justify-end">

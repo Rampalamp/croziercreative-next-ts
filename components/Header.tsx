@@ -62,8 +62,8 @@ export default function Header() {
     }
 
     return (
-        <div className="bg-gradient-to-r from-lt-fore to-ls-back dark:from-dt-back dark:to-ds-back bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
-            <nav className="flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
+        <div className="sticky top-0 z-40 w-full text-lt-fore dark:text-ds-fore">
+            <nav className=" backdrop-blur flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
                 <div className="flex grow items-center mr-4">
                     <span className="font-extrabold text-xl hidden sm:block">
                         <Link href="/">CrozierCreative</Link>
@@ -102,8 +102,8 @@ export default function Header() {
                 </div>
 
                 {/**Nav options for medium and up screen sizes */}
-                <div className="font-bold text-lg mr-1 md:mr-12 hidden sm:block">
-                    <ul className="flex space-x-5 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8">
+                <div className="font-bold text-lg  md:mr-12 hidden sm:block">
+                    <ul className="flex 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8 space-x-4">
                         <NavOptions />
                     </ul>
                 </div>
@@ -144,13 +144,13 @@ export default function Header() {
                     </div>
                 </div>
             </nav>
-            <nav className="relative drop-shadow-xl z-10">
+            <nav className="relative">
                 {/**Nav options for small screen format */}
                 <div
                     ref={sideNav}
-                    className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
+                    className="rounded-md backdrop-blur sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
                 >
-                    <ul className="rounded space-y-10 p-7   bg-gradient-to-b opacity-90 dark:opacity-90 from-ls-back to-lt-fore dark:from-ds-back dark:to-dt-back">
+                    <ul className="space-y-10 p-7">
                         <NavOptions />
                     </ul>
                 </div>
