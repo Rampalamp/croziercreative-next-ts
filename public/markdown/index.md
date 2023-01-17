@@ -1,3 +1,4 @@
+```typescript
 import Image from "next/image";
 import Link from "next/link";
 import ShowCodeButton from "../components/ShowCodeButton";
@@ -85,3 +86,4 @@ export default function Home() {
         </div>
     );
 }
+```

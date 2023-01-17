@@ -1,7 +1,7 @@
 import fs from "fs";
 import { marked } from "marked";
 
-const mdFiles: string[] = ["./public/header.md"];
+const mdFiles: string[] = ["./public/markdown/header.md"];
 
 async function CreateCodeSnippetFile() {
     const file = fs.readFileSync(mdFiles[0], "utf-8");

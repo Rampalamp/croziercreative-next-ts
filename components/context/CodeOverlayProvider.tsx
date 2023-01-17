@@ -57,7 +57,7 @@ export default function CodeOverlayProvider({
             <div className="relative">
                 {showOverlay ? (
                     <div className="absolute z-20 h-screen w-screen items-center justify-center backdrop-blur-md">
-                        <div className="flex flex-col h-screen min-w-[380px] p-16">
+                        <div className="flex flex-col h-screen min-w-[380px] p-3 sm:py-24 sm:px-28 xl:px-52 2xl:py-24 2xl:px-80">
                             <div className="flex space-x-3 justify-end">
                                 <button
                                     className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
