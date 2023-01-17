@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { HeaderCode, IndexCode } from "../../constants/CodeSnippets";
+import CCButton from "../CCButton";
 
 export type CodeOverlay = "header" | "index" | null;
 
@@ -57,6 +58,11 @@ export default function CodeOverlayProvider({
         setCopied(false);
     }
 
+    function copyCode() {
+        navigator.clipboard.writeText(codeDiv.current!.textContent!);
+        setCopied(true);
+    }
+
     return (
         <CodeOverlayContext.Provider
             value={{ codeOverlay, toggleOverlay, setOverlay }}
@@ -78,33 +84,24 @@ export default function CodeOverlayProvider({
                                     Code Copied!
                                 </span>
                             </div>
-                            <button
-                                className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                                onClick={() => {
-                                    navigator.clipboard.writeText(
-                                        codeDiv.current!.textContent!
-                                    );
-                                    setCopied(true);
-                                }}
-                            >
+
+                            <CCButton onClick={copyCode}>
                                 <Image
                                     src="/copy.svg"
                                     width={20}
                                     height={20}
                                     alt="Copy svg"
                                 />
-                            </button>
-                            <button
-                                className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                                onClick={toggleOverlay}
-                            >
+                            </CCButton>
+
+                            <CCButton onClick={toggleOverlay}>
                                 <Image
                                     src="/x.svg"
                                     width={20}
                                     height={20}
                                     alt="X(Close) svg"
                                 />
-                            </button>
+                            </CCButton>
                         </div>
                         <div className="mt-3 overflow-scroll p-4 rounded-md shadow-2xl bg-dp-back dark:bg-dt-back">
                             <div

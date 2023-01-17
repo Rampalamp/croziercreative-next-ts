@@ -1,11 +1,12 @@
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { CodeOverlayContext, CodeOverlay } from "./context/CodeOverlayProvider";
+import CCButton from "./CCButton";
 
 interface IShowCodeButtonProps
     extends React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLDivElement>,
-        HTMLDivElement
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
     > {
     codeToShow: string;
 }
@@ -22,13 +23,8 @@ export default function ShowCodeButton({
         toggleOverlay();
     }
     return (
-        <div className={className}>
-            <button
-                className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                onClick={showCode}
-            >
-                <Image src="/code.svg" width={20} height={20} alt="Code svg" />
-            </button>
-        </div>
+        <CCButton className={className} onClick={showCode}>
+            <Image src="/code.svg" width={20} height={20} alt="Code svg" />
+        </CCButton>
     );
 }

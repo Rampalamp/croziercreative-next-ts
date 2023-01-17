@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
 import ShowCodeButton from "./ShowCodeButton";
+import CCButton from "./CCButton";
 
 let rootDiv: HTMLElement | null;
 
@@ -112,10 +113,7 @@ export default function Header() {
 
                 <div className="flex space-x-3">
                     <div className="min-h-fit min-w-fit sm:hidden">
-                        <button
-                            className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                            onClick={toggleSideNav}
-                        >
+                        <CCButton onClick={toggleSideNav}>
                             <Image
                                 ref={menuSvg}
                                 src="/menu-dark.svg"
@@ -123,13 +121,10 @@ export default function Header() {
                                 width={20}
                                 height={20}
                             />
-                        </button>
+                        </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">
-                        <button
-                            className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                            onClick={toggleTheme}
-                        >
+                        <CCButton onClick={toggleTheme}>
                             <Image
                                 ref={themeToggleSvg}
                                 src="/sun.svg"
@@ -137,7 +132,7 @@ export default function Header() {
                                 width={20}
                                 height={20}
                             />
-                        </button>
+                        </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">
                         <ShowCodeButton codeToShow="header" />
