@@ -1,29 +1,43 @@
 import fs from "fs";
 import { marked } from "marked";
 
-const mdFiles: string[] = ["./public/markdown/header.md"];
+const mdFiles: { [key: string]: string } = {
+    HeaderCode: "./public/markdown/header.md",
+    IndexCode: "./public/markdown/index.md",
+};
 
 async function CreateCodeSnippetFile() {
-    const file = fs.readFileSync(mdFiles[0], "utf-8");
+    let fileContent: string = "";
 
-    const processedContent: string = marked(file);
-    //Insert the prettyprint class onto code tag
-    const insertAt: string = `<code class="`;
+    for (const [key, value] of Object.entries(mdFiles)) {
+        const file = fs.readFileSync(value, "utf-8");
 
-    const index: number = processedContent.indexOf(insertAt) + insertAt.length;
+        const processedContent: string = marked(file);
 
-    const prettyprintClass: string = "prettyprint ";
+        //Insert the prettyprint class onto code tag
+        const insertAt: string = `<code class="`;
 
-    const finalContent: string = [
-        processedContent.slice(0, index),
-        prettyprintClass,
-        processedContent.slice(index),
-    ].join("");
+        const index: number =
+            processedContent.indexOf(insertAt) + insertAt.length;
 
-    fs.writeFileSync(
-        "./components/CodeSnippets.tsx",
-        `export const HeaderCode = \`${finalContent}\`;`
-    );
+        const prettyprintClass: string = "prettyprint ";
+
+        const finalContent: string = [
+            processedContent.slice(0, index),
+            prettyprintClass,
+            processedContent.slice(index),
+        ].join("");
+        //     `export const ${key.toString()} = \`${finalContent.toString()}\`;`
+        fileContent = fileContent.concat(
+            `export const ${key}: string = \`${finalContent}\`;\n`
+        );
+    }
+
+    // fs.writeFileSync(
+    //     "./components/CodeSnippets.tsx",
+    //     `export const HeaderCode = \`${finalContent}\`;`
+    // );
+    fs.writeFileSync("./constants/CodeSnippets.tsx", fileContent);
 }
 
 CreateCodeSnippetFile()

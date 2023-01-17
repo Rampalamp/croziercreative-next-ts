@@ -1,4 +1,4 @@
-export const HeaderCode = `<pre><code class="prettyprint language-typescript">import Link from &quot;next/link&quot;;
+export const HeaderCode: string = `<pre><code class="prettyprint language-typescript">import Link from &quot;next/link&quot;;
 import Image from &quot;next/image&quot;;
 import { useEffect, useContext, useRef } from &quot;react&quot;;
 import { ThemeContext } from &quot;./context/ThemeProvider&quot;;
@@ -155,6 +155,95 @@ export default function Header() {
                     &lt;/ul&gt;
                 &lt;/div&gt;
             &lt;/nav&gt;
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+`;
+export const IndexCode: string = `<pre><code class="prettyprint language-typescript">import Image from &quot;next/image&quot;;
+import Link from &quot;next/link&quot;;
+import ShowCodeButton from &quot;../components/ShowCodeButton&quot;;
+
+export default function Home() {
+    return (
+        &lt;div className=&quot;mt-5 sm:mt-0 text-center items-center &quot;&gt;
+            &lt;div&gt;
+                &lt;div className=&quot;grid grid-cols-2 p-3&quot;&gt;
+                    &lt;div className=&quot;text-left col-span-1 skew-y-12 m-auto&quot;&gt;
+                        {/**make-transparent is not a tailwind class, it is my work around, exists in globals.css */}
+                        &lt;span className=&quot;make-transparent text-6xl sm:text-8xl lg:text-9xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore&quot;&gt;
+                            Hey.
+                        &lt;/span&gt;
+                        &lt;br /&gt;
+                        &lt;span className=&quot;make-transparent text-5xl sm:text-7xl lg:text-8xl uppercase bg-clip-text bg-gradient-to-r from-ds-fore to-ds-back dark:from-ls-back dark:to-ls-fore&quot;&gt;
+                            Hello.
+                        &lt;/span&gt;
+                        &lt;br /&gt;
+                        &lt;span className=&quot;make-transparent text-4xl sm:text-6xl lg:text-7xl uppercase whitespace-nowrap bg-clip-text bg-gradient-to-r from-dt-back to-dt-fore dark:from-lt-back dark:to-lt-fore&quot;&gt;
+                            Hi there.
+                        &lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div className=&quot;col-span-1 m-auto&quot;&gt;
+                        &lt;Image
+                            className=&quot;rounded-full&quot;
+                            src=&quot;/zuko.png&quot;
+                            width={250}
+                            height={250}
+                            alt=&quot;Menu drop down&quot;
+                        /&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;br /&gt;
+            &lt;br /&gt;
+            &lt;div&gt;
+                &lt;span className=&quot;font-extrabold text-xl &quot;&gt;
+                    My name is Matthew, thats my dog Zuko, and this is my
+                    website. I hope you enjoy and interact (Look for{&quot; &quot;}
+                    &lt;ShowCodeButton codeToShow={&quot;&quot;} className=&quot;inline&quot; /&gt; to
+                    view the component source code, or visit my{&quot; &quot;}
+                    &lt;a
+                        className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                        target=&quot;_blank&quot;
+                        href=&quot;https://github.com/Rampalamp&quot;
+                        rel=&quot;noopener noreferrer&quot;
+                    &gt;
+                        GitHub
+                    &lt;/a&gt;
+                    ).
+                &lt;/span&gt;
+                &lt;br /&gt;
+                &lt;br /&gt;I am a full stack software engineer with a passion for
+                building scalable and efficient applications, please navigate to{&quot; &quot;}
+                &lt;Link
+                    className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                    href=&quot;/skills&quot;
+                &gt;
+                    Skills
+                &lt;/Link&gt;{&quot; &quot;}
+                for my specific experience. With a strong foundation in software
+                engineering and a desire to constantly learn and improve, I have
+                set my phasers to &#39;love me&#39;
+                &lt;span className=&quot;italic&quot;&gt; as well as &lt;/span&gt;
+                blockchain development / technologies. Feel free to connect and
+                play around in the{&quot; &quot;}
+                &lt;Link
+                    className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                    href=&quot;/dapp&quot;
+                &gt;
+                    dApp
+                &lt;/Link&gt;{&quot; &quot;}
+                page. I am also interested in Smart Contract auditing, with that
+                being said, I am currently offering free Smart Contract audits.
+                Please visit{&quot; &quot;}
+                &lt;Link
+                    className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                    href=&quot;/audits&quot;
+                &gt;
+                    Audits
+                &lt;/Link&gt;{&quot; &quot;}
+                for more details.
+            &lt;/div&gt;
         &lt;/div&gt;
     );
 }

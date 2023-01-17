@@ -1,6 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { HeaderCode } from "../CodeSnippets";
+import { HeaderCode, IndexCode } from "../../constants/CodeSnippets";
 
 export type CodeOverlay = "header" | "index" | null;
 
@@ -45,9 +45,21 @@ export default function CodeOverlayProvider({
         //not sure how to do this just yet
     }
 
-    function generateCode() {
-        if (codeOverlay === "header") {
+    function determineCode() {
+        let codeText: string = "";
+
+        switch (codeOverlay) {
+            case "header": {
+                codeText = HeaderCode;
+                break;
+            }
+            case "index": {
+                codeText = IndexCode;
+                break;
+            }
         }
+
+        return <div dangerouslySetInnerHTML={{ __html: codeText }} />;
     }
 
     return (
@@ -83,11 +95,7 @@ export default function CodeOverlayProvider({
                                 </button>
                             </div>
                             <div className="mt-3 overflow-scroll p-4 rounded-md shadow-2xl bg-dp-back dark:bg-dt-back">
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: HeaderCode,
-                                    }}
-                                />
+                                {determineCode()}
                             </div>
                         </div>
                     </div>

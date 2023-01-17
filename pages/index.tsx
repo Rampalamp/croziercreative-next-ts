@@ -38,7 +38,7 @@ export default function Home() {
                 <span className="font-extrabold text-xl ">
                     My name is Matthew, thats my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
-                    <ShowCodeButton codeToShow={""} className="inline" /> to
+                    <ShowCodeButton codeToShow="index" className="inline" /> to
                     view the component source code, or visit my{" "}
                     <a
                         className="underline hover:text-dp-back hover:dark:text-ls-fore"
