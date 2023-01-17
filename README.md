@@ -13,9 +13,10 @@
     1. Sort out which smart contract interactions to tap into.
 5. COMPONENTS
 
-    1. Finish up CodeOverlayProvider. Code content is properly contained now, and gets applied styles through a script provided by google https://github.com/googlearchive/code-prettify. Need to now do the same and setup how to choose which code is shown depending which instance of code button is clicked. Figure out how to make copy text function work.
+    1. CodeOverlayProvider I believe is finished, for now at least until I think some stylings are ugly.
     2. Do I want different colors for the code.svg when toggling light/dark theme? Might be able to achieve this relatively painlessly if use ThemeContext inside the ShowCode.tsx component.
     3. For Header.tsx consider how tailwindcss has their header setup. transparent with a blur, and it takes the background of the underlying. Gets a deeper shade as soon as a scroll occurs.?
+    4. Create new generic CCButton that holds the main styling. The same styling is repeated any time a button is made except for ShowCodeButton, but this can also utilize the CCButton generic component when created.
 
 6. SCRIPTS
-    1. Make CreateCodeSnippets.ts more dynamic so that it makes the constants name unqiue depending which .md is being processed. Likely need to make a key/value mapping then just for each through it. Make the constant names the Key, and build out one giant string to write to the file in the loop and do one write after the loop is finished.
+    1. CreateCodeSnippets is good to go I think.
