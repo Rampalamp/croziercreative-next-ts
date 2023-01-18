@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
             <CodeOverlayProvider>
                 {/**Old gradient background setup: bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back */}
-                <div className="overflow-auto flex flex-col w-screen h-screen min-w-[380px] bg-image bg-center bg-cover bg-ls-fore dark:bg-dp-back text-lp-fore dark:text-dp-fore">
+                <div className="overflow-auto flex flex-col w-screen h-screen min-w-[380px] bg-light dark:bg-dark bg-center bg-cover bg-ls-fore dark:bg-ds-back text-lp-fore dark:text-dp-fore">
                     {/**Header Section */}
                     <ThemeProvider>
                         <Header />

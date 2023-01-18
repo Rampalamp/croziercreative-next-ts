@@ -23,7 +23,7 @@ export default function Home() {
                     </div>
                     <div className="col-span-1 m-auto">
                         <Image
-                            className="rounded-full  w-auto h-auto"
+                            className="rounded-full w-auto h-auto"
                             src="/zuko.png"
                             width={250}
                             height={250}
@@ -36,7 +36,7 @@ export default function Home() {
             <br />
             <div>
                 <span className="font-extrabold text-xl ">
-                    My name is Matthew, thats my dog Zuko, and this is my
+                    My name is Matthew, that's my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
                     <ShowCodeButton codeToShow="index" className="inline" /> to
                     view the component source code, or visit my{" "}

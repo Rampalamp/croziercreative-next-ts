@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { HeaderCode, IndexCode } from "../../constants/CodeSnippets";
 import CCButton from "../CCButton";

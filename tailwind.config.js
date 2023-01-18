@@ -31,22 +31,24 @@ module.exports = {
             //light primary background amber-100
             "lp-back": "#fef3c7",
             //light primary foreground amber-700
-            "lp-fore": "#b45309",
+            "lp-fore": "#92400e",
             //light secondary background orange-500
             "ls-back": "#f97316",
-            //light secondary foreground orange-100
-            "ls-fore": "#ffedd5",
+            //light secondary foreground orange-50
+            "ls-fore": "#fff7ed",
             //light tertiary background rose-100
             "lt-back": "#ffe4e6",
-            //light tertiary foreground rose-700
-            "lt-fore": "#be123c",
+            //light tertiary foreground rose-800
+            "lt-fore": "#9f1239",
             //light button hover stone-500
             "lbtn-hov": "#78716c",
         },
         extend: {
             backgroundImage: {
-                //grabbed from https://tailwindcss.com/_next/static/media/docs-dark@30.1a9f8cbf.avif
-                image: "url('/backimg.avif')",
+                //OG grabbed from https://tailwindcss.com/_next/static/media/docs-dark@30.1a9f8cbf.avif
+                //modified with GIMP for both dark/light
+                dark: "url('/back-dark.avif')",
+                light: "url('/back-light.avif')",
             },
         },
     },
