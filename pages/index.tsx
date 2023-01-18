@@ -7,7 +7,7 @@ export default function Home() {
         <div className="mt-5 sm:mt-0 text-center items-center ">
             <div>
                 <div className="grid grid-cols-2 p-3">
-                    <div className="text-left col-span-1 skew-y-12 m-auto">
+                    <div className="text-left skew-y-12 m-auto">
                         {/**make-transparent is not a tailwind class, it is my work around, exists in globals.css */}
                         <span className="make-transparent text-6xl sm:text-8xl lg:text-9xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore">
                             Hey.
@@ -21,7 +21,7 @@ export default function Home() {
                             Hi there.
                         </span>
                     </div>
-                    <div className="col-span-1 m-auto">
+                    <div className="m-auto">
                         <Image
                             className="rounded-full w-auto h-auto"
                             src="/zuko.png"
@@ -52,16 +52,16 @@ export default function Home() {
                 </span>
                 <br />
                 <br />I am a full stack software engineer with a passion for
-                building scalable and efficient applications, please navigate to{" "}
+                building scalable and efficient applications, please see{" "}
                 <Link
                     className="underline hover:text-dp-back hover:dark:text-ls-fore"
                     href="/skills"
                 >
                     Skills
                 </Link>{" "}
-                for my specific experience. With a strong foundation in software
-                engineering and a desire to constantly learn and improve, I have
-                set my phasers to 'love me'
+                for more specific experience. With a strong foundation in
+                software engineering and a desire to constantly learn and
+                improve, I have set my phasers to 'love me'
                 <span className="italic"> as well as </span>
                 blockchain development / technologies. Feel free to connect and
                 play around in the{" "}

@@ -10,12 +10,14 @@ export default function CCButton({
     className,
     onClick,
     children,
+    title,
 }: ICCButtonProps) {
     return (
         <div className={className}>
             <button
+                title={title}
                 onClick={onClick}
-                className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
+                className="rounded-md shadow-md hover:dark:shadow-cust-hover p-3 bg-ls-back dark:bg-dt-back hover:shadow-lt-fore hover:dark:shadow-dt-fore"
             >
                 {children}
             </button>

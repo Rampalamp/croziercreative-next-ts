@@ -5,8 +5,8 @@
     2. Seems to respond in size well enough
     3. Now skewed
 2. SKILLS
-    1. Create cloud of svgs with a grid maybe?
-    2. Do something with the text blerb.
+    1. Skills SVG cloud created
+    2. Create a SkillsProvider and have it display text when clicking on each SVG?
 3. AUDITS
     1. Message for Audits (hopefully one day it will actually contain links or content of completed audits)
 4. DAPP

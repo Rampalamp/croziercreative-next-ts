@@ -26,8 +26,6 @@ module.exports = {
             "dt-back": "#1c1917",
             //dark tertiary foreground violet-300
             "dt-fore": "#c4b5fd",
-            //dark button hover slate-50
-            "dbtn-hov": "#f8fafc",
             //light primary background amber-100
             "lp-back": "#fef3c7",
             //light primary foreground amber-700
@@ -40,8 +38,6 @@ module.exports = {
             "lt-back": "#ffe4e6",
             //light tertiary foreground rose-800
             "lt-fore": "#9f1239",
-            //light button hover stone-500
-            "lbtn-hov": "#78716c",
         },
         extend: {
             backgroundImage: {
@@ -49,6 +45,10 @@ module.exports = {
                 //modified with GIMP for both dark/light
                 dark: "url('/back-dark.avif')",
                 light: "url('/back-light.avif')",
+            },
+            boxShadow: {
+                cust: "3px 5px 2px rgba(0, 0, 0, / 0)",
+                "dark-hover": "3px 5px 2px rgb(153 204 255 / 0.4)",
             },
         },
     },

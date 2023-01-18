@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/********** GENERIC **********/
 /*
 Tailwinds text/opacity classes are acting strange when setting the text color 
 closer to the root of the document. using below to go transparent.
@@ -10,7 +11,7 @@ closer to the root of the document. using below to go transparent.
     color: transparent;
 }
 
-/* MENU */
+/********** MENU ICON **********/
 .hamburger {
     width: 20px;
     height: 20px;
@@ -43,26 +44,40 @@ closer to the root of the document. using below to go transparent.
     transform: rotate(-45deg);
 }
 
-/* SKILL CLOUD CSS */
-.skillSize {
+/********** SKILL CLOUD CSS **********/
+.skill {
     width: 50px;
     height: 50px;
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
 }
-.skillSlow {
+.skill:hover {
+    filter: drop-shadow(3px 5px 2px rgb(159 18 57 / 0.4));
+}
+
+.dark .skill:hover {
+    filter: drop-shadow(3px 5px 2px rgb(196 181 253 / 0.4));
+}
+
+.myOrbit:hover {
+    animation-play-state: paused;
+}
+
+.speedSlow {
     -webkit-animation: myOrbit 5s linear infinite; /* Chrome, Safari 5 */
     -moz-animation: myOrbit 5s linear infinite; /* Firefox 5-15 */
     -o-animation: myOrbit 5s linear infinite; /* Opera 12+ */
     animation: myOrbit 5s linear infinite; /* Chrome, Firefox 16+, 
                                                       IE 10+, Safari 5 */
 }
-.skillMedium {
+
+.speedMedium {
     -webkit-animation: myOrbit 4s linear infinite;
     -moz-animation: myOrbit 4s linear infinite;
     -o-animation: myOrbit 4s linear infinite;
     animation: myOrbit 4s linear infinite;
 }
 
-.skillFast {
+.speedFast {
     -webkit-animation: myOrbit 3s linear infinite;
     -moz-animation: myOrbit 3s linear infinite;
     -o-animation: myOrbit 3s linear infinite;
@@ -108,7 +123,7 @@ closer to the root of the document. using below to go transparent.
     }
 }
 
-/* CODE OVERLAY STYLES */
+/********** CODE OVERLAY STYLES **********/
 /* desert scheme ported from vim to google prettify, with a few color changes by Rampalamp*/
 pre .str {
     color: #ffa0a0;

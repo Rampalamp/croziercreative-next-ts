@@ -23,7 +23,7 @@ export default function ShowCodeButton({
         toggleOverlay();
     }
     return (
-        <CCButton className={className} onClick={showCode}>
+        <CCButton className={className} onClick={showCode} title="ShowCode">
             <Image src="/code.svg" width={20} height={20} alt="Code svg" />
         </CCButton>
     );

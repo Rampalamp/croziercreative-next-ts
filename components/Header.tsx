@@ -14,16 +14,24 @@ function NavOptions() {
     return (
         <>
             <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/">Home</Link>
+                <Link href="/" title="Home">
+                    Home
+                </Link>
             </li>
             <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/skills">Skills</Link>
+                <Link href="/skills" title="Skills">
+                    Skills
+                </Link>
             </li>
             <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/dapp">dApp</Link>
+                <Link href="/dapp" title="dApp">
+                    dApp
+                </Link>
             </li>
             <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/audits">Audits</Link>
+                <Link href="/audits" title="Audits">
+                    Audits
+                </Link>
             </li>
         </>
     );
@@ -72,10 +80,14 @@ export default function Header() {
             <nav className=" backdrop-blur flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
                 <div className="flex grow items-center mr-4">
                     <span className="font-extrabold text-xl hidden sm:block">
-                        <Link href="/">CrozierCreative</Link>
+                        <Link href="/" title="CrozierCreative">
+                            CrozierCreative
+                        </Link>
                     </span>
                     <span className="font-extrabold text-3xl block sm:hidden">
-                        <Link href="/">CC</Link>
+                        <Link href="/" title="CrozierCreative">
+                            CC
+                        </Link>
                     </span>
                     <div className="flex  ml-3 space-x-2 min-h-fit min-w-fit">
                         <a
@@ -89,6 +101,7 @@ export default function Header() {
                                 alt="LinkedIn URL"
                                 width={20}
                                 height={20}
+                                title="LinkedIn."
                             />
                         </a>
                         <a
@@ -102,6 +115,7 @@ export default function Header() {
                                 alt="GitHub URL"
                                 width={20}
                                 height={20}
+                                title="GitHub"
                             />
                         </a>
                     </div>
@@ -118,7 +132,7 @@ export default function Header() {
 
                 <div className="flex space-x-3">
                     <div className="min-h-fit min-w-fit sm:hidden">
-                        <CCButton onClick={toggleSideNav}>
+                        <CCButton onClick={toggleSideNav} title="Menu">
                             {/* <Image
                                 ref={menuSvg}
                                 src="/test.svg"
@@ -130,7 +144,7 @@ export default function Header() {
                         </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">
-                        <CCButton onClick={toggleTheme}>
+                        <CCButton onClick={toggleTheme} title="ThemeToggle">
                             <Image
                                 ref={themeToggleSvg}
                                 src="/sun.svg"
