@@ -1,6 +1,0 @@
-
-<svg fill="#86efac" height="24" viewBox="0 0 24 24" width="24" class="hamburger" id="burg" xmlns="http://www.w3.org/2000/svg">
-    <line x1="0" y1="50%" x2="100%" y2="50%" class="hamburger__bar hamburger__bar--top" />
-    <line x1="0" y1="50%" x2="100%" y2="50%" class="hamburger__bar hamburger__bar--mid" />
-    <line x1="0" y1="50%" x2="100%" y2="50%" class="hamburger__bar hamburger__bar--bot" />
-  </svg>
