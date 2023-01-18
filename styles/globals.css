@@ -10,6 +10,7 @@ closer to the root of the document. using below to go transparent.
     color: transparent;
 }
 
+/* MENU */
 .hamburger {
     width: 20px;
     height: 20px;
@@ -40,6 +41,71 @@ closer to the root of the document. using below to go transparent.
 
 .is-opened .hamburger__bar--bot {
     transform: rotate(-45deg);
+}
+
+/* SKILL CLOUD CSS */
+.skillSize {
+    width: 50px;
+    height: 50px;
+}
+.skillSlow {
+    -webkit-animation: myOrbit 5s linear infinite; /* Chrome, Safari 5 */
+    -moz-animation: myOrbit 5s linear infinite; /* Firefox 5-15 */
+    -o-animation: myOrbit 5s linear infinite; /* Opera 12+ */
+    animation: myOrbit 5s linear infinite; /* Chrome, Firefox 16+, 
+                                                      IE 10+, Safari 5 */
+}
+.skillMedium {
+    -webkit-animation: myOrbit 4s linear infinite;
+    -moz-animation: myOrbit 4s linear infinite;
+    -o-animation: myOrbit 4s linear infinite;
+    animation: myOrbit 4s linear infinite;
+}
+
+.skillFast {
+    -webkit-animation: myOrbit 3s linear infinite;
+    -moz-animation: myOrbit 3s linear infinite;
+    -o-animation: myOrbit 3s linear infinite;
+    animation: myOrbit 3s linear infinite;
+}
+/*
+ * Set up the keyframes to actually describe the begining and end states of 
+ * the animation.
+ */
+@-webkit-keyframes myOrbit {
+    from {
+        -webkit-transform: rotate(0deg) translateX(10px) rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg) translateX(10px) rotate(-360deg);
+    }
+}
+
+@-moz-keyframes myOrbit {
+    from {
+        -moz-transform: rotate(0deg) translateX(5px) rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg) translateX(5px) rotate(-360deg);
+    }
+}
+
+@-o-keyframes myOrbit {
+    from {
+        -o-transform: rotate(0deg) translateX(5px) rotate(0deg);
+    }
+    to {
+        -o-transform: rotate(360deg) translateX(5px) rotate(-360deg);
+    }
+}
+
+@keyframes myOrbit {
+    from {
+        transform: rotate(0deg) translateX(5px) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(5px) rotate(-360deg);
+    }
 }
 
 /* CODE OVERLAY STYLES */

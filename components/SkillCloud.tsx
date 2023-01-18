@@ -1,20 +1,40 @@
+import { HardHat, Solidity, Ethereum } from "../constants/Svgs";
+import ShowCodeButton from "./ShowCodeButton";
+
 //1. Create a grid large enough to scatter skill SVGs
 //2. Add on hover animation/transition
 //3. on click give some sort of information about experience.
 export default function SkillCloud() {
     return (
-        <div className="flex items-center justify-center">
-            <svg viewBox="0 0 100 100">
-                <circle
-                    id="circle"
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="none"
-                    stroke="black"
-                />
-            </svg>
-            <div id="square" className="bg-dp-fore"></div>
+        <div className="grid grid-cols-3 grid-rows-3">
+            {/* Supposedly applying padding to the any grid element applies it to all */}
+            <div className="col-span-1 row-span-1 m-auto p-5 myOrbit skillFast">
+                <HardHat />
+            </div>
+            <div className="col-span-1 row-span-1 m-auto myOrbit skillSlow">
+                <Solidity />
+            </div>
+            <div className="col-span-1 row-span-1  m-auto myOrbit skillMedium">
+                <Ethereum />
+            </div>
+            <div className="col-span-1 row-span-1  m-auto myOrbit skillSlow">
+                <Ethereum />
+            </div>
+            <div className="col-span-1 row-span-1  m-auto myOrbit skillFast">
+                <ShowCodeButton codeToShow="skillcloud" />
+            </div>
+            <div className="col-span-1 row-span-1 m-auto p-5 myOrbit skillFast">
+                <HardHat />
+            </div>
+            <div className="col-span-1 row-span-1 m-auto myOrbit skillSlow">
+                <Solidity />
+            </div>
+            <div className="col-span-1 row-span-1  m-auto myOrbit skillMedium">
+                <Ethereum />
+            </div>
+            <div className="col-span-1 row-span-1  m-auto myOrbit skillSlow">
+                <Ethereum />
+            </div>
         </div>
     );
 }
