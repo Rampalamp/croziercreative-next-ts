@@ -24,6 +24,7 @@ export default function CodeOverlayProvider({
 }: ICodeOverlayProviderProps) {
     const [codeOverlay, setCodeOverlay] = useState<CodeOverlay>(null);
     const [codeText, setCodeText] = useState<string>("");
+    const [copyModalText, setCopyModalText] = useState<string>("");
     const [copied, setCopied] = useState(false);
     const overlayDiv = useRef<HTMLDivElement>(null);
     const codeDiv = useRef<HTMLDivElement>(null);
@@ -59,8 +60,14 @@ export default function CodeOverlayProvider({
     }
 
     function copyCode() {
-        navigator.clipboard.writeText(codeDiv.current!.textContent!);
-        setCopied(true);
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(codeDiv.current!.textContent!);
+            setCopyModalText("Code Copied!");
+            setCopied(true);
+        } else {
+            setCopyModalText("Error!");
+            setCopied(true);
+        }
     }
 
     return (
@@ -80,8 +87,8 @@ export default function CodeOverlayProvider({
                                 }`}
                                 onTransitionEnd={() => setCopied(false)}
                             >
-                                <span className="font-bold text-ls-fore  dark:text-dp-fore">
-                                    Code Copied!
+                                <span className="font-bold text-lt-fore  dark:text-dp-fore">
+                                    {copyModalText}
                                 </span>
                             </div>
 
