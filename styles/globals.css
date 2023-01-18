@@ -9,6 +9,40 @@ closer to the root of the document. using below to go transparent.
 .make-transparent {
     color: transparent;
 }
+
+.hamburger {
+    width: 20px;
+    height: 20px;
+}
+
+.hamburger__bar {
+    transition-property: transform;
+    transition-duration: 0.3s;
+    transform-origin: center;
+    stroke-width: 10%;
+}
+
+.hamburger__bar--top {
+    transform: translateY(-40%);
+}
+
+.hamburger__bar--bot {
+    transform: translateY(40%);
+}
+
+.is-opened .hamburger__bar--top {
+    transform: rotate(45deg);
+}
+
+.is-opened .hamburger__bar--mid {
+    transform: scaleX(0.1);
+}
+
+.is-opened .hamburger__bar--bot {
+    transform: rotate(-45deg);
+}
+
+/* CODE OVERLAY STYLES */
 /* desert scheme ported from vim to google prettify, with a few color changes by Rampalamp*/
 pre .str {
     color: #ffa0a0;

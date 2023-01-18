@@ -4,8 +4,11 @@ import { useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
 import ShowCodeButton from "./ShowCodeButton";
 import CCButton from "./CCButton";
+import CCMenuIcon from "./CCMenuIcon";
 
 let rootDiv: HTMLElement | null;
+//attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
+let menuSvg: HTMLElement | null;
 
 function NavOptions() {
     return (
@@ -32,12 +35,14 @@ export default function Header() {
     const gitSvg = useRef<HTMLImageElement>(null);
     const linkedSvg = useRef<HTMLImageElement>(null);
     const themeToggleSvg = useRef<HTMLImageElement>(null);
-    const menuSvg = useRef<HTMLImageElement>(null);
     const sideNav = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         rootDiv === undefined
             ? (rootDiv = document.getElementById("rootDiv"))
+            : {};
+        menuSvg === undefined
+            ? (menuSvg = document.getElementById("burg"))
             : {};
 
         //adjust element attributes accordingly.
@@ -45,13 +50,11 @@ export default function Header() {
             rootDiv!.classList.add("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin-dark.svg");
             gitSvg.current!.setAttribute("src", "/github-dark.svg");
-            menuSvg.current!.setAttribute("src", "menu-dark.svg");
             themeToggleSvg.current!.setAttribute("src", "/sun.svg");
         } else {
             rootDiv!.classList.remove("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin.svg");
             gitSvg.current!.setAttribute("src", "/github.svg");
-            menuSvg.current!.setAttribute("src", "menu.svg");
             themeToggleSvg.current!.setAttribute("src", "/moon.svg");
         }
     }, [theme]);
@@ -60,6 +63,8 @@ export default function Header() {
         //for some strange reason toggling for left-0 wasn't working
         //toggling -left-36 did work though, not sure why its acting like this.
         sideNav.current!.classList.toggle("-left-36");
+        //animate the menuSvg on open.
+        menuSvg!.classList.toggle("is-opened");
     }
 
     return (
@@ -114,13 +119,14 @@ export default function Header() {
                 <div className="flex space-x-3">
                     <div className="min-h-fit min-w-fit sm:hidden">
                         <CCButton onClick={toggleSideNav}>
-                            <Image
+                            {/* <Image
                                 ref={menuSvg}
-                                src="/menu-dark.svg"
+                                src="/test.svg"
                                 alt="Menu drop down"
                                 width={20}
                                 height={20}
-                            />
+                            /> */}
+                            <CCMenuIcon theme={theme} />
                         </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">

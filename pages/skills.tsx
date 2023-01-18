@@ -1,8 +1,9 @@
+import SkillCloud from "../components/SkillCloud";
+
 export default function Skills() {
     return (
-        <>
+        <div className="flex flex-col">
             <div>
-                <br />
                 <p>
                     I have experience working with a variety of technologies
                     including C#, JavaScript/TypeScript, SQL, GraphQL, and
@@ -15,6 +16,9 @@ export default function Skills() {
                     technical and non-technical stakeholders.
                 </p>
             </div>
-        </>
+            <div>
+                <SkillCloud />
+            </div>
+        </div>
     );
 }
