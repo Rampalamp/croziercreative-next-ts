@@ -8,31 +8,31 @@ export default function SkillCloud() {
     return (
         <div className="grid grid-cols-3 grid-rows-3">
             {/* Supposedly applying padding to the any grid element applies it to all */}
-            <div className="col-span-1 row-span-1 m-auto p-5 myOrbit skillFast">
+            <div className="m-auto p-5 myOrbit skillFast">
                 <HardHat />
             </div>
-            <div className="col-span-1 row-span-1 m-auto myOrbit skillSlow">
+            <div className="m-auto myOrbit skillSlow">
                 <Solidity />
             </div>
-            <div className="col-span-1 row-span-1  m-auto myOrbit skillMedium">
+            <div className=" m-auto myOrbit skillMedium">
                 <Ethereum />
             </div>
-            <div className="col-span-1 row-span-1  m-auto myOrbit skillSlow">
+            <div className=" m-auto myOrbit skillSlow">
                 <Ethereum />
             </div>
-            <div className="col-span-1 row-span-1  m-auto myOrbit skillFast">
+            <div className="  m-auto myOrbit skillFast">
                 <ShowCodeButton codeToShow="skillcloud" />
             </div>
-            <div className="col-span-1 row-span-1 m-auto p-5 myOrbit skillFast">
+            <div className=" m-auto p-5 myOrbit skillFast">
                 <HardHat />
             </div>
-            <div className="col-span-1 row-span-1 m-auto myOrbit skillSlow">
+            <div className=" m-auto myOrbit skillSlow">
                 <Solidity />
             </div>
-            <div className="col-span-1 row-span-1  m-auto myOrbit skillMedium">
+            <div className=" m-auto myOrbit skillMedium">
                 <Ethereum />
             </div>
-            <div className="col-span-1 row-span-1  m-auto myOrbit skillSlow">
+            <div className=" m-auto myOrbit skillSlow">
                 <Ethereum />
             </div>
         </div>
