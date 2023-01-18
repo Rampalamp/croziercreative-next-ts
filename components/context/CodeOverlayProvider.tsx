@@ -72,7 +72,7 @@ export default function CodeOverlayProvider({
                     ref={overlayDiv}
                     className="absolute z-50 h-screen w-screen items-center justify-center backdrop-blur-md hidden"
                 >
-                    <div className="flex flex-col h-screen min-w-[380px] p-3 sm:py-24 sm:px-28 xl:px-52 2xl:py-24 2xl:px-80">
+                    <div className="flex flex-col h-screen min-w-[380px] p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
                         <div className="flex space-x-3 justify-end">
                             <div
                                 className={`rounded-md shadow-lg p-3 bg-opacity-90 dark:bg-opacity-90 bg-ls-back dark:bg-dt-back transition-all duration-[1500ms] ease-out	 ${
