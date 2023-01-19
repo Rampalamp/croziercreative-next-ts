@@ -1,3 +1,4 @@
+```typescript
 import ShowCodeButton from "../components/ShowCodeButton";
 
 export default function Audits() {
@@ -15,19 +16,19 @@ export default function Audits() {
             >
                 leaderboard
             </a>
-            ). Audits help ensure that the smart contract is secure and
-            functions as intended, protecting the assets and interests of all
-            parties involved. Additionally, Audits give credibility to the
-            project and increase the trust of the users and investors, which is
-            vital in such a new and rapidly evolving field.
+            ). Audits help ensure that the smart contract is secure and functions
+            as intended, protecting the assets and interests of all parties involved.
+            Additionally, Audits give credibility to the project and increase the
+            trust of the users and investors, which is vital in such a new and rapidly
+            evolving field.
             <br />
             <br />I am interested in gaining experience in this sector, and I am
-            at the point where I simply must start reading past audits or
-            performing new audits. With that being said, CrozierCreative is
-            offering free smart contract audits! Now, it is generally good
-            practice to obtain multiple audits of your project before deploying
-            to a live chain, but since I am also new to this sector, I would
-            reccommend you do not count my audits (yet, at least) as reputable.
+            at the point where I simply must start reading past audits or performing
+            new audits. With that being said, CrozierCreative is offering free smart
+            contract audits! Now, it is generally good practice to obtain multiple
+            audits of your project before deploying to a live chain, but since I
+            am also new to this sector, I would reccommend you do not count my audits
+            (yet, at least) as reputable.
             <br />
             <br />
             If you are interested, please send a message to{" "}
@@ -48,3 +49,4 @@ export default function Audits() {
         </div>
     );
 }
+```

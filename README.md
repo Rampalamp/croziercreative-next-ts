@@ -6,9 +6,10 @@
     3. Now skewed
 2. SKILLS
     1. Skills SVG cloud created
-    2. Create a SkillsProvider and have it display text when clicking on each SVG? Add a brief description and then just a links to various github projects that use the tech.
+    2. SkillsProvider created.
 3. AUDITS
-    1. Message for Audits (hopefully one day it will actually contain links or content of completed audits)
+    1. General content complete, for now.
+    2. Links setup
 4. DAPP
     1. Sort out which smart contract interactions to tap into.
 5. COMPONENTS
@@ -17,6 +18,7 @@
     2. Do I want different colors for the code.svg when toggling light/dark theme? Might be able to achieve this relatively painlessly if use ThemeContext inside the ShowCode.tsx component.
     3. For Header.tsx consider how tailwindcss has their header setup. transparent with a blur, and it takes the background of the underlying. Gets a deeper shade as soon as a scroll occurs.?
     4. CCButton created and implemented.
+    5. CCMenuIcon.tsx created, SVG animates when Menu is open/closed.
 
 6. SCRIPTS
     1. CreateCodeSnippets is good to go I think.

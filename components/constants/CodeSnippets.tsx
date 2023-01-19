@@ -349,3 +349,55 @@ export default function SkillCloud() {
 }
 </code></pre>
 `;
+export const AuditsCode: string = `<pre><code class="prettyprint language-typescript">import ShowCodeButton from &quot;../components/ShowCodeButton&quot;;
+
+export default function Audits() {
+    return (
+        &lt;div className=&quot;text-center&quot;&gt;
+            Smart contracts are open for the world to see, and can be called by
+            anyone, or even other smart contracts. They often handle large
+            amounts of value, and a security breach can have severe consequences
+            (check out the running{&quot; &quot;}
+            &lt;a
+                className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                target=&quot;_blank&quot;
+                href=&quot;https://rekt.news/leaderboard/&quot;
+                rel=&quot;noopener noreferrer&quot;
+            &gt;
+                leaderboard
+            &lt;/a&gt;
+            ). Audits help ensure that the smart contract is secure and functions
+            as intended, protecting the assets and interests of all parties involved.
+            Additionally, Audits give credibility to the project and increase the
+            trust of the users and investors, which is vital in such a new and rapidly
+            evolving field.
+            &lt;br /&gt;
+            &lt;br /&gt;I am interested in gaining experience in this sector, and I am
+            at the point where I simply must start reading past audits or performing
+            new audits. With that being said, CrozierCreative is offering free smart
+            contract audits! Now, it is generally good practice to obtain multiple
+            audits of your project before deploying to a live chain, but since I
+            am also new to this sector, I would reccommend you do not count my audits
+            (yet, at least) as reputable.
+            &lt;br /&gt;
+            &lt;br /&gt;
+            If you are interested, please send a message to{&quot; &quot;}
+            &lt;a
+                className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                href=&quot;mailto:croziercreative@gmail.com?subject = Smart Contract Audit&quot;
+            &gt;
+                &lt;span className=&quot;italic&quot;&gt;croziercreative@gmail.com&lt;/span&gt;
+            &lt;/a&gt;{&quot; &quot;}
+            and we can get in touch. As you can probably guess, a proper audit
+            requires back and forth between the developer and auditor. It is
+            paramount that I understand exactly what you want your code to do to
+            perform a proper audit. Depending the size of the project I may also
+            request unit tests be written, if they weren&#39;t already.
+            &lt;br /&gt;
+            &lt;br /&gt;
+            &lt;ShowCodeButton codeToShow=&quot;audits&quot; /&gt;
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+`;

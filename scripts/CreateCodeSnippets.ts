@@ -6,6 +6,7 @@ const mdFiles: { [key: string]: string } = {
     IndexCode: "./public/markdown/index.md",
     SkillsCode: "./public/markdown/skills.md",
     SkillCloudCode: "./public/markdown/skillcloud.md",
+    AuditsCode: "./public/markdown/audits.md",
 };
 
 async function CreateCodeSnippetFile() {

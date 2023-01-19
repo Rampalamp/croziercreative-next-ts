@@ -5,10 +5,17 @@ import {
     IndexCode,
     SkillsCode,
     SkillCloudCode,
+    AuditsCode,
 } from "../constants/CodeSnippets";
 import CCButton from "../CCButton";
 
-export type CodeOverlay = "header" | "index" | "skills" | "skillcloud" | null;
+export type CodeOverlay =
+    | "header"
+    | "index"
+    | "skills"
+    | "skillcloud"
+    | "audits"
+    | null;
 
 type CodeOverlayContext = {
     codeOverlay: CodeOverlay;
@@ -51,6 +58,10 @@ export default function CodeOverlayProvider({
             }
             case "skillcloud": {
                 setCodeText(SkillCloudCode);
+                break;
+            }
+            case "audits": {
+                setCodeText(AuditsCode);
                 break;
             }
         }
