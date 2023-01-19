@@ -1,3 +1,4 @@
+```typescript
 import SkillCloud from "../components/SkillCloud";
 import SkillsProvider from "../components/context/SkillsProvider";
 import ShowCodeButton from "../components/ShowCodeButton";
@@ -23,3 +24,4 @@ export default function Skills() {
         </div>
     );
 }
+```

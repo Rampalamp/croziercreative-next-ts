@@ -5,37 +5,11 @@ import { ThemeContext } from "./context/ThemeProvider";
 import ShowCodeButton from "./ShowCodeButton";
 import CCButton from "./CCButton";
 import CCMenuIcon from "./CCMenuIcon";
+import { NavOptions } from "./constants/Generics";
 
 let rootDiv: HTMLElement | null;
 //attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
 let menuSvg: HTMLElement | null;
-
-function NavOptions() {
-    return (
-        <>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/" title="Home">
-                    Home
-                </Link>
-            </li>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/skills" title="Skills">
-                    Skills
-                </Link>
-            </li>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/dapp" title="dApp">
-                    dApp
-                </Link>
-            </li>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/audits" title="Audits">
-                    Audits
-                </Link>
-            </li>
-        </>
-    );
-}
 
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);

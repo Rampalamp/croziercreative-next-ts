@@ -1,9 +1,14 @@
 import { createContext, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { HeaderCode, IndexCode } from "../../constants/CodeSnippets";
+import {
+    HeaderCode,
+    IndexCode,
+    SkillsCode,
+    SkillCloudCode,
+} from "../constants/CodeSnippets";
 import CCButton from "../CCButton";
 
-export type CodeOverlay = "header" | "index" | null;
+export type CodeOverlay = "header" | "index" | "skills" | "skillcloud" | null;
 
 type CodeOverlayContext = {
     codeOverlay: CodeOverlay;
@@ -38,6 +43,14 @@ export default function CodeOverlayProvider({
             }
             case "index": {
                 setCodeText(IndexCode);
+                break;
+            }
+            case "skills": {
+                setCodeText(SkillsCode);
+                break;
+            }
+            case "skillcloud": {
+                setCodeText(SkillCloudCode);
                 break;
             }
         }
@@ -120,9 +133,8 @@ export default function CodeOverlayProvider({
                         </div>
                     </div>
                 </div>
-
-                {children}
             </div>
+            {children}
         </CodeOverlayContext.Provider>
     );
 }

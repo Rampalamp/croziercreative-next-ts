@@ -4,6 +4,8 @@ import { marked } from "marked";
 const mdFiles: { [key: string]: string } = {
     HeaderCode: "./public/markdown/header.md",
     IndexCode: "./public/markdown/index.md",
+    SkillsCode: "./public/markdown/skills.md",
+    SkillCloudCode: "./public/markdown/skillcloud.md",
 };
 
 async function CreateCodeSnippetFile() {
@@ -37,7 +39,7 @@ async function CreateCodeSnippetFile() {
     //     "./components/CodeSnippets.tsx",
     //     `export const HeaderCode = \`${finalContent}\`;`
     // );
-    fs.writeFileSync("./constants/CodeSnippets.tsx", fileContent);
+    fs.writeFileSync("./components/constants/CodeSnippets.tsx", fileContent);
 }
 
 CreateCodeSnippetFile()

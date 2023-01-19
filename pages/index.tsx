@@ -39,7 +39,7 @@ export default function Home() {
                     My name is Matthew, that's my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
                     <ShowCodeButton codeToShow="index" className="inline" /> to
-                    view the component source code, or visit my{" "}
+                    view some components source code, to see everything visit my{" "}
                     <a
                         className="underline hover:text-dp-back hover:dark:text-ls-fore"
                         target="_blank"
@@ -48,7 +48,7 @@ export default function Home() {
                     >
                         GitHub
                     </a>
-                    ).
+                    !).
                 </span>
                 <br />
                 <br />I am a full stack software engineer with a passion for

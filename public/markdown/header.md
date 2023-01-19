@@ -4,27 +4,13 @@ import Image from "next/image";
 import { useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "./context/ThemeProvider";
 import ShowCodeButton from "./ShowCodeButton";
+import CCButton from "./CCButton";
+import CCMenuIcon from "./CCMenuIcon";
+import { NavOptions } from "./constants/Generics";
 
 let rootDiv: HTMLElement | null;
-
-function NavOptions() {
-    return (
-        <>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/">Home</Link>
-            </li>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/skills">Skills</Link>
-            </li>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/dapp">dApp</Link>
-            </li>
-            <li className="hover:text-dp-back hover:dark:text-ls-fore">
-                <Link href="/audits">Audits</Link>
-            </li>
-        </>
-    );
-}
+//attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
+let menuSvg: HTMLElement | null;
 
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -32,12 +18,14 @@ export default function Header() {
     const gitSvg = useRef<HTMLImageElement>(null);
     const linkedSvg = useRef<HTMLImageElement>(null);
     const themeToggleSvg = useRef<HTMLImageElement>(null);
-    const menuSvg = useRef<HTMLImageElement>(null);
     const sideNav = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         rootDiv === undefined
             ? (rootDiv = document.getElementById("rootDiv"))
+            : {};
+        menuSvg === undefined
+            ? (menuSvg = document.getElementById("burg"))
             : {};
 
         //adjust element attributes accordingly.
@@ -45,13 +33,11 @@ export default function Header() {
             rootDiv!.classList.add("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin-dark.svg");
             gitSvg.current!.setAttribute("src", "/github-dark.svg");
-            menuSvg.current!.setAttribute("src", "menu-dark.svg");
             themeToggleSvg.current!.setAttribute("src", "/sun.svg");
         } else {
             rootDiv!.classList.remove("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin.svg");
             gitSvg.current!.setAttribute("src", "/github.svg");
-            menuSvg.current!.setAttribute("src", "menu.svg");
             themeToggleSvg.current!.setAttribute("src", "/moon.svg");
         }
     }, [theme]);
@@ -60,17 +46,23 @@ export default function Header() {
         //for some strange reason toggling for left-0 wasn't working
         //toggling -left-36 did work though, not sure why its acting like this.
         sideNav.current!.classList.toggle("-left-36");
+        //animate the menuSvg on open.
+        menuSvg!.classList.toggle("is-opened");
     }
 
     return (
-        <div className="bg-gradient-to-r from-lt-fore to-ls-back dark:from-dt-back dark:to-ds-back bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore">
-            <nav className="flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
+        <div className="sticky top-0 z-40 w-full text-lt-fore dark:text-ds-fore">
+            <nav className=" backdrop-blur flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl">
                 <div className="flex grow items-center mr-4">
                     <span className="font-extrabold text-xl hidden sm:block">
-                        <Link href="/">CrozierCreative</Link>
+                        <Link href="/" title="CrozierCreative">
+                            CrozierCreative
+                        </Link>
                     </span>
                     <span className="font-extrabold text-3xl block sm:hidden">
-                        <Link href="/">CC</Link>
+                        <Link href="/" title="CrozierCreative">
+                            CC
+                        </Link>
                     </span>
                     <div className="flex  ml-3 space-x-2 min-h-fit min-w-fit">
                         <a
@@ -84,6 +76,7 @@ export default function Header() {
                                 alt="LinkedIn URL"
                                 width={20}
                                 height={20}
+                                title="LinkedIn."
                             />
                         </a>
                         <a
@@ -97,14 +90,15 @@ export default function Header() {
                                 alt="GitHub URL"
                                 width={20}
                                 height={20}
+                                title="GitHub"
                             />
                         </a>
                     </div>
                 </div>
 
                 {/**Nav options for medium and up screen sizes */}
-                <div className="font-bold text-lg mr-1 md:mr-12 hidden sm:block">
-                    <ul className="flex space-x-5 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8">
+                <div className="font-bold text-lg  md:mr-12 hidden sm:block">
+                    <ul className="flex 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8 space-x-4">
                         <NavOptions />
                     </ul>
                 </div>
@@ -113,24 +107,19 @@ export default function Header() {
 
                 <div className="flex space-x-3">
                     <div className="min-h-fit min-w-fit sm:hidden">
-                        <button
-                            className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                            onClick={toggleSideNav}
-                        >
-                            <Image
+                        <CCButton onClick={toggleSideNav} title="Menu">
+                            {/* <Image
                                 ref={menuSvg}
-                                src="/menu-dark.svg"
+                                src="/test.svg"
                                 alt="Menu drop down"
                                 width={20}
                                 height={20}
-                            />
-                        </button>
+                            /> */}
+                            <CCMenuIcon theme={theme} />
+                        </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">
-                        <button
-                            className="rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back"
-                            onClick={toggleTheme}
-                        >
+                        <CCButton onClick={toggleTheme} title="ThemeToggle">
                             <Image
                                 ref={themeToggleSvg}
                                 src="/sun.svg"
@@ -138,20 +127,21 @@ export default function Header() {
                                 width={20}
                                 height={20}
                             />
-                        </button>
+                        </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">
                         <ShowCodeButton codeToShow="header" />
                     </div>
                 </div>
             </nav>
-            <nav className="relative drop-shadow-xl z-10">
+            <nav className="relative">
                 {/**Nav options for small screen format */}
+
                 <div
                     ref={sideNav}
-                    className="sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
+                    className="rounded-md backdrop-blur sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0"
                 >
-                    <ul className="rounded space-y-10 p-7   bg-gradient-to-b opacity-90 dark:opacity-90 from-ls-back to-lt-fore dark:from-ds-back dark:to-dt-back">
+                    <ul className="space-y-10 p-7">
                         <NavOptions />
                     </ul>
                 </div>

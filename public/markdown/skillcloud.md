@@ -1,3 +1,4 @@
+```typescript
 import {
     HardHat,
     Solidity,
@@ -79,3 +80,4 @@ export default function SkillCloud() {
         </div>
     );
 }
+```

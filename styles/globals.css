@@ -44,7 +44,7 @@ closer to the root of the document. using below to go transparent.
     transform: rotate(-45deg);
 }
 
-/********** SKILL CLOUD CSS **********/
+/********** SKILL CLOUD **********/
 .skill {
     width: 50px;
     height: 50px;
@@ -123,7 +123,7 @@ closer to the root of the document. using below to go transparent.
     }
 }
 
-/********** CODE OVERLAY STYLES **********/
+/********** CODE OVERLAY **********/
 /* desert scheme ported from vim to google prettify, with a few color changes by Rampalamp*/
 pre .str {
     color: #ffa0a0;

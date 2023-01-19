@@ -3,27 +3,13 @@ import Image from &quot;next/image&quot;;
 import { useEffect, useContext, useRef } from &quot;react&quot;;
 import { ThemeContext } from &quot;./context/ThemeProvider&quot;;
 import ShowCodeButton from &quot;./ShowCodeButton&quot;;
+import CCButton from &quot;./CCButton&quot;;
+import CCMenuIcon from &quot;./CCMenuIcon&quot;;
+import { NavOptions } from &quot;./constants/Generics&quot;;
 
 let rootDiv: HTMLElement | null;
-
-function NavOptions() {
-    return (
-        &lt;&gt;
-            &lt;li className=&quot;hover:text-dp-back hover:dark:text-ls-fore&quot;&gt;
-                &lt;Link href=&quot;/&quot;&gt;Home&lt;/Link&gt;
-            &lt;/li&gt;
-            &lt;li className=&quot;hover:text-dp-back hover:dark:text-ls-fore&quot;&gt;
-                &lt;Link href=&quot;/skills&quot;&gt;Skills&lt;/Link&gt;
-            &lt;/li&gt;
-            &lt;li className=&quot;hover:text-dp-back hover:dark:text-ls-fore&quot;&gt;
-                &lt;Link href=&quot;/dapp&quot;&gt;dApp&lt;/Link&gt;
-            &lt;/li&gt;
-            &lt;li className=&quot;hover:text-dp-back hover:dark:text-ls-fore&quot;&gt;
-                &lt;Link href=&quot;/audits&quot;&gt;Audits&lt;/Link&gt;
-            &lt;/li&gt;
-        &lt;/&gt;
-    );
-}
+//attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
+let menuSvg: HTMLElement | null;
 
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -31,12 +17,14 @@ export default function Header() {
     const gitSvg = useRef&lt;HTMLImageElement&gt;(null);
     const linkedSvg = useRef&lt;HTMLImageElement&gt;(null);
     const themeToggleSvg = useRef&lt;HTMLImageElement&gt;(null);
-    const menuSvg = useRef&lt;HTMLImageElement&gt;(null);
     const sideNav = useRef&lt;HTMLDivElement&gt;(null);
 
     useEffect(() =&gt; {
         rootDiv === undefined
             ? (rootDiv = document.getElementById(&quot;rootDiv&quot;))
+            : {};
+        menuSvg === undefined
+            ? (menuSvg = document.getElementById(&quot;burg&quot;))
             : {};
 
         //adjust element attributes accordingly.
@@ -44,13 +32,11 @@ export default function Header() {
             rootDiv!.classList.add(&quot;dark&quot;);
             linkedSvg.current!.setAttribute(&quot;src&quot;, &quot;/linkedin-dark.svg&quot;);
             gitSvg.current!.setAttribute(&quot;src&quot;, &quot;/github-dark.svg&quot;);
-            menuSvg.current!.setAttribute(&quot;src&quot;, &quot;menu-dark.svg&quot;);
             themeToggleSvg.current!.setAttribute(&quot;src&quot;, &quot;/sun.svg&quot;);
         } else {
             rootDiv!.classList.remove(&quot;dark&quot;);
             linkedSvg.current!.setAttribute(&quot;src&quot;, &quot;/linkedin.svg&quot;);
             gitSvg.current!.setAttribute(&quot;src&quot;, &quot;/github.svg&quot;);
-            menuSvg.current!.setAttribute(&quot;src&quot;, &quot;menu.svg&quot;);
             themeToggleSvg.current!.setAttribute(&quot;src&quot;, &quot;/moon.svg&quot;);
         }
     }, [theme]);
@@ -59,17 +45,23 @@ export default function Header() {
         //for some strange reason toggling for left-0 wasn&#39;t working
         //toggling -left-36 did work though, not sure why its acting like this.
         sideNav.current!.classList.toggle(&quot;-left-36&quot;);
+        //animate the menuSvg on open.
+        menuSvg!.classList.toggle(&quot;is-opened&quot;);
     }
 
     return (
-        &lt;div className=&quot;bg-gradient-to-r from-lt-fore to-ls-back dark:from-dt-back dark:to-ds-back bg-ls-back text-ls-fore dark:bg-ds-back dark:text-ds-fore&quot;&gt;
-            &lt;nav className=&quot;flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl&quot;&gt;
+        &lt;div className=&quot;sticky top-0 z-40 w-full text-lt-fore dark:text-ds-fore&quot;&gt;
+            &lt;nav className=&quot; backdrop-blur flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl&quot;&gt;
                 &lt;div className=&quot;flex grow items-center mr-4&quot;&gt;
                     &lt;span className=&quot;font-extrabold text-xl hidden sm:block&quot;&gt;
-                        &lt;Link href=&quot;/&quot;&gt;CrozierCreative&lt;/Link&gt;
+                        &lt;Link href=&quot;/&quot; title=&quot;CrozierCreative&quot;&gt;
+                            CrozierCreative
+                        &lt;/Link&gt;
                     &lt;/span&gt;
                     &lt;span className=&quot;font-extrabold text-3xl block sm:hidden&quot;&gt;
-                        &lt;Link href=&quot;/&quot;&gt;CC&lt;/Link&gt;
+                        &lt;Link href=&quot;/&quot; title=&quot;CrozierCreative&quot;&gt;
+                            CC
+                        &lt;/Link&gt;
                     &lt;/span&gt;
                     &lt;div className=&quot;flex  ml-3 space-x-2 min-h-fit min-w-fit&quot;&gt;
                         &lt;a
@@ -83,6 +75,7 @@ export default function Header() {
                                 alt=&quot;LinkedIn URL&quot;
                                 width={20}
                                 height={20}
+                                title=&quot;LinkedIn.&quot;
                             /&gt;
                         &lt;/a&gt;
                         &lt;a
@@ -96,14 +89,15 @@ export default function Header() {
                                 alt=&quot;GitHub URL&quot;
                                 width={20}
                                 height={20}
+                                title=&quot;GitHub&quot;
                             /&gt;
                         &lt;/a&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
 
                 {/**Nav options for medium and up screen sizes */}
-                &lt;div className=&quot;font-bold text-lg mr-1 md:mr-12 hidden sm:block&quot;&gt;
-                    &lt;ul className=&quot;flex space-x-5 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8&quot;&gt;
+                &lt;div className=&quot;font-bold text-lg  md:mr-12 hidden sm:block&quot;&gt;
+                    &lt;ul className=&quot;flex 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8 space-x-4&quot;&gt;
                         &lt;NavOptions /&gt;
                     &lt;/ul&gt;
                 &lt;/div&gt;
@@ -112,24 +106,19 @@ export default function Header() {
 
                 &lt;div className=&quot;flex space-x-3&quot;&gt;
                     &lt;div className=&quot;min-h-fit min-w-fit sm:hidden&quot;&gt;
-                        &lt;button
-                            className=&quot;rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back&quot;
-                            onClick={toggleSideNav}
-                        &gt;
-                            &lt;Image
+                        &lt;CCButton onClick={toggleSideNav} title=&quot;Menu&quot;&gt;
+                            {/* &lt;Image
                                 ref={menuSvg}
-                                src=&quot;/menu-dark.svg&quot;
+                                src=&quot;/test.svg&quot;
                                 alt=&quot;Menu drop down&quot;
                                 width={20}
                                 height={20}
-                            /&gt;
-                        &lt;/button&gt;
+                            /&gt; */}
+                            &lt;CCMenuIcon theme={theme} /&gt;
+                        &lt;/CCButton&gt;
                     &lt;/div&gt;
                     &lt;div className=&quot;min-h-fit min-w-fit&quot;&gt;
-                        &lt;button
-                            className=&quot;rounded-md shadow-lg p-3 hover:bg-opacity-25 hover:dark:bg-opacity-25 hover:bg-lbtn-hov hover:dark:bg-dbtn-hov bg-ls-back dark:bg-dt-back&quot;
-                            onClick={toggleTheme}
-                        &gt;
+                        &lt;CCButton onClick={toggleTheme} title=&quot;ThemeToggle&quot;&gt;
                             &lt;Image
                                 ref={themeToggleSvg}
                                 src=&quot;/sun.svg&quot;
@@ -137,20 +126,21 @@ export default function Header() {
                                 width={20}
                                 height={20}
                             /&gt;
-                        &lt;/button&gt;
+                        &lt;/CCButton&gt;
                     &lt;/div&gt;
                     &lt;div className=&quot;min-h-fit min-w-fit&quot;&gt;
                         &lt;ShowCodeButton codeToShow=&quot;header&quot; /&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
             &lt;/nav&gt;
-            &lt;nav className=&quot;relative drop-shadow-xl z-10&quot;&gt;
+            &lt;nav className=&quot;relative&quot;&gt;
                 {/**Nav options for small screen format */}
+
                 &lt;div
                     ref={sideNav}
-                    className=&quot;sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0&quot;
+                    className=&quot;rounded-md backdrop-blur sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0&quot;
                 &gt;
-                    &lt;ul className=&quot;rounded space-y-10 p-7   bg-gradient-to-b opacity-90 dark:opacity-90 from-ls-back to-lt-fore dark:from-ds-back dark:to-dt-back&quot;&gt;
+                    &lt;ul className=&quot;space-y-10 p-7&quot;&gt;
                         &lt;NavOptions /&gt;
                     &lt;/ul&gt;
                 &lt;/div&gt;
@@ -169,7 +159,7 @@ export default function Home() {
         &lt;div className=&quot;mt-5 sm:mt-0 text-center items-center &quot;&gt;
             &lt;div&gt;
                 &lt;div className=&quot;grid grid-cols-2 p-3&quot;&gt;
-                    &lt;div className=&quot;text-left col-span-1 skew-y-12 m-auto&quot;&gt;
+                    &lt;div className=&quot;text-left skew-y-12 m-auto&quot;&gt;
                         {/**make-transparent is not a tailwind class, it is my work around, exists in globals.css */}
                         &lt;span className=&quot;make-transparent text-6xl sm:text-8xl lg:text-9xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore&quot;&gt;
                             Hey.
@@ -183,9 +173,9 @@ export default function Home() {
                             Hi there.
                         &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;div className=&quot;col-span-1 m-auto&quot;&gt;
+                    &lt;div className=&quot;m-auto&quot;&gt;
                         &lt;Image
-                            className=&quot;rounded-full&quot;
+                            className=&quot;rounded-full w-auto h-auto&quot;
                             src=&quot;/zuko.png&quot;
                             width={250}
                             height={250}
@@ -198,10 +188,10 @@ export default function Home() {
             &lt;br /&gt;
             &lt;div&gt;
                 &lt;span className=&quot;font-extrabold text-xl &quot;&gt;
-                    My name is Matthew, thats my dog Zuko, and this is my
+                    My name is Matthew, that&#39;s my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{&quot; &quot;}
-                    &lt;ShowCodeButton codeToShow={&quot;&quot;} className=&quot;inline&quot; /&gt; to
-                    view the component source code, or visit my{&quot; &quot;}
+                    &lt;ShowCodeButton codeToShow=&quot;index&quot; className=&quot;inline&quot; /&gt; to
+                    view some components source code, to see everything visit my{&quot; &quot;}
                     &lt;a
                         className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
                         target=&quot;_blank&quot;
@@ -210,20 +200,20 @@ export default function Home() {
                     &gt;
                         GitHub
                     &lt;/a&gt;
-                    ).
+                    !).
                 &lt;/span&gt;
                 &lt;br /&gt;
                 &lt;br /&gt;I am a full stack software engineer with a passion for
-                building scalable and efficient applications, please navigate to{&quot; &quot;}
+                building scalable and efficient applications, please see{&quot; &quot;}
                 &lt;Link
                     className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
                     href=&quot;/skills&quot;
                 &gt;
                     Skills
                 &lt;/Link&gt;{&quot; &quot;}
-                for my specific experience. With a strong foundation in software
-                engineering and a desire to constantly learn and improve, I have
-                set my phasers to &#39;love me&#39;
+                for more specific experience. With a strong foundation in
+                software engineering and a desire to constantly learn and
+                improve, I have set my phasers to &#39;love me&#39;
                 &lt;span className=&quot;italic&quot;&gt; as well as &lt;/span&gt;
                 blockchain development / technologies. Feel free to connect and
                 play around in the{&quot; &quot;}
@@ -243,6 +233,116 @@ export default function Home() {
                     Audits
                 &lt;/Link&gt;{&quot; &quot;}
                 for more details.
+            &lt;/div&gt;
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+`;
+export const SkillsCode: string = `<pre><code class="prettyprint language-typescript">import SkillCloud from &quot;../components/SkillCloud&quot;;
+import SkillsProvider from &quot;../components/context/SkillsProvider&quot;;
+import ShowCodeButton from &quot;../components/ShowCodeButton&quot;;
+
+export default function Skills() {
+    return (
+        &lt;div className=&quot;mt-5 sm:mt-0 text-center items-center&quot;&gt;
+            &lt;SkillsProvider&gt;
+                &lt;div className=&quot;&quot;&gt;
+                    I am comfortable working on both the front-end and back-end
+                    aspects of an application and have an understanding of the
+                    entire development process, from ideation to deployment. I
+                    am also experienced working in agile development
+                    environments and am skilled at communicating with both
+                    technical and non-technical stakeholders. Click on the
+                    skills below to see specifics!{&quot; &quot;}
+                    &lt;ShowCodeButton codeToShow=&quot;skills&quot; className=&quot;inline&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;mt-20&quot;&gt;
+                    &lt;SkillCloud /&gt;
+                &lt;/div&gt;
+            &lt;/SkillsProvider&gt;
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+`;
+export const SkillCloudCode: string = `<pre><code class="prettyprint language-typescript">import {
+    HardHat,
+    Solidity,
+    Ethereum,
+    GraphQL,
+    SQL,
+    Azure,
+    CSharp,
+    TypeScript,
+} from &quot;./constants/Svgs&quot;;
+import ShowCodeButton from &quot;./ShowCodeButton&quot;;
+import { SkillsContext, Skill } from &quot;./context/SkillsProvider&quot;;
+import { useContext } from &quot;react&quot;;
+
+//1. Create a grid large enough to scatter skill SVGs
+//2. Add on hover animation/transition
+//3. on click give some sort of information about experience.
+export default function SkillCloud() {
+    const { skill, setSkill, toggleSkill } = useContext(SkillsContext);
+
+    function ShowSkill(skillToShow: Skill) {
+        skillToShow !== skill ? setSkill(skillToShow) : {};
+        toggleSkill();
+    }
+    return (
+        &lt;div className=&quot;grid grid-cols-3 grid-rows-3&quot;&gt;
+            {/* Supposedly applying padding to the any grid element applies it to all */}
+            &lt;div
+                className=&quot;m-auto p-5 myOrbit speedFast&quot;
+                onClick={() =&gt; ShowSkill(&quot;blockchain&quot;)}
+            &gt;
+                &lt;HardHat /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto myOrbit speedSlow&quot;
+                onClick={() =&gt; ShowSkill(&quot;blockchain&quot;)}
+            &gt;
+                &lt;Solidity /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto myOrbit speedMedium&quot;
+                onClick={() =&gt; ShowSkill(&quot;blockchain&quot;)}
+            &gt;
+                &lt;Ethereum /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto myOrbit speedSlow&quot;
+                onClick={() =&gt; ShowSkill(&quot;graph&quot;)}
+            &gt;
+                &lt;GraphQL /&gt;
+            &lt;/div&gt;
+            &lt;div className=&quot;m-auto myOrbit speedFast&quot;&gt;
+                &lt;ShowCodeButton codeToShow=&quot;skillcloud&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto p-5 myOrbit speedFast&quot;
+                onClick={() =&gt; ShowSkill(&quot;sql&quot;)}
+            &gt;
+                &lt;SQL /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto myOrbit speedFast&quot;
+                onClick={() =&gt; ShowSkill(&quot;azure&quot;)}
+            &gt;
+                &lt;Azure /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto myOrbit speedMedium&quot;
+                onClick={() =&gt; ShowSkill(&quot;cs&quot;)}
+            &gt;
+                &lt;CSharp /&gt;
+            &lt;/div&gt;
+            &lt;div
+                className=&quot;m-auto myOrbit speedSlow&quot;
+                onClick={() =&gt; ShowSkill(&quot;ts&quot;)}
+            &gt;
+                &lt;TypeScript /&gt;
             &lt;/div&gt;
         &lt;/div&gt;
     );
