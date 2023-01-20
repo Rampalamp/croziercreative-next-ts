@@ -7,17 +7,18 @@ import ShowCodeButton from "./ShowCodeButton";
 import CCButton from "./CCButton";
 import CCMenuIcon from "./CCMenuIcon";
 import { NavOptions } from "./constants/Generics";
+import CCThemeIcon from "./CCThemeIcon";
 
 let rootDiv: HTMLElement | null;
+let themeIconDiv: HTMLElement | null;
 //attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
 let menuSvg: HTMLElement | null;
 
 export default function Header() {
-    const { theme, toggleTheme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
 
     const gitSvg = useRef<HTMLImageElement>(null);
     const linkedSvg = useRef<HTMLImageElement>(null);
-    const themeToggleSvg = useRef<HTMLImageElement>(null);
     const sideNav = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -27,18 +28,19 @@ export default function Header() {
         menuSvg === undefined
             ? (menuSvg = document.getElementById("burg"))
             : {};
+        themeIconDiv === undefined
+            ? (themeIconDiv = document.getElementById("ThemeIconDiv"))
+            : {};
 
         //adjust element attributes accordingly.
         if (theme === "dark") {
             rootDiv!.classList.add("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin-dark.svg");
             gitSvg.current!.setAttribute("src", "/github-dark.svg");
-            themeToggleSvg.current!.setAttribute("src", "/sun.svg");
         } else {
             rootDiv!.classList.remove("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin.svg");
             gitSvg.current!.setAttribute("src", "/github.svg");
-            themeToggleSvg.current!.setAttribute("src", "/moon.svg");
         }
     }, [theme]);
 
@@ -108,25 +110,20 @@ export default function Header() {
                 <div className="flex space-x-3">
                     <div className="min-h-fit min-w-fit sm:hidden">
                         <CCButton onClick={toggleSideNav} title="Menu">
-                            {/* <Image
-                                ref={menuSvg}
-                                src="/test.svg"
-                                alt="Menu drop down"
-                                width={20}
-                                height={20}
-                            /> */}
-                            <CCMenuIcon theme={theme} />
+                            <CCMenuIcon />
                         </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">
-                        <CCButton onClick={toggleTheme} title="ThemeToggle">
-                            <Image
-                                ref={themeToggleSvg}
-                                src="/sun.svg"
-                                alt="Theme toggler"
-                                width={20}
-                                height={20}
-                            />
+                        <CCButton
+                            onClick={() => {
+                                themeIconDiv?.classList.toggle("spinTheme");
+                            }}
+                            title="ThemeToggle"
+                        >
+                            {/* CCThemeIcon triggers the toggleTheme function using onAnimationEnd event
+                                So toggling spinTheme starts the animation inside CCThemeIcon, which in turn calls toggleTheme
+                            */}
+                            <CCThemeIcon />
                         </CCButton>
                     </div>
                     <div className="min-h-fit min-w-fit">

@@ -1,10 +1,8 @@
-import { Theme } from "./context/ThemeProvider";
+import { useContext } from "react";
+import { ThemeContext } from "./context/ThemeProvider";
 
-interface ICCMenuIconProps {
-    theme: Theme;
-}
-
-export default function CCMenuIcon({ theme }: ICCMenuIconProps) {
+export default function CCMenuIcon() {
+    const { theme } = useContext(ThemeContext);
     let strokeColor: string;
 
     theme === "dark" ? (strokeColor = "#86efac") : (strokeColor = "#9f1239");

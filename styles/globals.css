@@ -11,6 +11,54 @@ closer to the root of the document. using below to go transparent.
     color: transparent;
 }
 
+/********** THEME ICON **********/
+
+.spinTheme {
+    -webkit-animation: spin 0.5s linear;
+    -moz-animation: spin 0.5s linear;
+    -o-animation: spin 0.5s linear;
+    animation: spin 0.5s linear;
+}
+/*
+ * Set up the keyframes to actually describe the begining and end states of 
+ * the animation.
+ */
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes spin {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes spin {
+    from {
+        -o-transform: rotate(0deg);
+    }
+    to {
+        -o-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /********** MENU ICON **********/
 .hamburger {
     width: 20px;

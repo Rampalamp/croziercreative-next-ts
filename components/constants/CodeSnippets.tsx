@@ -6,17 +6,18 @@ import ShowCodeButton from &quot;./ShowCodeButton&quot;;
 import CCButton from &quot;./CCButton&quot;;
 import CCMenuIcon from &quot;./CCMenuIcon&quot;;
 import { NavOptions } from &quot;./constants/Generics&quot;;
+import CCThemeIcon from &quot;./CCThemeIcon&quot;;
 
 let rootDiv: HTMLElement | null;
+let themeIconDiv: HTMLElement | null;
 //attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
 let menuSvg: HTMLElement | null;
 
 export default function Header() {
-    const { theme, toggleTheme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
 
     const gitSvg = useRef&lt;HTMLImageElement&gt;(null);
     const linkedSvg = useRef&lt;HTMLImageElement&gt;(null);
-    const themeToggleSvg = useRef&lt;HTMLImageElement&gt;(null);
     const sideNav = useRef&lt;HTMLDivElement&gt;(null);
 
     useEffect(() =&gt; {
@@ -26,18 +27,19 @@ export default function Header() {
         menuSvg === undefined
             ? (menuSvg = document.getElementById(&quot;burg&quot;))
             : {};
+        themeIconDiv === undefined
+            ? (themeIconDiv = document.getElementById(&quot;ThemeIconDiv&quot;))
+            : {};
 
         //adjust element attributes accordingly.
         if (theme === &quot;dark&quot;) {
             rootDiv!.classList.add(&quot;dark&quot;);
             linkedSvg.current!.setAttribute(&quot;src&quot;, &quot;/linkedin-dark.svg&quot;);
             gitSvg.current!.setAttribute(&quot;src&quot;, &quot;/github-dark.svg&quot;);
-            themeToggleSvg.current!.setAttribute(&quot;src&quot;, &quot;/sun.svg&quot;);
         } else {
             rootDiv!.classList.remove(&quot;dark&quot;);
             linkedSvg.current!.setAttribute(&quot;src&quot;, &quot;/linkedin.svg&quot;);
             gitSvg.current!.setAttribute(&quot;src&quot;, &quot;/github.svg&quot;);
-            themeToggleSvg.current!.setAttribute(&quot;src&quot;, &quot;/moon.svg&quot;);
         }
     }, [theme]);
 
@@ -107,25 +109,20 @@ export default function Header() {
                 &lt;div className=&quot;flex space-x-3&quot;&gt;
                     &lt;div className=&quot;min-h-fit min-w-fit sm:hidden&quot;&gt;
                         &lt;CCButton onClick={toggleSideNav} title=&quot;Menu&quot;&gt;
-                            {/* &lt;Image
-                                ref={menuSvg}
-                                src=&quot;/test.svg&quot;
-                                alt=&quot;Menu drop down&quot;
-                                width={20}
-                                height={20}
-                            /&gt; */}
-                            &lt;CCMenuIcon theme={theme} /&gt;
+                            &lt;CCMenuIcon /&gt;
                         &lt;/CCButton&gt;
                     &lt;/div&gt;
                     &lt;div className=&quot;min-h-fit min-w-fit&quot;&gt;
-                        &lt;CCButton onClick={toggleTheme} title=&quot;ThemeToggle&quot;&gt;
-                            &lt;Image
-                                ref={themeToggleSvg}
-                                src=&quot;/sun.svg&quot;
-                                alt=&quot;Theme toggler&quot;
-                                width={20}
-                                height={20}
-                            /&gt;
+                        &lt;CCButton
+                            onClick={() =&gt; {
+                                themeIconDiv?.classList.toggle(&quot;spinTheme&quot;);
+                            }}
+                            title=&quot;ThemeToggle&quot;
+                        &gt;
+                            {/* CCThemeIcon triggers the toggleTheme function using onAnimationEnd event
+                                So toggling spinTheme starts the animation inside CCThemeIcon, which in turn calls toggleTheme
+                            */}
+                            &lt;CCThemeIcon /&gt;
                         &lt;/CCButton&gt;
                     &lt;/div&gt;
                     &lt;div className=&quot;min-h-fit min-w-fit&quot;&gt;
