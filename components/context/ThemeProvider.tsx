@@ -7,6 +7,8 @@ interface IProviderProps {
     children: React.ReactNode;
 }
 
+let rootDiv: HTMLElement | null;
+
 export const ThemeContext = createContext<ThemeContext>({} as ThemeContext);
 
 export const ThemeProvider: React.FC<IProviderProps> = ({ children }) => {
@@ -14,6 +16,9 @@ export const ThemeProvider: React.FC<IProviderProps> = ({ children }) => {
 
     useEffect(() => {
         let storedTheme: string | null = localStorage.getItem("theme");
+        rootDiv === undefined
+            ? (rootDiv = document.getElementById("rootDiv"))
+            : {};
 
         if (!storedTheme) {
             console.log("No theme found. Creating localStorage theme");
@@ -24,8 +29,7 @@ export const ThemeProvider: React.FC<IProviderProps> = ({ children }) => {
             const lightTheme: boolean = window.matchMedia(
                 "(prefers-color-scheme: light)"
             ).matches;
-            //check systemTheme value, if true user prefers dark, which is the default for theme provider.
-            //so no need to toggle
+            //check systemTheme value, if true user prefers dark
             if (darkTheme) {
                 localStorage.setItem("theme", "dark");
                 storedTheme = "dark";
@@ -38,17 +42,23 @@ export const ThemeProvider: React.FC<IProviderProps> = ({ children }) => {
                 storedTheme = "dark";
             }
         }
-        storedTheme === "dark" ? setTheme("dark") : setTheme("light");
+        //set base theme
+        setTheme(storedTheme as Theme);
+
+        //check value of storedTheme, website starts with dark, therefore if storedTheme is light, remove dark, if not, leave it.
+        //cant use classList.toggle below because useEffect runs twice on start up, thus resulting in the rootDiv the 'dark' class assigned incorrectly.
+        storedTheme === "light" ? rootDiv!.classList.remove("dark") : {};
     }, []);
 
     function toggleTheme() {
         if (theme === "light") {
-            setTheme("dark");
             localStorage.setItem("theme", "dark");
+            setTheme("dark");
         } else {
-            setTheme("light");
             localStorage.setItem("theme", "light");
+            setTheme("light");
         }
+        rootDiv!.classList.toggle("dark");
     }
 
     return (

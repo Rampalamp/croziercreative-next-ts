@@ -25,7 +25,7 @@
 
     1. CodeOverlayProvider I believe is finished, for now at least until I think some stylings are ugly.
     2. Do I want different colors for the code.svg when toggling light/dark theme? Might be able to achieve this relatively painlessly if use ThemeContext inside the ShowCode.tsx component.
-    3. ThemeToggle. Should I animate the moon/sun accordingly to liek rotate 360degree on click, THEN toggle t he theme? Would be similar to the Copied Code! fading in and out on the CodeOverlayProvider
+    3. CCThemeIcon added, with spin animation on click, toggleTheme is called onAnimationEnd attribute in CCThemeIcon
     4. CCButton created and implemented.
     5. CCMenuIcon.tsx created, SVG animates when Menu is open/closed.
 

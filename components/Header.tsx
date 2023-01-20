@@ -8,7 +8,6 @@ import CCMenuIcon from "./CCMenuIcon";
 import { NavOptions } from "./constants/Generics";
 import CCThemeIcon from "./CCThemeIcon";
 
-let rootDiv: HTMLElement | null;
 let themeIconDiv: HTMLElement | null;
 //attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
 let menuSvg: HTMLElement | null;
@@ -21,9 +20,6 @@ export default function Header() {
     const sideNav = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        rootDiv === undefined
-            ? (rootDiv = document.getElementById("rootDiv"))
-            : {};
         menuSvg === undefined
             ? (menuSvg = document.getElementById("burg"))
             : {};
@@ -33,11 +29,9 @@ export default function Header() {
 
         //adjust element attributes accordingly.
         if (theme === "dark") {
-            rootDiv!.classList.add("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin-dark.svg");
             gitSvg.current!.setAttribute("src", "/github-dark.svg");
         } else {
-            rootDiv!.classList.remove("dark");
             linkedSvg.current!.setAttribute("src", "/linkedin.svg");
             gitSvg.current!.setAttribute("src", "/github.svg");
         }
