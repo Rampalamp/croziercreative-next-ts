@@ -5,7 +5,7 @@ import { ThemeContext } from "./context/ThemeProvider";
 import ShowCodeButton from "./ShowCodeButton";
 import CCButton from "./CCButton";
 import CCMenuIcon from "./CCMenuIcon";
-import { NavOptions } from "./constants/Generics";
+import { NavOptions } from "../constants/Generics";
 import CCThemeIcon from "./CCThemeIcon";
 
 let themeIconDiv: HTMLElement | null;

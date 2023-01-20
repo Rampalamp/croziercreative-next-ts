@@ -40,7 +40,7 @@ async function CreateCodeSnippetFile() {
     //     "./components/CodeSnippets.tsx",
     //     `export const HeaderCode = \`${finalContent}\`;`
     // );
-    fs.writeFileSync("./components/constants/CodeSnippets.tsx", fileContent);
+    fs.writeFileSync("./constants/CodeSnippets.tsx", fileContent);
 }
 
 CreateCodeSnippetFile()

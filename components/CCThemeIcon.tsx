@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { Moon, Sun } from "./constants/Svgs";
+import { Moon, Sun } from "../constants/Svgs";
 import { ThemeContext } from "./context/ThemeProvider";
 
 interface ICCThemeIconProps

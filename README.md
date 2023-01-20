@@ -19,7 +19,7 @@
 4. DAPP
 
     1. Sort out which smart contract interactions to tap into.
-    2. Create our own CCConnectButton? Or just use the web3uikit?
+    2. Going to attempt making our own Web3Provider of sorts. Lots of options out there, Web3uiKit, Web3Modal, RainbowKit is nice also. But they just do so much more then what I need, or how they operate confuses me. So this is a good time to learn something new more concretely.
 
 5. COMPONENTS
 

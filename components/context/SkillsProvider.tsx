@@ -6,7 +6,7 @@ import {
     TS,
     Blockchain,
     MySql,
-} from "../constants/SkillDescriptions";
+} from "../../constants/SkillDescriptions";
 import CCButton from "../CCButton";
 import Image from "next/image";
 
@@ -76,7 +76,7 @@ export default function SkillsProvider({ children }: ISkillsProviderProps) {
                     ref={skillDiv}
                     className="absolute z-10 backdrop-blur-sm hidden"
                 >
-                    <div className="flex flex-col  h-[40rem] mb-9">
+                    <div className="flex flex-col  h-[40rem] mb-20 -mt-5 sm:mb-0">
                         <div className="flex justify-end">
                             <CCButton onClick={toggleSkill}>
                                 <Image

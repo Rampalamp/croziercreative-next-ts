@@ -7,7 +7,7 @@ import {
     Azure,
     CSharp,
     TypeScript,
-} from "./constants/Svgs";
+} from "../constants/Svgs";
 import ShowCodeButton from "./ShowCodeButton";
 import { SkillsContext, Skill } from "./context/SkillsProvider";
 import { useContext } from "react";

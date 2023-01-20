@@ -6,7 +6,7 @@ import {
     SkillsCode,
     SkillCloudCode,
     AuditsCode,
-} from "../constants/CodeSnippets";
+} from "../../constants/CodeSnippets";
 import CCButton from "../CCButton";
 
 export type CodeOverlay =
