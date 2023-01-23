@@ -23,9 +23,7 @@
 }
  */
 
-import { connect } from "http2";
 import Image from "next/image";
-import { type } from "os";
 import { createContext, useEffect, useRef, useState } from "react";
 
 export type Wallet = "metamask" | "gamestop" | null;
