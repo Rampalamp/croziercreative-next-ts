@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useRef, useState } from "react";
+import React, { createContext, useRef, useState } from "react";
 import {
     CS,
     MicrosoftAzure,
@@ -45,12 +45,7 @@ export const SkillsContext = createContext<SkillsContext>({} as SkillsContext);
 
 export default function SkillsProvider({ children }: ISkillsProviderProps) {
     const [skill, setSkill] = useState<Skill>(null);
-    const [component, setComponent] = useState<React.ReactNode>();
     const skillDiv = useRef<HTMLDivElement>(null);
-
-    useMemo(() => {
-        setComponent(SkillComponents.get(skill));
-    }, [skill]);
 
     function toggleSkill() {
         skillDiv.current!.classList.toggle("hidden");
@@ -75,7 +70,7 @@ export default function SkillsProvider({ children }: ISkillsProviderProps) {
                             </CCButton>
                         </div>
                         <div className="mt-3 overflow-auto  p-4 rounded-lg shadow-2xl bg-lt-back dark:bg-dt-back">
-                            {component}
+                            {SkillComponents.get(skill)}
                         </div>
                     </div>
                 </div>
