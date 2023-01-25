@@ -1,4 +1,4 @@
-import { createContext, useMemo, useRef, useState } from "react";
+import React, { createContext, useMemo, useRef, useState } from "react";
 import {
     CS,
     MicrosoftAzure,
@@ -29,6 +29,18 @@ interface ISkillsProviderProps {
     children: React.ReactNode;
 }
 
+const SkillComponents: Map<Skill, React.ReactNode> = new Map<
+    Skill,
+    React.ReactNode
+>([
+    ["blockchain", <Blockchain />],
+    ["graph", <Graph />],
+    ["sql", <MySql />],
+    ["azure", <MicrosoftAzure />],
+    ["cs", <CS />],
+    ["ts", <TS />],
+]);
+
 export const SkillsContext = createContext<SkillsContext>({} as SkillsContext);
 
 export default function SkillsProvider({ children }: ISkillsProviderProps) {
@@ -37,32 +49,7 @@ export default function SkillsProvider({ children }: ISkillsProviderProps) {
     const skillDiv = useRef<HTMLDivElement>(null);
 
     useMemo(() => {
-        switch (skill) {
-            case "azure": {
-                setComponent(MicrosoftAzure());
-                break;
-            }
-            case "blockchain": {
-                setComponent(Blockchain());
-                break;
-            }
-            case "graph": {
-                setComponent(Graph());
-                break;
-            }
-            case "sql": {
-                setComponent(MySql());
-                break;
-            }
-            case "cs": {
-                setComponent(CS());
-                break;
-            }
-            case "ts": {
-                setComponent(TS());
-                break;
-            }
-        }
+        setComponent(SkillComponents.get(skill));
     }, [skill]);
 
     function toggleSkill() {
