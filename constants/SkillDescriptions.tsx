@@ -1,7 +1,7 @@
 export function Blockchain() {
     return (
         <div className="">
-            <span className="italic text-xl font-extrabold">
+            <span className="text-xl font-extrabold italic">
                 ***All blockchain related skills show this content***
             </span>
             <br />
@@ -30,7 +30,7 @@ export function Blockchain() {
             experience.
             <br />
             <br />
-            <ul className="text-left list-disc list-inside text-lt-fore dark:text-dt-fore">
+            <ul className="list-inside list-disc text-left text-lt-fore dark:text-dt-fore">
                 <li>
                     <a
                         className="underline hover:text-dp-back hover:dark:text-ls-fore"
@@ -123,7 +123,7 @@ export function CS() {
             and Javascript render loop.
             <br />
             <br />
-            <ul className="text-left list-disc list-inside text-lt-fore dark:text-dt-fore">
+            <ul className="list-inside list-disc text-left text-lt-fore dark:text-dt-fore">
                 <li>
                     <a
                         className="underline hover:text-dp-back hover:dark:text-ls-fore"
@@ -174,7 +174,7 @@ export function TS() {
             or not use any or all of it in your own projects!
             <br />
             <br />
-            <ul className="text-left list-disc list-inside text-lt-fore dark:text-dt-fore">
+            <ul className="list-inside list-disc text-left text-lt-fore dark:text-dt-fore">
                 <li>
                     <a
                         className="underline hover:text-dp-back hover:dark:text-ls-fore"

@@ -8,7 +8,7 @@ import CCWeb3Provider from "../components/context/CCWeb3Provider";
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <div id="rootDiv" className="font-mono dark">
+        <div id="rootDiv" className="dark font-mono">
             <Head>
                 <title>Crozier Creative</title>
                 <meta
@@ -25,14 +25,14 @@ export default function App({ Component, pageProps }: AppProps) {
             <CodeOverlayProvider>
                 <CCWeb3Provider>
                     {/**Old gradient background setup: bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back */}
-                    <div className="transition duration-500 overflow-auto flex flex-col w-screen h-screen min-w-[380px] bg-light dark:bg-dark bg-center bg-cover bg-ls-fore dark:bg-ds-back text-lp-fore dark:text-dp-fore">
+                    <div className="flex h-screen w-screen min-w-[380px] flex-col overflow-auto bg-ls-fore bg-light bg-cover bg-center text-lp-fore transition duration-500 dark:bg-ds-back dark:bg-dark dark:text-dp-fore">
                         {/**Header Section */}
                         <ThemeProvider>
                             <Header />
                         </ThemeProvider>
                         {/**Main body of app */}
 
-                        <div className="m-auto font-bold text-lg p-3 2xl:px-96 xl:px-72 lg:px-40 md:px-32 sm:px-16 px-6">
+                        <div className="m-auto p-3 px-6 text-lg font-bold sm:px-16 md:px-32 lg:px-40 xl:px-72 2xl:px-96">
                             <Component {...pageProps} />
                         </div>
 

@@ -56,9 +56,9 @@ export default function SkillsProvider({ children }: ISkillsProviderProps) {
             <div className="relative">
                 <div
                     ref={skillDiv}
-                    className="absolute z-10 backdrop-blur-sm hidden"
+                    className="absolute z-10 hidden backdrop-blur-sm"
                 >
-                    <div className="flex flex-col  h-[40rem] mb-20 -mt-5 sm:mb-0">
+                    <div className="mb-20 -mt-5  flex h-[40rem] flex-col sm:mb-0">
                         <div className="flex justify-end">
                             <CCButton onClick={toggleSkill}>
                                 <Image
@@ -69,7 +69,7 @@ export default function SkillsProvider({ children }: ISkillsProviderProps) {
                                 />
                             </CCButton>
                         </div>
-                        <div className="mt-3 overflow-auto  p-4 rounded-lg shadow-2xl bg-lt-back dark:bg-dt-back">
+                        <div className="mt-3 overflow-auto rounded-lg bg-lt-back p-4 shadow-2xl dark:bg-dt-back">
                             {SkillComponents.get(skill)}
                         </div>
                     </div>

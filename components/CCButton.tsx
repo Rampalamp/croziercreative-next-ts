@@ -17,7 +17,7 @@ export default function CCButton({
             <button
                 title={title}
                 onClick={onClick}
-                className="rounded-md shadow-md hover:dark:shadow-cust-hover p-3 bg-ls-back dark:bg-dt-back hover:shadow-lt-fore hover:dark:shadow-dt-fore"
+                className="hover:dark:shadow-cust-hover rounded-md bg-ls-back p-3 shadow-md hover:shadow-lt-fore dark:bg-dt-back hover:dark:shadow-dt-fore"
             >
                 {children}
             </button>

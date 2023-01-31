@@ -87,12 +87,12 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
             <div className="relative">
                 <div
                     ref={walletsDiv}
-                    className="absolute z-50 h-screen w-screen backdrop-blur-md hidden font-bold text-lg text-lp-fore dark:text-dp-fore "
+                    className="absolute z-50 hidden h-screen w-screen text-lg font-bold text-lp-fore backdrop-blur-md dark:text-dp-fore "
                 >
                     <div className="h-screen min-w-[380px] p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
-                        <div className="flex flex-col cursor-pointer p-12 rounded-lg shadow-2xl bg-lt-back dark:bg-dt-back">
+                        <div className="flex cursor-pointer flex-col rounded-lg bg-lt-back p-12 shadow-2xl dark:bg-dt-back">
                             <div
-                                className="flex items-center p-12 space-x-10 justify-center hover:bg-dt-fore hover:dark:bg-lp-back/25"
+                                className="flex items-center justify-center space-x-10 p-12 hover:bg-dt-fore hover:dark:bg-lp-back/25"
                                 onClick={() => {
                                     connectProvider("gamestop");
                                 }}
@@ -107,7 +107,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                                 <div>MetaMask</div>
                             </div>
                             <div
-                                className="flex items-center p-12  space-x-10  justify-center hover:bg-dt-fore hover:dark:bg-lp-back/25"
+                                className="flex items-center justify-center  space-x-10  p-12 hover:bg-dt-fore hover:dark:bg-lp-back/25"
                                 onClick={() => {
                                     connectProvider("gamestop");
                                 }}
