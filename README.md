@@ -20,6 +20,7 @@
 
     1. Sort out which smart contract interactions to tap into.
     2. Going to attempt making our own Web3Provider of sorts. Lots of options out there, Web3uiKit, Web3Modal, RainbowKit is nice also, web3-onboard https://github.com/blocknative/web3-onboard seems pretty straight forward and uses gamestop wallet. But they just do so much more then what I need, or how they operate confuses me. So this is a good time to learn something new more concretely.
+    3. Metamask api / playground https://metamask.github.io/api-playground/api-documentation/
 
 5. COMPONENTS
 
