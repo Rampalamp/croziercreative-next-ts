@@ -10,6 +10,11 @@ export default function dApp() {
             <CCConnectButton />
         </div>
     ) : (
-        <div>{CCWebProvider.toString()}</div>
+        <div>
+            <div>{CCWebProvider.account}</div>
+            <div>{CCWebProvider.chainId}</div>
+            <div>{CCWebProvider.balance?.toString()}</div>
+            <div>{CCWebProvider.chainName}</div>
+        </div>
     );
 }

@@ -28,17 +28,20 @@ import { createContext, useEffect, useRef, useState } from "react";
 import CCButton from "../CCButton";
 import { ethers } from "ethers";
 import { BigNumber } from "ethers/lib/ethers";
+import { CCWebProvider as CCWP } from "../../classes/CCWebProvider";
 
 export type Wallet = "metamask" | "gamestop" | null;
-export type CCWebProvider = {
-    provider: any;
-    account: string;
-    balance: BigNumber;
-};
+// export type CCWebProvider = {
+//     provider: any;
+//     account: string;
+//     balance: BigNumber;
+//     chainId: number;
+//     chainName: string;
+// };
 type CCWeb3Context = {
     connectProvider: (wallet: Wallet) => Promise<boolean>;
     toggleWalletModal: () => void;
-    CCWebProvider: CCWebProvider | undefined;
+    CCWebProvider: CCWP | undefined;
 };
 
 interface ICCWeb3ProviderProps {
@@ -48,28 +51,20 @@ interface ICCWeb3ProviderProps {
 export const CCWeb3Context = createContext<CCWeb3Context>({} as CCWeb3Context);
 
 export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
-    const [CCWebProvider, setCCWebProvider] = useState<CCWebProvider>();
+    const [CCWebProvider, setCCWebProvider] = useState<CCWP>();
 
     const walletsDiv = useRef<HTMLDivElement>(null);
 
     useEffect(() => {}, []);
 
     async function connectProvider(wallet: Wallet): Promise<boolean> {
-        let ccProv: CCWebProvider = {} as CCWebProvider;
-
         switch (wallet) {
             case "metamask": {
                 if (typeof (window as any).ethereum !== "undefined") {
-                    const eth = (window as any).ethereum;
+                    let ccProv = new CCWP((window as any).ethereum);
 
                     try {
-                        await eth.request({
-                            method: "eth_requestAccounts",
-                        });
-
-                        ccProv.provider = new ethers.providers.Web3Provider(
-                            eth
-                        );
+                        ccProv.connect();
 
                         setCCWebProvider(ccProv);
                     } catch (error) {
@@ -82,14 +77,16 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
             }
             case "gamestop": {
                 if (typeof (window as any).ethereum !== "undefined") {
-                    const gs = (window as any).gamestop;
-
+                    //const gs = (window as any).gamestop;
+                    let ccProv = new CCWP((window as any).gamestop);
                     try {
-                        await gs.request({
-                            method: "eth_requestAccounts",
-                        });
-                        ccProv.provider = new ethers.providers.Web3Provider(gs);
+                        ccProv.connect();
+
                         setCCWebProvider(ccProv);
+                        // await gs.request({
+                        //     method: "eth_requestAccounts",
+                        // });
+                        // initCCWebProvider(gs);
                     } catch (error) {
                         console.log(error);
                     }
@@ -104,6 +101,22 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         return true;
     }
 
+    // async function initCCWebProvider(eth: any) {
+    //     let ccProv: CCWebProvider = {} as CCWebProvider;
+
+    //     ccProv.provider = new ethers.providers.Web3Provider(eth);
+
+    //     ccProv.account = eth.selectedAddress;
+
+    //     ccProv.balance = await ccProv.provider.getBalance(ccProv.account);
+
+    //     const network = await ccProv.provider.getNetwork();
+
+    //     ccProv.chainId = network.chainId;
+    //     ccProv.chainName = network.name;
+
+    //     setCCWebProvider(ccProv);
+    // }
     function toggleWalletModal() {
         walletsDiv.current!.classList.toggle("hidden");
     }
