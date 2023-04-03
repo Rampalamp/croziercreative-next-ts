@@ -9,12 +9,12 @@ interface IShowCodeButtonProps
     > {}
 
 export default function CCConnectButton({ className }: IShowCodeButtonProps) {
-    const { showWalletModal } = useContext(CCWeb3Context);
+    const { toggleWalletModal } = useContext(CCWeb3Context);
 
     return (
         <CCButton
             className={className}
-            onClick={showWalletModal}
+            onClick={toggleWalletModal}
             title="ShowCode"
         >
             CONNECT

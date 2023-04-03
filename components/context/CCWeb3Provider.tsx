@@ -25,12 +25,20 @@
 
 import Image from "next/image";
 import { createContext, useEffect, useRef, useState } from "react";
+import CCButton from "../CCButton";
+import { ethers } from "ethers";
+import { BigNumber } from "ethers/lib/ethers";
 
 export type Wallet = "metamask" | "gamestop" | null;
-
+export type CCWebProvider = {
+    provider: any;
+    account: string;
+    balance: BigNumber;
+};
 type CCWeb3Context = {
     connectProvider: (wallet: Wallet) => Promise<boolean>;
-    showWalletModal: () => void;
+    toggleWalletModal: () => void;
+    CCWebProvider: CCWebProvider | undefined;
 };
 
 interface ICCWeb3ProviderProps {
@@ -40,11 +48,15 @@ interface ICCWeb3ProviderProps {
 export const CCWeb3Context = createContext<CCWeb3Context>({} as CCWeb3Context);
 
 export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
+    const [CCWebProvider, setCCWebProvider] = useState<CCWebProvider>();
+
     const walletsDiv = useRef<HTMLDivElement>(null);
 
     useEffect(() => {}, []);
 
     async function connectProvider(wallet: Wallet): Promise<boolean> {
+        let ccProv: CCWebProvider = {} as CCWebProvider;
+
         switch (wallet) {
             case "metamask": {
                 if (typeof (window as any).ethereum !== "undefined") {
@@ -54,9 +66,17 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                         await eth.request({
                             method: "eth_requestAccounts",
                         });
+
+                        ccProv.provider = new ethers.providers.Web3Provider(
+                            eth
+                        );
+
+                        setCCWebProvider(ccProv);
                     } catch (error) {
                         console.log(error);
                     }
+                } else {
+                    return false;
                 }
                 break;
             }
@@ -68,33 +88,51 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                         await gs.request({
                             method: "eth_requestAccounts",
                         });
+                        ccProv.provider = new ethers.providers.Web3Provider(gs);
+                        setCCWebProvider(ccProv);
                     } catch (error) {
                         console.log(error);
                     }
+                } else {
+                    return false;
                 }
+                break;
             }
         }
 
+        toggleWalletModal();
         return true;
     }
 
-    function showWalletModal() {
+    function toggleWalletModal() {
         walletsDiv.current!.classList.toggle("hidden");
     }
 
     return (
-        <CCWeb3Context.Provider value={{ connectProvider, showWalletModal }}>
+        <CCWeb3Context.Provider
+            value={{ connectProvider, toggleWalletModal, CCWebProvider }}
+        >
             <div className="relative">
                 <div
                     ref={walletsDiv}
                     className="absolute z-50 hidden h-screen w-screen text-lg font-bold text-lp-fore backdrop-blur-md dark:text-dp-fore "
                 >
                     <div className="h-screen min-w-[380px] p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
+                        <div className="mb-3 flex justify-end">
+                            <CCButton onClick={toggleWalletModal}>
+                                <Image
+                                    src="/x.svg"
+                                    width={20}
+                                    height={20}
+                                    alt="X(Close) svg"
+                                />
+                            </CCButton>
+                        </div>
                         <div className="flex cursor-pointer flex-col rounded-lg bg-lt-back p-12 shadow-2xl dark:bg-dt-back">
                             <div
                                 className="flex items-center justify-center space-x-10 p-12 hover:bg-dt-fore hover:dark:bg-lp-back/25"
                                 onClick={() => {
-                                    connectProvider("gamestop");
+                                    connectProvider("metamask");
                                 }}
                             >
                                 <Image
