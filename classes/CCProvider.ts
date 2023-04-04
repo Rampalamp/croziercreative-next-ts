@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 
-export class CCWebProvider {
+export class CCProvider {
     account!: string;
     balance!: string;
     chainId!: number;
