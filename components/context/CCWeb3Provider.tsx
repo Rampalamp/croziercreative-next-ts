@@ -64,7 +64,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                     let ccProv = new CCWP((window as any).ethereum);
 
                     try {
-                        ccProv.connect();
+                        await ccProv.connect();
 
                         setCCWebProvider(ccProv);
                     } catch (error) {
@@ -80,13 +80,9 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                     //const gs = (window as any).gamestop;
                     let ccProv = new CCWP((window as any).gamestop);
                     try {
-                        ccProv.connect();
+                        await ccProv.connect();
 
                         setCCWebProvider(ccProv);
-                        // await gs.request({
-                        //     method: "eth_requestAccounts",
-                        // });
-                        // initCCWebProvider(gs);
                     } catch (error) {
                         console.log(error);
                     }

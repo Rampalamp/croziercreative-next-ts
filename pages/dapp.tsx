@@ -13,7 +13,7 @@ export default function dApp() {
         <div>
             <div>{CCWebProvider.account}</div>
             <div>{CCWebProvider.chainId}</div>
-            <div>{CCWebProvider.balance?.toString()}</div>
+            <div>{CCWebProvider.balance}</div>
             <div>{CCWebProvider.chainName}</div>
         </div>
     );
