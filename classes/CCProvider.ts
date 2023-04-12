@@ -1,5 +1,8 @@
 import { BigNumber, ethers } from "ethers";
 
+//Good article that breaks down manually creating the data payload for a eth_sendTransaction call to interact with smart contract functions.
+//https://medium.com/coinmonks/ethereum-smart-contracts-how-to-communicate-with-them-abi-specification-web3-solidity-db056218b251
+
 export class CCProvider {
     account!: string;
     balance!: string;
@@ -76,7 +79,7 @@ export class CCProvider {
     }
 
     async getChainName(chainId: number): Promise<string> {
-        let chainName = "";
+        let chainName;
 
         switch (chainId) {
             case 1:
@@ -103,5 +106,29 @@ export class CCProvider {
         }
 
         return chainName;
+    }
+
+    async sendContractTransaction(address: string, sender: string, params: {}) {
+        const payloadData: string = this.createDataPayload(params);
+
+        const transactionParameters = {
+            nonce: "0x00", // ignored by MetaMask
+            gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
+            gas: "0x2710", // customizable by user during MetaMask confirmation.
+            to: "0x0000000000000000000000000000000000000000", // Required except during contract publications.
+            from: sender, // must match user's active address.
+            value: "0x00", // Only required to send ether to the recipient from the initiating external account.
+            data: "0x7f7465737432000000000000000000000000000000000000000000000000000000600057", // Optional, but used for defining smart contract creation and interaction.
+            chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+        };
+
+        const txHash = await this.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [transactionParameters],
+        });
+    }
+
+    private createDataPayload(params: {}): string {
+        return "";
     }
 }

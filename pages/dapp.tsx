@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
+import CCButton from "../components/CCButton";
 import CCConnectButton from "../components/CCConnectButton";
 import { CCWeb3Context } from "../components/context/CCWeb3Provider";
+import { XEN_HHLOCAL } from "../constants/SmartContracts";
 
 export default function dApp() {
     const { CCProvider } = useContext(CCWeb3Context);
@@ -35,6 +37,33 @@ export default function dApp() {
             setBalance(CCProvider.balance);
         }
     }
+    /*CLAIM RANK FUNC
+  function claimRank(uint256 term) external {
+        uint256 termSec = term * SECONDS_IN_DAY;
+        require(termSec > MIN_TERM, "CRank: Term less than min");
+        require(termSec < _calculateMaxTerm() + 1, "CRank: Term more than current max term");
+        require(userMints[_msgSender()].rank == 0, "CRank: Mint already in progress");
+
+        // create and store new MintInfo
+        MintInfo memory mintInfo = MintInfo({
+            user: _msgSender(),
+            term: term,
+            maturityTs: block.timestamp + termSec,
+            rank: globalRank,
+            amplifier: _calculateRewardAmplifier(),
+            eaaRate: _calculateEAARate()
+        });
+        userMints[_msgSender()] = mintInfo;
+        activeMinters++;
+        emit RankClaimed(_msgSender(), term, globalRank++);
+    }
+
+*/
+    async function handleXenClaimRank() {
+        await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
+            termInDays: 100,
+        });
+    }
     return CCProvider === undefined ? (
         <div className="mt-5 items-center text-center sm:mt-0">
             <CCConnectButton />
@@ -56,7 +85,10 @@ export default function dApp() {
             </div>
 
             <div className="mt-10 flex-col rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dt-back">
-                <div>XEN SMART CONTRACT</div>
+                <div className="flex">
+                    XEN SMART CONTRACT
+                    <CCButton onClick={handleXenClaimRank}>CLAIM RANK</CCButton>
+                </div>
                 <div>XEN FLEX SMART CONTRACT</div>
             </div>
         </div>
