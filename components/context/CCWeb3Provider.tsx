@@ -33,8 +33,6 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
 
     const walletsDiv = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {}, []);
-
     async function connectProvider(wallet: Wallet): Promise<boolean> {
         switch (wallet) {
             case "metamask": {
@@ -42,8 +40,10 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                     let ccProvider = new CCP((window as any).ethereum);
 
                     try {
-                        await ccProvider.connect();
-
+                        //check if wallet has been connected already, if not make run connect.
+                        if (!ccProvider.ethereum.isConnected()) {
+                            await ccProvider.connect();
+                        }
                         setCCProvider(ccProvider);
                     } catch (error) {
                         console.log(error);
@@ -58,8 +58,9 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                     //const gs = (window as any).gamestop;
                     let ccProvider = new CCP((window as any).gamestop);
                     try {
-                        await ccProvider.connect();
-
+                        if (!ccProvider.ethereum.isConnected()) {
+                            await ccProvider.connect();
+                        }
                         setCCProvider(ccProvider);
                     } catch (error) {
                         console.log(error);

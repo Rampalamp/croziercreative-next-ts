@@ -15,7 +15,7 @@ export default function CCConnectButton({ className }: IShowCodeButtonProps) {
         <CCButton
             className={className}
             onClick={toggleWalletModal}
-            title="ShowCode"
+            title="DappConnect"
         >
             CONNECT
         </CCButton>

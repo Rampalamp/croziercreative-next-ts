@@ -5,12 +5,50 @@ import { CCWeb3Context } from "../components/context/CCWeb3Provider";
 import { XEN_HHLOCAL } from "../constants/SmartContracts";
 
 export default function dApp() {
-    const { CCProvider } = useContext(CCWeb3Context);
+    const { CCProvider, connectProvider } = useContext(CCWeb3Context);
     const [account, setAccount] = useState<string>("0x0");
     const [balance, setBalance] = useState<string>("0");
+    const [walletFound, setWalletFound] = useState<boolean>(false);
+
+    // if (walletExists()) {
+    //     if (CCProvider === undefined) {
+    //         const connectedWallet = isWalletConnected();
+
+    //         if (connectedWallet === "metamask") {
+    //             connectProvider("metamask");
+    //         } else if (connectedWallet === "gamestop") {
+    //             connectProvider("gamestop");
+    //         }
+    //     }
+    // }
+    useEffect(() => {
+        if (walletExists()) {
+            if (CCProvider === undefined) {
+                const connectedWallet = isWalletConnected();
+
+                if (connectedWallet === "metamask") {
+                    // const connProv = async () => {
+                    //     await connectProvider("metamask");
+                    // };
+                    // connProv();
+
+                    //I DONT THINK I CAN JUST CALL connectProvider, IT IS CURRENTLY SET TO ALSO TOGGLE THE WALLET MODAL.
+                    //ON TOP OF THAT, THE ORDER FLOW OF THINGS ARE CAUSING ISSUES, AND CALLING ASYNC FUNCTIONS IN useEffect DOESNT
+                    //SEEM TO BE WORKING, CCProvider IS COMING BACK UNDEFINED?
+                    connectProvider("metamask").then(() => {
+                        setAccount(CCProvider!.account);
+                        setBalance(CCProvider!.balance);
+                    });
+                } else if (connectedWallet === "gamestop") {
+                    connectProvider("gamestop");
+                }
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (CCProvider?.ethereum !== undefined) {
+            console.log("CC PROVIDER NOT NULL");
             //setup initial account/balance values.
             //I made them a useState object because updating the CCProvider properties weren't triggering a component update.
             //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
@@ -25,6 +63,29 @@ export default function dApp() {
             );
         };
     }, [CCProvider]);
+
+    function walletExists(): boolean {
+        if (
+            typeof (window as any).ethereum !== undefined ||
+            typeof (window as any).gamestop !== undefined
+        ) {
+            setWalletFound(true);
+            return true;
+        }
+        setWalletFound(false);
+        return false;
+    }
+
+    function isWalletConnected(): string | undefined {
+        if ((window as any).gamestop.isConnected()) {
+            console.log("GS is connected");
+            return "gamestop";
+        } else if ((window as any).ethereum.isConnected()) {
+            console.log("metamask is connected");
+            return "metamask";
+        }
+        return undefined;
+    }
 
     async function handleAccountsChanged() {
         if (CCProvider !== undefined) {
@@ -65,7 +126,12 @@ export default function dApp() {
             termInDays: 100,
         });
     }
-    return CCProvider === undefined ? (
+    return !walletFound ? (
+        <div className="rounded-md bg-ls-back p-3 shadow-md  dark:bg-dt-back">
+            No wallet found. Please install Metamask or Gamestop wallet browser
+            extensions.
+        </div>
+    ) : CCProvider === undefined ? (
         <div className="mt-5 items-center text-center sm:mt-0">
             <CCConnectButton />
         </div>
@@ -88,7 +154,9 @@ export default function dApp() {
             <div className="mt-10 flex-col rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dt-back">
                 <div className="flex">
                     XEN SMART CONTRACT
-                    <CCButton onClick={handleXenClaimRank}>CLAIM RANK</CCButton>
+                    <CCButton onClick={handleXenClaimRank} title="ClaimXenRank">
+                        CLAIM RANK
+                    </CCButton>
                 </div>
                 <div>XEN FLEX SMART CONTRACT</div>
             </div>

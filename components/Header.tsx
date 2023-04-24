@@ -9,7 +9,7 @@ import { NavOptions } from "../constants/Generics";
 import CCThemeIcon from "./CCThemeIcon";
 
 let themeIconDiv: HTMLElement | null;
-//attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
+//attempting to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
 let menuSvg: HTMLElement | null;
 
 export default function Header() {

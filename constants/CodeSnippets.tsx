@@ -5,11 +5,11 @@ import { ThemeContext } from &quot;./context/ThemeProvider&quot;;
 import ShowCodeButton from &quot;./ShowCodeButton&quot;;
 import CCButton from &quot;./CCButton&quot;;
 import CCMenuIcon from &quot;./CCMenuIcon&quot;;
-import { NavOptions } from &quot;./constants/Generics&quot;;
+import { NavOptions } from &quot;../constants/Generics&quot;;
 import CCThemeIcon from &quot;./CCThemeIcon&quot;;
 
 let themeIconDiv: HTMLElement | null;
-//attemtping to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
+//attempting to useRef the menuSvg was being troublesome so just grabbing it like rootDiv
 let menuSvg: HTMLElement | null;
 
 export default function Header() {
@@ -47,19 +47,19 @@ export default function Header() {
 
     return (
         &lt;div className=&quot;sticky top-0 z-40 w-full text-lt-fore dark:text-ds-fore&quot;&gt;
-            &lt;nav className=&quot; backdrop-blur flex items-center flex-nowrap p-3 2xl:px-80 xl:px-60 lg:px-32 drop-shadow-xl&quot;&gt;
-                &lt;div className=&quot;flex grow items-center mr-4&quot;&gt;
-                    &lt;span className=&quot;font-extrabold text-xl hidden sm:block&quot;&gt;
+            &lt;nav className=&quot; flex flex-nowrap items-center p-3 drop-shadow-xl backdrop-blur lg:px-32 xl:px-60 2xl:px-80&quot;&gt;
+                &lt;div className=&quot;mr-4 flex grow items-center&quot;&gt;
+                    &lt;span className=&quot;hidden text-xl font-extrabold sm:block&quot;&gt;
                         &lt;Link href=&quot;/&quot; title=&quot;CrozierCreative&quot;&gt;
                             CrozierCreative
                         &lt;/Link&gt;
                     &lt;/span&gt;
-                    &lt;span className=&quot;font-extrabold text-3xl block sm:hidden&quot;&gt;
+                    &lt;span className=&quot;block text-3xl font-extrabold sm:hidden&quot;&gt;
                         &lt;Link href=&quot;/&quot; title=&quot;CrozierCreative&quot;&gt;
                             CC
                         &lt;/Link&gt;
                     &lt;/span&gt;
-                    &lt;div className=&quot;flex  ml-3 space-x-2 min-h-fit min-w-fit&quot;&gt;
+                    &lt;div className=&quot;ml-3  flex min-h-fit min-w-fit space-x-2&quot;&gt;
                         &lt;a
                             target=&quot;_blank&quot;
                             href=&quot;https://www.linkedin.com/in/matthew-rampen-7883b5b1/&quot;
@@ -92,8 +92,8 @@ export default function Header() {
                 &lt;/div&gt;
 
                 {/**Nav options for medium and up screen sizes */}
-                &lt;div className=&quot;font-bold text-lg  md:mr-12 hidden sm:block&quot;&gt;
-                    &lt;ul className=&quot;flex 2xl:space-x-20 xl:space-x-12 lg:space-x-10 md:space-x-8 space-x-4&quot;&gt;
+                &lt;div className=&quot;hidden text-lg  font-bold sm:block md:mr-12&quot;&gt;
+                    &lt;ul className=&quot;flex space-x-4 md:space-x-8 lg:space-x-10 xl:space-x-12 2xl:space-x-20&quot;&gt;
                         &lt;NavOptions /&gt;
                     &lt;/ul&gt;
                 &lt;/div&gt;
@@ -129,7 +129,7 @@ export default function Header() {
 
                 &lt;div
                     ref={sideNav}
-                    className=&quot;rounded-md backdrop-blur sm:hidden font-bold text-lg absolute top-12 transition-all duration-500 -left-36 left-0&quot;
+                    className=&quot;absolute top-12 -left-36 left-0 rounded-md text-lg font-bold backdrop-blur transition-all duration-500 sm:hidden&quot;
                 &gt;
                     &lt;ul className=&quot;space-y-10 p-7&quot;&gt;
                         &lt;NavOptions /&gt;
