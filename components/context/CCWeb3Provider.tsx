@@ -34,45 +34,38 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
     const walletsDiv = useRef<HTMLDivElement>(null);
 
     async function connectProvider(wallet: Wallet): Promise<boolean> {
+        let ccProvider: CCP | undefined = undefined;
         switch (wallet) {
             case "metamask": {
                 if (typeof (window as any).ethereum !== "undefined") {
-                    let ccProvider = new CCP((window as any).ethereum);
-
-                    try {
-                        //check if wallet has been connected already, if not make run connect.
-                        if (!ccProvider.ethereum.isConnected()) {
-                            await ccProvider.connect();
-                        }
-                        setCCProvider(ccProvider);
-                    } catch (error) {
-                        console.log(error);
-                    }
+                    ccProvider = new CCP((window as any).ethereum);
                 } else {
                     return false;
                 }
                 break;
             }
             case "gamestop": {
-                if (typeof (window as any).ethereum !== "undefined") {
+                if (typeof (window as any).gamestop !== "undefined") {
                     //const gs = (window as any).gamestop;
-                    let ccProvider = new CCP((window as any).gamestop);
-                    try {
-                        if (!ccProvider.ethereum.isConnected()) {
-                            await ccProvider.connect();
-                        }
-                        setCCProvider(ccProvider);
-                    } catch (error) {
-                        console.log(error);
-                    }
+                    ccProvider = new CCP((window as any).gamestop);
                 } else {
                     return false;
                 }
                 break;
             }
         }
+        if (ccProvider !== undefined) {
+            try {
+                if (!ccProvider.ethereum.isConnected()) {
+                    await ccProvider.connect();
+                }
+                await ccProvider.initializeProvider();
+                setCCProvider(ccProvider);
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-        toggleWalletModal();
         return true;
     }
 
@@ -105,6 +98,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                                 className="flex items-center justify-center space-x-10 p-12 hover:bg-dt-fore hover:dark:bg-lp-back/25"
                                 onClick={() => {
                                     connectProvider("metamask");
+                                    toggleWalletModal();
                                 }}
                             >
                                 <Image
@@ -120,6 +114,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                                 className="flex items-center justify-center  space-x-10  p-12 hover:bg-dt-fore hover:dark:bg-lp-back/25"
                                 onClick={() => {
                                     connectProvider("gamestop");
+                                    toggleWalletModal();
                                 }}
                             >
                                 <Image

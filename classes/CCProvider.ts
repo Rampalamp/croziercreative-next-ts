@@ -25,12 +25,10 @@ export class CCProvider {
     async connect() {
         try {
             await this.ethereum.request({ method: "eth_requestAccounts" });
-
-            await this.initializeProvider();
         } catch (error: any) {
             if (error.code === 4001) {
                 // EIP-1193 userRejectedRequest error
-                console.log("Please connect to MetaMask.");
+                console.log("Please connect your wallet.");
             } else {
                 console.error(error);
             }

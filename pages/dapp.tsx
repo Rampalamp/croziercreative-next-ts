@@ -10,35 +10,13 @@ export default function dApp() {
     const [balance, setBalance] = useState<string>("0");
     const [walletFound, setWalletFound] = useState<boolean>(false);
 
-    // if (walletExists()) {
-    //     if (CCProvider === undefined) {
-    //         const connectedWallet = isWalletConnected();
-
-    //         if (connectedWallet === "metamask") {
-    //             connectProvider("metamask");
-    //         } else if (connectedWallet === "gamestop") {
-    //             connectProvider("gamestop");
-    //         }
-    //     }
-    // }
     useEffect(() => {
         if (walletExists()) {
             if (CCProvider === undefined) {
                 const connectedWallet = isWalletConnected();
 
                 if (connectedWallet === "metamask") {
-                    // const connProv = async () => {
-                    //     await connectProvider("metamask");
-                    // };
-                    // connProv();
-
-                    //I DONT THINK I CAN JUST CALL connectProvider, IT IS CURRENTLY SET TO ALSO TOGGLE THE WALLET MODAL.
-                    //ON TOP OF THAT, THE ORDER FLOW OF THINGS ARE CAUSING ISSUES, AND CALLING ASYNC FUNCTIONS IN useEffect DOESNT
-                    //SEEM TO BE WORKING, CCProvider IS COMING BACK UNDEFINED?
-                    connectProvider("metamask").then(() => {
-                        setAccount(CCProvider!.account);
-                        setBalance(CCProvider!.balance);
-                    });
+                    connectProvider("metamask");
                 } else if (connectedWallet === "gamestop") {
                     connectProvider("gamestop");
                 }
@@ -48,7 +26,6 @@ export default function dApp() {
 
     useEffect(() => {
         if (CCProvider?.ethereum !== undefined) {
-            console.log("CC PROVIDER NOT NULL");
             //setup initial account/balance values.
             //I made them a useState object because updating the CCProvider properties weren't triggering a component update.
             //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
@@ -78,10 +55,8 @@ export default function dApp() {
 
     function isWalletConnected(): string | undefined {
         if ((window as any).gamestop.isConnected()) {
-            console.log("GS is connected");
             return "gamestop";
         } else if ((window as any).ethereum.isConnected()) {
-            console.log("metamask is connected");
             return "metamask";
         }
         return undefined;
@@ -128,8 +103,7 @@ export default function dApp() {
     }
     return !walletFound ? (
         <div className="rounded-md bg-ls-back p-3 shadow-md  dark:bg-dt-back">
-            No wallet found. Please install Metamask or Gamestop wallet browser
-            extensions.
+            Please download either MetaMask or GameStop wallet.
         </div>
     ) : CCProvider === undefined ? (
         <div className="mt-5 items-center text-center sm:mt-0">
