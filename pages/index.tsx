@@ -21,7 +21,7 @@ export default function Home() {
                             Hi there.
                         </span>
                     </div>
-                    <div className="m-auto">
+                    <div className="mt-auto mb-auto ml-6 xs:m-auto">
                         <Image
                             className="h-auto w-auto rounded-full"
                             src="/zuko.png"

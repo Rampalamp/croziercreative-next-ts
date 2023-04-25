@@ -43,8 +43,8 @@ export default function dApp() {
 
     function walletExists(): boolean {
         if (
-            typeof (window as any).ethereum !== undefined ||
-            typeof (window as any).gamestop !== undefined
+            typeof (window as any).ethereum !== "undefined" ||
+            typeof (window as any).gamestop !== "undefined"
         ) {
             setWalletFound(true);
             return true;
@@ -57,6 +57,7 @@ export default function dApp() {
         if ((window as any).gamestop.isConnected()) {
             return "gamestop";
         } else if ((window as any).ethereum.isConnected()) {
+            console.log("thinks meta is connected even though not logged in.");
             return "metamask";
         }
         return undefined;
@@ -102,7 +103,7 @@ export default function dApp() {
         });
     }
     return !walletFound ? (
-        <div className="rounded-md bg-ls-back p-3 shadow-md  dark:bg-dt-back">
+        <div className="rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back">
             Please download either MetaMask or GameStop wallet.
         </div>
     ) : CCProvider === undefined ? (

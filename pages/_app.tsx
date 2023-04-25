@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <CodeOverlayProvider>
                 <CCWeb3Provider>
                     {/**Old gradient background setup: bg-gradient-to-bl from-lp-back to-lt-back dark:from-dt-back dark:to-dp-back */}
-                    <div className="flex h-screen w-screen min-w-[380px] flex-col overflow-auto bg-ls-fore bg-light bg-cover bg-center text-lp-fore transition duration-500 dark:bg-ds-back dark:bg-dark dark:text-dp-fore">
+                    <div className="flex h-screen w-screen min-w-[280px] flex-col overflow-auto bg-ls-fore bg-light bg-cover bg-center text-lp-fore transition duration-500 dark:bg-ds-back dark:bg-dark dark:text-dp-fore">
                         {/**Header Section */}
                         <ThemeProvider>
                             <Header />

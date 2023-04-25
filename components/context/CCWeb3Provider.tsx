@@ -82,7 +82,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                     ref={walletsDiv}
                     className="absolute z-50 hidden h-screen w-screen text-lg font-bold text-lp-fore backdrop-blur-md dark:text-dp-fore "
                 >
-                    <div className="h-screen min-w-[380px] p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
+                    <div className="sticky top-[10%] p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
                         <div className="mb-3 flex justify-end">
                             <CCButton onClick={toggleWalletModal}>
                                 <Image
