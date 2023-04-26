@@ -1,26 +1,36 @@
 import { useContext, useEffect, useState } from "react";
 import CCButton from "../components/CCButton";
 import CCConnectButton from "../components/CCConnectButton";
-import { CCWeb3Context } from "../components/context/CCWeb3Provider";
+import { CCWeb3Context, Wallet } from "../components/context/CCWeb3Provider";
 import { XEN_HHLOCAL } from "../constants/SmartContracts";
 
 export default function dApp() {
-    const { CCProvider, connectProvider } = useContext(CCWeb3Context);
+    const {
+        CCProvider,
+        connectProvider,
+        walletExists,
+        isWalletConnected,
+        isWalletUnlocked,
+    } = useContext(CCWeb3Context);
     const [account, setAccount] = useState<string>("0x0");
     const [balance, setBalance] = useState<string>("0");
     const [walletFound, setWalletFound] = useState<boolean>(false);
 
     useEffect(() => {
         if (walletExists()) {
-            if (CCProvider === undefined) {
-                const connectedWallet = isWalletConnected();
+            setWalletFound(true);
 
-                if (connectedWallet === "metamask") {
-                    connectProvider("metamask");
-                } else if (connectedWallet === "gamestop") {
-                    connectProvider("gamestop");
+            if (CCProvider === undefined) {
+                const connectedWallet: Wallet = isWalletConnected();
+
+                if (connectedWallet !== null) {
+                    isWalletUnlocked(connectedWallet)
+                        ? connectProvider(connectedWallet)
+                        : null;
                 }
             }
+        } else {
+            setWalletFound(false);
         }
     }, []);
 
@@ -41,26 +51,17 @@ export default function dApp() {
         };
     }, [CCProvider]);
 
-    function walletExists(): boolean {
-        if (
-            typeof (window as any).ethereum !== "undefined" ||
-            typeof (window as any).gamestop !== "undefined"
-        ) {
-            setWalletFound(true);
+    function showDapp(): boolean {
+        if (CCProvider !== undefined) {
+            //if no wallet connected dont display dapp
+            if (!isWalletConnected) return false;
+            //if connected wallet is not unlocked
+            if (!isWalletUnlocked(CCProvider.wallet)) return false;
+            //if it reaches here, should be safe to display dapp.
             return true;
         }
-        setWalletFound(false);
-        return false;
-    }
 
-    function isWalletConnected(): string | undefined {
-        if ((window as any).gamestop.isConnected()) {
-            return "gamestop";
-        } else if ((window as any).ethereum.isConnected()) {
-            console.log("thinks meta is connected even though not logged in.");
-            return "metamask";
-        }
-        return undefined;
+        return false;
     }
 
     async function handleAccountsChanged() {
@@ -106,15 +107,11 @@ export default function dApp() {
         <div className="rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back">
             Please download either MetaMask or GameStop wallet.
         </div>
-    ) : CCProvider === undefined ? (
-        <div className="mt-5 items-center text-center sm:mt-0">
-            <CCConnectButton />
-        </div>
-    ) : (
+    ) : showDapp() ? (
         <div>
             <div className="flex space-x-8">
                 <div className="rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dt-back">
-                    {CCProvider.chainName}
+                    {CCProvider!.chainName}
                 </div>
                 <div className="rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dt-back">
                     ETH {balance.slice(0, balance.indexOf(".") + 4)}
@@ -122,7 +119,7 @@ export default function dApp() {
                 </div>
                 <div className="rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dt-back">
                     {account.slice(0, 6)}...
-                    {account.slice(CCProvider.account.length - 4)}
+                    {account.slice(CCProvider!.account.length - 4)}
                 </div>
             </div>
 
@@ -135,6 +132,10 @@ export default function dApp() {
                 </div>
                 <div>XEN FLEX SMART CONTRACT</div>
             </div>
+        </div>
+    ) : (
+        <div className="mt-5 items-center text-center sm:mt-0">
+            <CCConnectButton />
         </div>
     );
 }

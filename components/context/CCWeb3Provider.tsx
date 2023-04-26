@@ -1,12 +1,3 @@
-/**
- * 1. Sort out interacting with the chrome wallet extensions, in window object most likely, will need to
- * useEffect and on load grab some values.
- * 2. Setup some basic provider functions like get Balance etc.
- * 3. Check chain ID? Probably just set it up to only work on mainnette and Goerlie to do some testing on.
- * 4. Start off with using Metamask and Gamestop wallet.
- *
- */
-
 import Image from "next/image";
 import { createContext, useEffect, useRef, useState } from "react";
 import CCButton from "../CCButton";
@@ -19,6 +10,9 @@ export type Wallet = "metamask" | "gamestop" | null;
 type CCWeb3Context = {
     connectProvider: (wallet: Wallet) => Promise<boolean>;
     toggleWalletModal: () => void;
+    walletExists: () => boolean;
+    isWalletConnected: () => Wallet | null;
+    isWalletUnlocked: (wallet: Wallet) => boolean;
     CCProvider: CCP | undefined;
 };
 
@@ -38,7 +32,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         switch (wallet) {
             case "metamask": {
                 if (typeof (window as any).ethereum !== "undefined") {
-                    ccProvider = new CCP((window as any).ethereum);
+                    ccProvider = new CCP((window as any).ethereum, wallet);
                 } else {
                     return false;
                 }
@@ -47,16 +41,20 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
             case "gamestop": {
                 if (typeof (window as any).gamestop !== "undefined") {
                     //const gs = (window as any).gamestop;
-                    ccProvider = new CCP((window as any).gamestop);
+                    ccProvider = new CCP((window as any).gamestop, wallet);
                 } else {
                     return false;
                 }
                 break;
             }
         }
+
         if (ccProvider !== undefined) {
             try {
-                if (!ccProvider.ethereum.isConnected()) {
+                if (
+                    !ccProvider.ethereum.isConnected() ||
+                    !isWalletUnlocked(ccProvider.wallet)
+                ) {
                     await ccProvider.connect();
                 }
                 await ccProvider.initializeProvider();
@@ -69,13 +67,48 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         return true;
     }
 
+    function walletExists(): boolean {
+        if (
+            typeof (window as any).ethereum !== "undefined" ||
+            typeof (window as any).gamestop !== "undefined"
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    function isWalletConnected(): Wallet | null {
+        if ((window as any).gamestop.isConnected()) {
+            return "gamestop";
+        } else if ((window as any).ethereum.isConnected()) {
+            return "metamask";
+        }
+        return null;
+    }
+
+    function isWalletUnlocked(wallet: Wallet): boolean {
+        if (wallet === "metamask") {
+            return (window as any).ethereum._state.isUnlocked ? true : false;
+        } else if (wallet === "gamestop") {
+            return (window as any).gamestop.isUnlocked ? true : false;
+        }
+        return false;
+    }
+
     function toggleWalletModal() {
         walletsDiv.current!.classList.toggle("hidden");
     }
 
     return (
         <CCWeb3Context.Provider
-            value={{ connectProvider, toggleWalletModal, CCProvider }}
+            value={{
+                connectProvider,
+                toggleWalletModal,
+                walletExists,
+                isWalletConnected,
+                isWalletUnlocked,
+                CCProvider,
+            }}
         >
             <div className="relative">
                 <div

@@ -1,5 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import keccak256 from "keccak256";
+import { Wallet } from "../components/context/CCWeb3Provider";
 
 //Good article that breaks down manually creating the data payload for a eth_sendTransaction call to interact with smart contract functions.
 //https://medium.com/coinmonks/ethereum-smart-contracts-how-to-communicate-with-them-abi-specification-web3-solidity-db056218b251
@@ -10,9 +11,11 @@ export class CCProvider {
     chainId!: number;
     chainName!: string;
     ethereum: any;
+    wallet: Wallet;
 
-    constructor(eth: any) {
+    constructor(eth: any, wallet: Wallet) {
         this.ethereum = eth;
+        this.wallet = wallet;
     }
 
     async initializeProvider() {
