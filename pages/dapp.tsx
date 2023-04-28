@@ -75,33 +75,18 @@ export default function dApp() {
             setBalance(CCProvider.balance);
         }
     }
-    /*CLAIM RANK FUNC
-  function claimRank(uint256 term) external {
-        uint256 termSec = term * SECONDS_IN_DAY;
-        require(termSec > MIN_TERM, "CRank: Term less than min");
-        require(termSec < _calculateMaxTerm() + 1, "CRank: Term more than current max term");
-        require(userMints[_msgSender()].rank == 0, "CRank: Mint already in progress");
 
-        // create and store new MintInfo
-        MintInfo memory mintInfo = MintInfo({
-            user: _msgSender(),
-            term: term,
-            maturityTs: block.timestamp + termSec,
-            rank: globalRank,
-            amplifier: _calculateRewardAmplifier(),
-            eaaRate: _calculateEAARate()
-        });
-        userMints[_msgSender()] = mintInfo;
-        activeMinters++;
-        emit RankClaimed(_msgSender(), term, globalRank++);
-    }
-
-*/
     async function handleXenClaimRank() {
         await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
-            function: "claimRank(uint256)",
-            termInDays: 100,
+            function: "sam(bytes, bool, uint256[])",
+            name: "dave",
+            check: true,
+            ids: [1, 2, 3],
         });
+        // await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
+        //     function: "claimRank(uint256)",
+        //     termInDays: 100,
+        // });
     }
     return !walletFound ? (
         <div className="rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back">
