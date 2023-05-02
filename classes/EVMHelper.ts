@@ -1,25 +1,22 @@
-import { create } from "domain";
 import keccak256 from "keccak256";
-import { stringify } from "querystring";
+
 /**
  *
  * @param params An object which the first property should always be the function signature, every property thereafter is considered a parameter within the function signature we are going to call
  * @returns a long string in hex that should be used in the data portion for the eth_sendTransaction request.
  */
 export function createDataPayload(params: {}): string {
-    //assume params coming in the following order - Function name and params claimRank(uint256 term)
     const paramEntries = Object.entries(params);
     let sigParamDataMap: Map<number, string[]> | null = null;
     let payloadMap: Map<number, string> = new Map<number, string>();
     let refDataMap: Map<number, string[]> = new Map<number, string[]>();
     let payload: string = "0x";
     let param: any;
-    let paramKey: string;
+    let offsetSigParamCount: number = 0;
     let paramValue: any;
 
     for (let i = 0; i < paramEntries.length; i++) {
         param = paramEntries[i];
-        paramKey = param[0];
         paramValue = param[1];
 
         if (i === 0) {
@@ -29,8 +26,10 @@ export function createDataPayload(params: {}): string {
             const signature: string = keccak256(trimmed)
                 .toString("hex")
                 .slice(0, 8);
+
             //prime payload with signature
-            payload = payload + signature;
+            payload += signature;
+
             //parse trimmed non-keccak signature and fill mapping with what we can for now.
             const cleanExp: RegExp = /\(([^)]+)\)/;
             const paramMatch = cleanExp.exec(trimmed);
@@ -56,8 +55,9 @@ export function createDataPayload(params: {}): string {
             } else {
                 //dynamic type
                 //add placeholder for offset to payloadMap
-                //when setting offsetX value, subtract 1 again from i for mapping continuinity
-                payloadMap.set(payloadMap.size, `offset${i - 1}`);
+                //using a separate offsetSigParamCounter, since offset rows can come in any order.
+                payloadMap.set(payloadMap.size, `offset${offsetSigParamCount}`);
+                offsetSigParamCount++;
                 //for now insert a blank hex string
                 //determine complexity/# of dimensions for an array parameter
                 let offsetArray: string[] = [];
@@ -72,10 +72,9 @@ export function createDataPayload(params: {}): string {
 
                     dataArray.push(create32ByteHexString(paramValue.length));
                     dataArray.push(create32ByteHexString(paramValue));
-                    console.log(dataArray);
                 } else if (paramComplexity === 1) {
                     //one exception would be if its a string[], which is really a complexity of 2.
-                    if (paramDataType.includes("string")) {
+                    if (/^string/.test(paramDataType)) {
                         //first encode the actual data
                         //each entry of array gets 64 bytes
                         //first 32 bytes are for length of string
@@ -110,12 +109,44 @@ export function createDataPayload(params: {}): string {
                         }
                     }
                 } else if (paramComplexity === 2) {
+                    if (/^string/.test(paramDataType)) {
+                        //unsure if I will build this out for a string[][].
+                        //with each increasing complexity, right now there is too much duplicated code going on.
+                        //would need to do some refactoring for the array pushing
+                        //and create a method/algo to make it more dynamic regardless of parameter complexity.
+                    } else {
+                        let offsetByteMultiplier: number = paramValue.length;
+
+                        offsetArray.push(
+                            create32ByteHexString(offsetByteMultiplier)
+                        );
+
+                        for (let k = 0; k < paramValue.length; k++) {
+                            const item = paramValue[k];
+
+                            offsetArray.push(
+                                create32ByteHexString(offsetByteMultiplier * 32)
+                            );
+
+                            //in this case offsetByteMultiplier will increased based on items.length + 1
+                            offsetByteMultiplier += 1 + item.length;
+                            dataArray.push(create32ByteHexString(item.length));
+                            //I think it is safe to assume our paramValue[k] is an array
+
+                            for (const innerItem of item) {
+                                dataArray.push(
+                                    create32ByteHexString(innerItem)
+                                );
+                            }
+                        }
+                        console.log(offsetArray);
+                    }
                 } else {
                     //more then 3 deep, not going to bother for now.
+                    //again would need to consider some refactoring
+                    //and figuring out a method to cleanly handle increase complexity
                 }
 
-                console.log(offsetArray);
-                console.log(dataArray);
                 refDataMap.set(refDataMap.size, offsetArray.concat(dataArray));
             }
         }
@@ -125,27 +156,34 @@ export function createDataPayload(params: {}): string {
         //no params just return payload which should be 0xkeccak256(FUNC SIG)
         return payload;
     }
-    //if sigParamDataMap is not null, safe to assume we have used payloadMap
-    //iterate through and create final payload string with params.
-    //offset1 in payloadMap should be the first array in refDataMap
-    //offset2 is second entry in refdataMap etc etc.
+    //if sigParamDataMap is not null, safe to assume we have used/created a payloadMap
+
+    //here we are iterating through payloadMap
+    //as we loop we adjust any data that contains the string 'offset'
+    //we use the ending of the offset value to grab the reference data
     payloadMap.forEach((value, key, map) => {
-        if (value.includes("offset")) {
+        if (/offset/g.test(value)) {
             const refDataKey = Number(value.replace(/offset/g, ""));
+            //use payloadMap.size to determine the offset byte.
+            //I think this will be safer
+            //we end up building out the payloadMap further
+            map.set(key, create32ByteHexString(map.size * 32));
 
-            //if its offset0, then the starting byte will be # of params x 32
+            const refData: string[] | undefined = refDataMap.get(refDataKey);
 
-            if (refDataKey === 0) {
-                map.set(key, create32ByteHexString(sigParamDataMap!.size * 32));
-            } else {
-                //any other offsets1,2,3,4 will need to count the number of rows in previous refEntry array count, + paramCount * 32
+            if (refData !== undefined) {
+                for (const value of refData) map.set(map.size, value);
             }
-
-            const refEntry = refDataMap.get(refDataKey);
         }
     });
-    console.log(payloadMap);
-    console.log(refDataMap);
+
+    //final iteartion of payloadMap to construct one long payload string.
+    payloadMap.forEach((value) => {
+        payload += value;
+    });
+
+    console.log(payload);
+
     return payload;
 }
 
