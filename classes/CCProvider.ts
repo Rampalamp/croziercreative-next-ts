@@ -2,8 +2,6 @@ import { BigNumber, ethers } from "ethers";
 import { Wallet } from "../components/context/CCWeb3Provider";
 import { createDataPayload } from "./EVMHelper";
 
-//Good article that breaks down manually creating the data payload for a eth_sendTransaction call to interact with smart contract functions.
-//https://medium.com/coinmonks/ethereum-smart-contracts-how-to-communicate-with-them-abi-specification-web3-solidity-db056218b251
 //https://docs.soliditylang.org/en/develop/abi-spec.html#use-of-dynamic-types
 
 export class CCProvider {
@@ -113,8 +111,6 @@ export class CCProvider {
 
     async sendContractTransaction(address: string, sender: string, params: {}) {
         const payloadData: string = createDataPayload(params);
-
-        console.log(payloadData);
 
         const transactionParameters = {
             nonce: "0x00", // ignored by MetaMask

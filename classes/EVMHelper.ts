@@ -1,5 +1,6 @@
 import { create } from "domain";
 import keccak256 from "keccak256";
+import { stringify } from "querystring";
 /**
  *
  * @param params An object which the first property should always be the function signature, every property thereafter is considered a parameter within the function signature we are going to call
@@ -8,10 +9,10 @@ import keccak256 from "keccak256";
 export function createDataPayload(params: {}): string {
     //assume params coming in the following order - Function name and params claimRank(uint256 term)
     const paramEntries = Object.entries(params);
-    let sigParamDataMap: Map<number, string[]>;
+    let sigParamDataMap: Map<number, string[]> | null = null;
     let payloadMap: Map<number, string> = new Map<number, string>();
     let refDataMap: Map<number, string[]> = new Map<number, string[]>();
-    let payload: string = "";
+    let payload: string = "0x";
     let param: any;
     let paramKey: string;
     let paramValue: any;
@@ -29,31 +30,23 @@ export function createDataPayload(params: {}): string {
                 .toString("hex")
                 .slice(0, 8);
             //prime payload with signature
-            payload = signature + payload;
+            payload = payload + signature;
             //parse trimmed non-keccak signature and fill mapping with what we can for now.
-            const regExp: RegExp = /\(([^)]+)\)/;
-            const paramMatch = regExp.exec(trimmed);
+            const cleanExp: RegExp = /\(([^)]+)\)/;
+            const paramMatch = cleanExp.exec(trimmed);
             if (paramMatch !== null) {
                 const params: string[] = paramMatch[1].split(",");
 
-                sigParamDataMap = createParamDataMapping(params);
+                sigParamDataMap =
+                    params.length > 0 ? createParamDataMapping(params) : null;
             }
         } else {
             //parameters of the function signature
             //mappedParam[0] will be either static or dynamic
             //mappedParam[1] will be the actual solidity data type (bool, address, uint etc.)
-            const mappedParam = sigParamDataMap!.get(i);
+            //subtract 1 from i to make sure the proper key is used to retrieve sigParamDataMap entry.
+            const mappedParam = sigParamDataMap!.get(i - 1);
 
-            //determine if param is dynamic type or static type
-            //This part can get tricky, and likley more work then I have time to do
-            //Going to keep it simple and only handle basic arrays, not multi-dimensional.
-            //things to note, the initial 4 selector bytes are not considered when calculating offset bytes
-            //the offset byte for the first dynamic type in sig params can be easily calculated
-            //params.length x 32
-
-            //offset for a secondary dynamic type need to be calculated based off the first dynamic type.
-            //if the first dynamic type is an array of numbers, each number will push the
-            //offset of the second dynamic type another 32 bytes down.
             if (mappedParam![0] === "static") {
                 //for static should be able to just straight add it to the payloadMap object.
                 payloadMap.set(
@@ -63,7 +56,8 @@ export function createDataPayload(params: {}): string {
             } else {
                 //dynamic type
                 //add placeholder for offset to payloadMap
-                payloadMap.set(payloadMap.size, "offset" + i.toString());
+                //when setting offsetX value, subtract 1 again from i for mapping continuinity
+                payloadMap.set(payloadMap.size, `offset${i - 1}`);
                 //for now insert a blank hex string
                 //determine complexity/# of dimensions for an array parameter
                 let offsetArray: string[] = [];
@@ -78,6 +72,7 @@ export function createDataPayload(params: {}): string {
 
                     dataArray.push(create32ByteHexString(paramValue.length));
                     dataArray.push(create32ByteHexString(paramValue));
+                    console.log(dataArray);
                 } else if (paramComplexity === 1) {
                     //one exception would be if its a string[], which is really a complexity of 2.
                     if (paramDataType.includes("string")) {
@@ -108,29 +103,49 @@ export function createDataPayload(params: {}): string {
                         dataArray.push(
                             create32ByteHexString(paramValue.length)
                         );
-                        for (let k = 0; k < paramValue.length.length; k++) {
+                        for (let k = 0; k < paramValue.length; k++) {
                             dataArray.push(
-                                create32ByteHexString(paramValue.length[k])
+                                create32ByteHexString(paramValue[k])
                             );
                         }
                     }
-                    refDataMap.set(
-                        refDataMap.size,
-                        offsetArray.concat(dataArray)
-                    );
                 } else if (paramComplexity === 2) {
                 } else {
                     //more then 3 deep, not going to bother for now.
                 }
 
-                //check mappedParam[1] to determine if you are making more offsets (array of arrays, or an array of strings)
-                //If its bytes/strings, get the length
-                //if array of uints/addresses?/ints/bools w/e
+                console.log(offsetArray);
+                console.log(dataArray);
+                refDataMap.set(refDataMap.size, offsetArray.concat(dataArray));
             }
-            console.log(payloadMap);
-            console.log(refDataMap);
         }
     }
+
+    if (sigParamDataMap === null) {
+        //no params just return payload which should be 0xkeccak256(FUNC SIG)
+        return payload;
+    }
+    //if sigParamDataMap is not null, safe to assume we have used payloadMap
+    //iterate through and create final payload string with params.
+    //offset1 in payloadMap should be the first array in refDataMap
+    //offset2 is second entry in refdataMap etc etc.
+    payloadMap.forEach((value, key, map) => {
+        if (value.includes("offset")) {
+            const refDataKey = Number(value.replace(/offset/g, ""));
+
+            //if its offset0, then the starting byte will be # of params x 32
+
+            if (refDataKey === 0) {
+                map.set(key, create32ByteHexString(sigParamDataMap!.size * 32));
+            } else {
+                //any other offsets1,2,3,4 will need to count the number of rows in previous refEntry array count, + paramCount * 32
+            }
+
+            const refEntry = refDataMap.get(refDataKey);
+        }
+    });
+    console.log(payloadMap);
+    console.log(refDataMap);
     return payload;
 }
 
@@ -148,8 +163,8 @@ export function createParamDataMapping(
         const param = params[i];
 
         const paramType = getSolidityParamType(param);
-        //set the key/index to be i+1, this makes it easier inside the createDataPayload function
-        mapping.set(i + 1, [paramType, param]);
+
+        mapping.set(i, [paramType, param]);
     }
 
     return mapping;
@@ -174,7 +189,7 @@ export function create32ByteHexString(value: any): string {
             break;
         case "boolean":
             const valBool: boolean = value as boolean;
-            param = valBool ? "01" : "00";
+            param = valBool ? "01".padStart(64, "0") : "00".padStart(64, "0");
             break;
         case "bigint":
             const valBigInt: bigint = value as bigint;
