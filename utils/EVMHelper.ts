@@ -1,3 +1,4 @@
+import { create } from "domain";
 import keccak256 from "keccak256";
 
 /**
@@ -14,6 +15,31 @@ export function createDataPayload(params: {}): string {
     let param: any;
     let offsetSigParamCount: number = 0;
     let paramValue: any;
+    let testRefMap: Map<number, string[]> = new Map<number, string[]>();
+    // const pp = [
+    //     [[1, 2, 3], [4, 3], [2]],
+    //     [[3], [3, 2]],
+    // ];
+    // const af = [[4, 5, 6], [7], [8, 9]];
+    // const reliable = { ints: true, pn: "fart", kk: "Poop" };
+    // const testNt = Object.entries(reliable);
+
+    // for (let i = 0; i < testNt.length; i++) {
+    //     const element = testNt[i];
+    //     let datAr: string[] = [];
+    //     let offAr: string[] = [];
+
+    //     traverseDynamicType(
+    //         element[1],
+    //         "uint256[][]",
+    //         testRefMap,
+    //         offAr,
+    //         datAr
+    //     );
+    //     testRefMap.set(testRefMap.size, offAr.concat(datAr));
+    // }
+
+    // console.log(testRefMap);
 
     for (let i = 0; i < paramEntries.length; i++) {
         param = paramEntries[i];
@@ -53,6 +79,19 @@ export function createDataPayload(params: {}): string {
                     create32ByteHexString(paramValue)
                 );
             } else {
+                //FINISH IMPLEMENTING traverseDynamicType and get rid of rest of it.
+                let datAr: string[] = [];
+                let offAr: string[] = [];
+
+                traverseDynamicType(
+                    paramValue,
+                    "uint256[][]",
+                    testRefMap,
+                    offAr,
+                    datAr
+                );
+                testRefMap.set(testRefMap.size, offAr.concat(datAr));
+
                 //dynamic type
                 //add placeholder for offset to payloadMap
                 //using a separate offsetSigParamCounter, since offset rows can come in any order.
@@ -139,7 +178,6 @@ export function createDataPayload(params: {}): string {
                                 );
                             }
                         }
-                        console.log(offsetArray);
                     }
                 } else {
                     //more then 3 deep, not going to bother for now.
@@ -151,6 +189,8 @@ export function createDataPayload(params: {}): string {
             }
         }
     }
+
+    console.log(testRefMap);
 
     if (sigParamDataMap === null) {
         //no params just return payload which should be 0xkeccak256(FUNC SIG)
@@ -182,9 +222,83 @@ export function createDataPayload(params: {}): string {
         payload += value;
     });
 
-    console.log(payload);
-
     return payload;
+}
+
+function traverseDynamicType(
+    val: any,
+    paramDataType: string,
+    refMap: Map<number, string[]>,
+    offsetArray: string[],
+    dataArray: string[]
+): void {
+    if (Array.isArray(val)) {
+        //confirm if next child is another array, if true, create further offset rows.
+        if (Array.isArray(val[0])) {
+            offsetArray.push(create32ByteHexString(val.length));
+            //array in array
+
+            let byteMulti: number = val.length;
+            //loop through once calculating offset values for next array
+            for (let i = 0; i < val.length; i++) {
+                offsetArray.push(create32ByteHexString(byteMulti * 32));
+
+                byteMulti += val[i].length + 1;
+            }
+            //loop through again using val[i] as new value for next recursion
+            for (let i = 0; i < val.length; i++) {
+                traverseDynamicType(
+                    val[i],
+                    paramDataType,
+                    refMap,
+                    offsetArray,
+                    dataArray
+                );
+            }
+        } else if (typeof val[0] === "string") {
+            //strings have a more static byteMulti increaser
+            //unless the string is longer then 32 bytes, then this will break I think...
+            //Havn't researched what happens in that case
+            //I assume it just adds as many byte rows for the data as needed in 32 byte increments.
+            offsetArray.push(create32ByteHexString(val.length));
+
+            let byteMulti: number = val.length;
+            //if val is string, loop through once for offsets,
+            for (let i = 0; i < val.length; i++) {
+                offsetArray.push(create32ByteHexString(byteMulti * 32));
+                byteMulti += 2;
+            }
+            //loop through sending val[i] for next recursion
+            for (let i = 0; i < val.length; i++) {
+                offsetArray.push(create32ByteHexString(val[i].length));
+                traverseDynamicType(
+                    val[i],
+                    paramDataType,
+                    refMap,
+                    offsetArray,
+                    dataArray
+                );
+            }
+        } else {
+            offsetArray.push(create32ByteHexString(val.length));
+
+            for (let i = 0; i < val.length; i++) {
+                traverseDynamicType(
+                    val[i],
+                    paramDataType,
+                    refMap,
+                    offsetArray,
+                    dataArray
+                );
+            }
+        }
+    } else if (typeof val === "string") {
+        //here we want to know how many paramters total are in the signature.
+        offsetArray.push(create32ByteHexString(val.length));
+        offsetArray.push(create32ByteHexString(val));
+    } else {
+        offsetArray.push(create32ByteHexString(val));
+    }
 }
 
 /**

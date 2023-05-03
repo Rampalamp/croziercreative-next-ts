@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { Wallet } from "../components/context/CCWeb3Provider";
-import { createDataPayload } from "./EVMHelper";
+import { createDataPayload } from "../utils/EVMHelper";
 
 //https://docs.soliditylang.org/en/develop/abi-spec.html#use-of-dynamic-types
 
