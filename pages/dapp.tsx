@@ -78,10 +78,9 @@ export default function dApp() {
 
     async function handleXenClaimRank() {
         await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
-            function: "sam(bytes,bool,uint256[])",
-            ints: "dave",
-            strings: true,
-            ins: [1, 2, 3],
+            function: "g(uint256[][],string[])",
+            ints: [[1, 2], [3]],
+            strings: ["one", "two", "three"],
         });
         // await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
         //     function: "claimRank(uint256)",

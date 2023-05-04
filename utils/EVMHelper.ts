@@ -6,40 +6,15 @@ import keccak256 from "keccak256";
  * @param params An object which the first property should always be the function signature, every property thereafter is considered a parameter within the function signature we are going to call
  * @returns a long string in hex that should be used in the data portion for the eth_sendTransaction request.
  */
-export function createDataPayload(params: {}): string {
+export function encodeDataPayload(params: {}): string {
     const paramEntries = Object.entries(params);
-    let sigParamDataMap: Map<number, string[]> | null = null;
+    let sigParamDataMap: Map<number, string> | null = null;
     let payloadMap: Map<number, string> = new Map<number, string>();
     let refDataMap: Map<number, string[]> = new Map<number, string[]>();
     let payload: string = "0x";
     let param: any;
     let offsetSigParamCount: number = 0;
     let paramValue: any;
-    let testRefMap: Map<number, string[]> = new Map<number, string[]>();
-    // const pp = [
-    //     [[1, 2, 3], [4, 3], [2]],
-    //     [[3], [3, 2]],
-    // ];
-    // const af = [[4, 5, 6], [7], [8, 9]];
-    // const reliable = { ints: true, pn: "fart", kk: "Poop" };
-    // const testNt = Object.entries(reliable);
-
-    // for (let i = 0; i < testNt.length; i++) {
-    //     const element = testNt[i];
-    //     let datAr: string[] = [];
-    //     let offAr: string[] = [];
-
-    //     traverseDynamicType(
-    //         element[1],
-    //         "uint256[][]",
-    //         testRefMap,
-    //         offAr,
-    //         datAr
-    //     );
-    //     testRefMap.set(testRefMap.size, offAr.concat(datAr));
-    // }
-
-    // console.log(testRefMap);
 
     for (let i = 0; i < paramEntries.length; i++) {
         param = paramEntries[i];
@@ -79,118 +54,20 @@ export function createDataPayload(params: {}): string {
                     create32ByteHexString(paramValue)
                 );
             } else {
-                //FINISH IMPLEMENTING traverseDynamicType and get rid of rest of it.
-                let datAr: string[] = [];
-                let offAr: string[] = [];
-
-                traverseDynamicType(
-                    paramValue,
-                    "uint256[][]",
-                    testRefMap,
-                    offAr,
-                    datAr
-                );
-                testRefMap.set(testRefMap.size, offAr.concat(datAr));
-
                 //dynamic type
                 //add placeholder for offset to payloadMap
                 //using a separate offsetSigParamCounter, since offset rows can come in any order.
                 payloadMap.set(payloadMap.size, `offset${offsetSigParamCount}`);
                 offsetSigParamCount++;
-                //for now insert a blank hex string
-                //determine complexity/# of dimensions for an array parameter
+                //send in fresh array to be filled out with offsets and data.
                 let offsetArray: string[] = [];
-                let dataArray: string[] = [];
-                const paramDataType: string = mappedParam![1];
-                const paramComplexity: number = (
-                    paramDataType.match(/\[\]/g) || []
-                ).length;
 
-                if (paramComplexity === 0) {
-                    //this should be bytes/string if its a dynamic parameter but not explicitly an array in the naming convention [].
-
-                    dataArray.push(create32ByteHexString(paramValue.length));
-                    dataArray.push(create32ByteHexString(paramValue));
-                } else if (paramComplexity === 1) {
-                    //one exception would be if its a string[], which is really a complexity of 2.
-                    if (/^string/.test(paramDataType)) {
-                        //first encode the actual data
-                        //each entry of array gets 64 bytes
-                        //first 32 bytes are for length of string
-                        //second 32 bytes is the actual character ASCII hex value.
-                        let offsetByteMultiplier: number = paramValue.length;
-                        //set count line in offset array, which at this point should just be the offsetByteMultiplier.
-                        offsetArray.push(
-                            create32ByteHexString(offsetByteMultiplier)
-                        );
-                        for (let k = 0; k < paramValue.length; k++) {
-                            const item = paramValue[k];
-
-                            offsetArray.push(
-                                create32ByteHexString(offsetByteMultiplier * 32)
-                            );
-
-                            offsetByteMultiplier += 2;
-
-                            dataArray.push(create32ByteHexString(item.length));
-                            dataArray.push(create32ByteHexString(item));
-                        }
-                    } else {
-                        //if not a string, no extra offsets needed in this complexity.
-                        //encode the count/number of items in array, then the actual data point.
-                        dataArray.push(
-                            create32ByteHexString(paramValue.length)
-                        );
-                        for (let k = 0; k < paramValue.length; k++) {
-                            dataArray.push(
-                                create32ByteHexString(paramValue[k])
-                            );
-                        }
-                    }
-                } else if (paramComplexity === 2) {
-                    if (/^string/.test(paramDataType)) {
-                        //unsure if I will build this out for a string[][].
-                        //with each increasing complexity, right now there is too much duplicated code going on.
-                        //would need to do some refactoring for the array pushing
-                        //and create a method/algo to make it more dynamic regardless of parameter complexity.
-                    } else {
-                        let offsetByteMultiplier: number = paramValue.length;
-
-                        offsetArray.push(
-                            create32ByteHexString(offsetByteMultiplier)
-                        );
-
-                        for (let k = 0; k < paramValue.length; k++) {
-                            const item = paramValue[k];
-
-                            offsetArray.push(
-                                create32ByteHexString(offsetByteMultiplier * 32)
-                            );
-
-                            //in this case offsetByteMultiplier will increased based on items.length + 1
-                            offsetByteMultiplier += 1 + item.length;
-                            dataArray.push(create32ByteHexString(item.length));
-                            //I think it is safe to assume our paramValue[k] is an array
-
-                            for (const innerItem of item) {
-                                dataArray.push(
-                                    create32ByteHexString(innerItem)
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    //more then 3 deep, not going to bother for now.
-                    //again would need to consider some refactoring
-                    //and figuring out a method to cleanly handle increase complexity
-                }
-
-                refDataMap.set(refDataMap.size, offsetArray.concat(dataArray));
+                traverseDynamicType(paramValue, offsetArray);
+                //create new entry in refDataMap with offsetArray data.
+                refDataMap.set(refDataMap.size, offsetArray);
             }
         }
     }
-
-    console.log(testRefMap);
 
     if (sigParamDataMap === null) {
         //no params just return payload which should be 0xkeccak256(FUNC SIG)
@@ -221,17 +98,18 @@ export function createDataPayload(params: {}): string {
     payloadMap.forEach((value) => {
         payload += value;
     });
+    console.log(payload);
 
     return payload;
 }
 
-function traverseDynamicType(
-    val: any,
-    paramDataType: string,
-    refMap: Map<number, string[]>,
-    offsetArray: string[],
-    dataArray: string[]
-): void {
+/**
+ * This function has a recursion based on the child type being an array creating offset encoding when needed
+ * eventually when the value is a non-array type it will encode the actual data inside the arrays.
+ * @param val Parameter value to traverse over which should be a dynamic solidity type
+ * @param offsetArray The array that will be populated while traversing, to be appended to refDataMap after filled.
+ */
+function traverseDynamicType(val: any, offsetArray: string[]): void {
     if (Array.isArray(val)) {
         //confirm if next child is another array, if true, create further offset rows.
         if (Array.isArray(val[0])) {
@@ -247,19 +125,14 @@ function traverseDynamicType(
             }
             //loop through again using val[i] as new value for next recursion
             for (let i = 0; i < val.length; i++) {
-                traverseDynamicType(
-                    val[i],
-                    paramDataType,
-                    refMap,
-                    offsetArray,
-                    dataArray
-                );
+                traverseDynamicType(val[i], offsetArray);
             }
         } else if (typeof val[0] === "string") {
             //strings have a more static byteMulti increaser
             //unless the string is longer then 32 bytes, then this will break I think...
             //Havn't researched what happens in that case
             //I assume it just adds as many byte rows for the data as needed in 32 byte increments.
+            //this section will likely need changing for strings greater then 32 bytes.
             offsetArray.push(create32ByteHexString(val.length));
 
             let byteMulti: number = val.length;
@@ -271,32 +144,18 @@ function traverseDynamicType(
             //loop through sending val[i] for next recursion
             for (let i = 0; i < val.length; i++) {
                 offsetArray.push(create32ByteHexString(val[i].length));
-                traverseDynamicType(
-                    val[i],
-                    paramDataType,
-                    refMap,
-                    offsetArray,
-                    dataArray
-                );
+                traverseDynamicType(val[i], offsetArray);
             }
         } else {
             offsetArray.push(create32ByteHexString(val.length));
 
             for (let i = 0; i < val.length; i++) {
-                traverseDynamicType(
-                    val[i],
-                    paramDataType,
-                    refMap,
-                    offsetArray,
-                    dataArray
-                );
+                traverseDynamicType(val[i], offsetArray);
             }
         }
-    } else if (typeof val === "string") {
-        //here we want to know how many paramters total are in the signature.
-        offsetArray.push(create32ByteHexString(val.length));
-        offsetArray.push(create32ByteHexString(val));
     } else {
+        //after traversing through all arrays, function should finally end here
+        //hexifying the actual data itself.
         offsetArray.push(create32ByteHexString(val));
     }
 }
@@ -306,17 +165,15 @@ function traverseDynamicType(
  * @param params String array of the parameters in the function signature
  * @returns Mapping<number,string[]> : key of map is index order of the string[] params passed in. The value string[] will have two strings, first stringwill be the param type (static or dynamic), the second string will be the actual param/data solidity type
  */
-export function createParamDataMapping(
-    params: string[]
-): Map<number, string[]> {
-    let mapping: Map<number, string[]> = new Map<number, string[]>();
+export function createParamDataMapping(params: string[]): Map<number, string> {
+    let mapping: Map<number, string> = new Map<number, string>();
 
     for (let i = 0; i < params.length; i++) {
         const param = params[i];
 
         const paramType = getSolidityParamType(param);
 
-        mapping.set(i, [paramType, param]);
+        mapping.set(i, paramType);
     }
 
     return mapping;

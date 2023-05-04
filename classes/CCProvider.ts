@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { Wallet } from "../components/context/CCWeb3Provider";
-import { createDataPayload } from "../utils/EVMHelper";
+import { encodeDataPayload } from "../utils/EVMHelper";
 
 //https://docs.soliditylang.org/en/develop/abi-spec.html#use-of-dynamic-types
 
@@ -110,7 +110,7 @@ export class CCProvider {
     }
 
     async sendContractTransaction(address: string, sender: string, params: {}) {
-        const payloadData: string = createDataPayload(params);
+        const payloadData: string = encodeDataPayload(params);
 
         const transactionParameters = {
             nonce: "0x00", // ignored by MetaMask
