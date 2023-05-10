@@ -1,8 +1,6 @@
 import Image from "next/image";
 import { createContext, useEffect, useRef, useState } from "react";
 import CCButton from "../CCButton";
-import { ethers } from "ethers";
-import { BigNumber } from "ethers/lib/ethers";
 import { CCProvider as CCP } from "../../classes/CCProvider";
 
 export type Wallet = "metamask" | "gamestop" | null;

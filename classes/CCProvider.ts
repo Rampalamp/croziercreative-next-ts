@@ -109,22 +109,38 @@ export class CCProvider {
         return chainName;
     }
 
-    async callContract(address: string, sender: string, params: {}) {
+    async callContract(
+        address: string,
+        sender: string,
+        params: {}
+    ): Promise<string | undefined> {
         const payloadData: string = encodeDataPayload(params);
-        const txHash = await this.ethereum.request({
-            method: "eth_call",
-            params: [
-                {
-                    from: sender,
-                    to: address,
-                    data: payloadData,
-                },
-            ],
-        });
-        console.log(txHash);
+
+        try {
+            const txResponseData = await this.ethereum.request({
+                method: "eth_call",
+                params: [
+                    {
+                        from: sender,
+                        to: address,
+                        data: payloadData,
+                    },
+                ],
+            });
+
+            return txResponseData;
+        } catch (error) {
+            console.log(error);
+
+            return undefined;
+        }
     }
 
-    async sendContractTransaction(address: string, sender: string, params: {}) {
+    async sendContractTransaction(
+        address: string,
+        sender: string,
+        params: {}
+    ): Promise<boolean> {
         const payloadData: string = encodeDataPayload(params);
 
         //Don't need to supply gas or gasPrice fields. They were causing issues with metamask
@@ -140,12 +156,22 @@ export class CCProvider {
             data: payloadData, // Optional, but used for defining smart contract creation and interaction.
             chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
         };
+        try {
+            const txHash = await this.ethereum.request({
+                method: "eth_sendTransaction",
+                params: [transactionParameters],
+            });
+            //the eth_getTransactionReceipt is essentially our wait for block mining
+            //Currently no need to do anything with the txReceipt objext...yet.
+            const txReceipt = await this.ethereum.request({
+                method: "eth_getTransactionReceipt",
+                params: [txHash],
+            });
 
-        const txHash = await this.ethereum.request({
-            method: "eth_sendTransaction",
-            params: [transactionParameters],
-        });
-
-        console.log(txHash);
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
 }

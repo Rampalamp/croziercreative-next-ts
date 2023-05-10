@@ -1,5 +1,12 @@
-import { create } from "domain";
 import keccak256 from "keccak256";
+import { Type } from "typescript";
+/**
+ * Considered making a decoder function for when calling view functions
+ * on smart contracts. It would likely follow some pattern similar
+ * to encodeDataPayload, but for the dapp section of crozier creative,
+ * I am going to just create a function to handle getUserMint specifically.
+ * Perhaps one day!
+ */
 
 /**
  *
@@ -98,7 +105,6 @@ export function encodeDataPayload(params: {}): string {
     payloadMap.forEach((value) => {
         payload += value;
     });
-    console.log(payload);
 
     return payload;
 }
@@ -206,50 +212,58 @@ export function create32ByteHexString(value: any): string {
             break;
 
         default:
-            //I dont think any of this array logic will stay in here.
-            if (Array.isArray(value)) {
-                const isStringArray =
-                    value.length > 0 &&
-                    value.every((val) => {
-                        return typeof val === "string";
-                    });
-
-                if (isStringArray) {
-                    value.forEach((val) => {
-                        param =
-                            param +
-                            Buffer.from(val).toString("hex").padEnd(64, "0");
-                    });
-                    break;
-                }
-
-                const isNumberArray =
-                    value.length > 0 &&
-                    value.every((val) => {
-                        return typeof val === "number";
-                    });
-
-                if (isNumberArray) {
-                    value.forEach((val) => {
-                        param = param + val.toString(16).padStart(64, "0");
-                    });
-                    break;
-                }
-                //for each new depth of arrays, it will result in new offsets being needed.
-                const isArrayOfArray =
-                    value.length > 0 &&
-                    value.every((val) => {
-                        return Array.isArray(val);
-                    });
-                if (isArrayOfArray) {
-                    //Not sure if I want to bother with this currently.
-                }
-            }
             break;
     }
     return param;
 }
 
+/**
+ * This function will trim off leading zeros of a 32Byte hex string
+ * It currently does not handle all possible types, ie arrays/dynamic solidity types
+ * Perhaps one day, but its basically setup to handle XENCrypto.sol
+ * but should also handle most basic data types.
+ * @param hexString 32 Byte or 64 Char long hex string
+ * @param dataType Type of data in string format
+ * @returns Each type will return its own type respectively, with the exception of
+ * address which is solidity specific type but will be represented as a string
+ * in the front end.
+ */
+export function decode32ByteHexString(
+    hexString: string,
+    dataType: string
+): number | string | boolean | bigint | null {
+    //regex to trim leading zeroes
+    //this should cover most types, but not strings in its current state
+    //i assume when a smart contract call that returns a view string
+    //it would be a series of 32 byte hex strings, first one being length
+    //of the string, second one being the actual ascii hex values.
+    const trimmedHex = hexString.replace(/^0+(?!$)/, "");
+
+    switch (dataType) {
+        case "number":
+            return parseInt(trimmedHex, 16);
+
+        case "string":
+            let ascii = "";
+            for (let i = 0; i < trimmedHex.length; i += 2) {
+                let hexCode = parseInt(trimmedHex.substring(i, 2), 16);
+                ascii += String.fromCharCode(hexCode);
+            }
+            return ascii;
+
+        case "boolean":
+            return trimmedHex === "" ? false : true;
+
+        case "bigint":
+            //not sure if this will break something, using regular parseInt?...
+            return parseInt(trimmedHex, 16);
+        case "address":
+            //for the solidity address type, just trim the leading 0's, so can just return trimmed hex here.
+            return trimmedHex;
+        default:
+            return null;
+    }
+}
 /**
  *
  * @param type string name of solidity type in function signature (bytes, bytes1, uint256, address etc..)
