@@ -109,13 +109,31 @@ export class CCProvider {
         return chainName;
     }
 
+    async callContract(address: string, sender: string, params: {}) {
+        const payloadData: string = encodeDataPayload(params);
+        const txHash = await this.ethereum.request({
+            method: "eth_call",
+            params: [
+                {
+                    from: sender,
+                    to: address,
+                    data: payloadData,
+                },
+            ],
+        });
+        console.log(txHash);
+    }
+
     async sendContractTransaction(address: string, sender: string, params: {}) {
         const payloadData: string = encodeDataPayload(params);
 
+        //Don't need to supply gas or gasPrice fields. They were causing issues with metamask
+        //confirm button was greyed out, easier to just let MM sort it out
+        //perhaps we could get our own gas estimates and manually set, but its fine leaving out.
+        //in the HH local network there is errors in the console popping up, but they seem to be harmless
+        //transactions are still going through properly. Something is up with the HHLocal/Metamask browser plugin.
         const transactionParameters = {
             nonce: "0x00", // ignored by MetaMask
-            gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
-            gas: "0x2710", // customizable by user during MetaMask confirmation.
             to: address, // Required except during contract publications ("0x0000000000000000000000000000000000000000").
             from: sender, // must match user's active address.
             value: "0x00", // Only required to send ether to the recipient from the initiating external account.
@@ -123,9 +141,11 @@ export class CCProvider {
             chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
         };
 
-        // const txHash = await this.ethereum.request({
-        //     method: "eth_sendTransaction",
-        //     params: [transactionParameters],
-        // });
+        const txHash = await this.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [transactionParameters],
+        });
+
+        console.log(txHash);
     }
 }

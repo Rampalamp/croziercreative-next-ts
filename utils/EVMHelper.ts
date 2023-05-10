@@ -47,7 +47,7 @@ export function encodeDataPayload(params: {}): string {
             //subtract 1 from i to make sure the proper key is used to retrieve sigParamDataMap entry.
             const mappedParam = sigParamDataMap!.get(i - 1);
 
-            if (mappedParam![0] === "static") {
+            if (mappedParam === "static") {
                 //for static should be able to just straight add it to the payloadMap object.
                 payloadMap.set(
                     payloadMap.size,

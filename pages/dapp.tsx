@@ -77,16 +77,18 @@ export default function dApp() {
     }
 
     async function handleXenClaimRank() {
-        await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
-            function: "g(uint256[][],string[])",
-            ints: [[1, 2], [3]],
-            strings: ["one", "two", "three"],
-        });
+        console.log(account);
+
         // await CCProvider?.sendContractTransaction(XEN_HHLOCAL, account, {
         //     function: "claimRank(uint256)",
         //     termInDays: 100,
         // });
+
+        await CCProvider?.callContract(XEN_HHLOCAL, account, {
+            function: "getUserMint()",
+        });
     }
+
     return !walletFound ? (
         <div className="rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back">
             Please download either MetaMask or GameStop wallet.
