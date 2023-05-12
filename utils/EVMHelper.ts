@@ -10,7 +10,8 @@ import { Type } from "typescript";
 
 /**
  *
- * @param params An object which the first property should always be the function signature, every property thereafter is considered a parameter within the function signature we are going to call
+ * @param params An object which the first property should always be the function signature,
+ * every property thereafter is considered a parameter within the function signature we are going to call
  * @returns a long string in hex that should be used in the data portion for the eth_sendTransaction request.
  */
 export function encodeDataPayload(params: {}): string {
@@ -169,7 +170,9 @@ function traverseDynamicType(val: any, offsetArray: string[]): void {
 /**
  *
  * @param params String array of the parameters in the function signature
- * @returns Mapping<number,string[]> : key of map is index order of the string[] params passed in. The value string[] will have two strings, first stringwill be the param type (static or dynamic), the second string will be the actual param/data solidity type
+ * @returns Mapping<number,string[]> : key of map is index order of the string[] params passed in.
+ * The value string[] will have two strings, first stringwill be the param type (static or dynamic),
+ * the second string will be the actual param/data solidity type
  */
 export function createParamDataMapping(params: string[]): Map<number, string> {
     let mapping: Map<number, string> = new Map<number, string>();
@@ -187,7 +190,8 @@ export function createParamDataMapping(params: string[]): Map<number, string> {
 
 /**
  *
- * @param value any type, this value will enter a switch statement which will attempt to determine how it needs to turn the value into hex data with a 32 byte buffer of 0's at the beginning or the end depending data type.
+ * @param value any type, this value will enter a switch statement which will attempt to determine how it
+ * needs to turn the value into hex data with a 32 byte buffer of 0's at the beginning or the end depending data type.
  * @returns parameter data in hex form with 32 byte hex 0's padding beginning or end.
  */
 export function create32ByteHexString(value: any): string {

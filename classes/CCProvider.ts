@@ -143,9 +143,7 @@ export class CCProvider {
     ): Promise<boolean> {
         const payloadData: string = encodeDataPayload(params);
 
-        //Don't need to supply gas or gasPrice fields. They were causing issues with metamask
-        //confirm button was greyed out, easier to just let MM sort it out
-        //perhaps we could get our own gas estimates and manually set, but its fine leaving out.
+        //just let MetaMask calculate the gasPrice and gas fields.
         //in the HH local network there is errors in the console popping up, but they seem to be harmless
         //transactions are still going through properly. Something is up with the HHLocal/Metamask browser plugin.
         const transactionParameters = {
@@ -156,13 +154,14 @@ export class CCProvider {
             data: payloadData, // Optional, but used for defining smart contract creation and interaction.
             chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
         };
+
         try {
             const txHash = await this.ethereum.request({
                 method: "eth_sendTransaction",
                 params: [transactionParameters],
             });
             //the eth_getTransactionReceipt is essentially our wait for block mining
-            //Currently no need to do anything with the txReceipt objext...yet.
+            //Currently no need to do anything with the txReceipt object...yet.
             const txReceipt = await this.ethereum.request({
                 method: "eth_getTransactionReceipt",
                 params: [txHash],

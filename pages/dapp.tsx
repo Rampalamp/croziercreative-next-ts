@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import CCButton from "../components/CCButton";
 import CCConnectButton from "../components/CCConnectButton";
 import { CCWeb3Context, Wallet } from "../components/context/CCWeb3Provider";
-import { XEN_HHLOCAL } from "../constants/SmartContracts";
+import { XENFLEX_HHLOCAL, XEN_HHLOCAL } from "../constants/SmartContracts";
 import { MintInfo } from "../types/XENTypes";
 import { decode32ByteHexString } from "../utils/EVMHelper";
 
@@ -18,6 +18,7 @@ export default function dApp() {
     const [balance, setBalance] = useState<string>("0");
     const [walletFound, setWalletFound] = useState<boolean>(false);
     const [mintInfo, setMintInfo] = useState<MintInfo>();
+    const [isRankMinted, setIsRankMinted] = useState<boolean>(false);
 
     useEffect(() => {
         if (walletExists()) {
@@ -38,12 +39,25 @@ export default function dApp() {
     }, []);
 
     useEffect(() => {
+        async function getMintInfo() {
+            await getUserMintInfo();
+        }
+
+        async function queryXenFlex() {
+            await queryXenFlexTokenId();
+        }
+
         if (CCProvider?.ethereum !== undefined) {
             //setup initial account/balance values.
             //I made them a useState object because updating the CCProvider properties weren't triggering a component update.
             //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
             setAccount(CCProvider.account);
             setBalance(CCProvider.balance);
+
+            getMintInfo();
+
+            if (mintInfo !== undefined) queryXenFlex();
+
             CCProvider.ethereum.on("accountsChanged", handleAccountsChanged);
         }
         return () => {
@@ -151,6 +165,23 @@ export default function dApp() {
         }
     }
 
+    async function queryXenFlexTokenId() {
+        const txResponse = await CCProvider?.callContract(
+            XENFLEX_HHLOCAL,
+            account,
+            { function: "ownerOf(uint256)", tokenId: mintInfo!.rank }
+        );
+
+        if (txResponse !== undefined) {
+            //this should just be an address, or an error. not entirely sure how this will test on HH local since its using an azure link for the base URI
+            //if Address exists, then the account has already minted their cRank
+            //if response returns an error or execution reverted, then invalid token
+            //can assume cRank has not been minted.
+
+            setIsRankMinted(true);
+        }
+    }
+
     async function handleAccountsChanged() {
         if (CCProvider !== undefined) {
             //change values in provider AND local useState values for account/balance.
@@ -180,6 +211,16 @@ export default function dApp() {
             : console.log("Xen Claim Rank Failed.");
     }
 
+    async function handleXenFlexMint() {
+        const success = await CCProvider?.sendContractTransaction(
+            XENFLEX_HHLOCAL,
+            account,
+            { function: "mintNft()" }
+        );
+
+        !success ? console.log("Xen Flex mint Failed.") : null;
+    }
+
     return !walletFound ? (
         <div className="rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back">
             Please download either MetaMask or GameStop wallet.
@@ -202,12 +243,86 @@ export default function dApp() {
 
             <div className="mt-10 flex-col rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dt-back">
                 <div className="flex">
-                    XEN SMART CONTRACT
-                    <CCButton onClick={handleXenClaimRank} title="ClaimXenRank">
-                        CLAIM RANK
-                    </CCButton>
+                    <div>
+                        <div>XEN Crypto</div>
+                        <div>
+                            <a
+                                className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                target="_blank"
+                                href="https://etherscan.io/token/0x06450dEe7FD2Fb8E39061434BAbCFC05599a6Fb8"
+                                rel="noopener noreferrer"
+                            >
+                                Etherscan
+                            </a>
+                        </div>
+                        <div>
+                            <a
+                                className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                target="_blank"
+                                href="https://xen.network/"
+                                rel="noopener noreferrer"
+                            >
+                                XEN DAPP
+                            </a>
+                        </div>
+                    </div>
+
+                    {mintInfo === undefined ? (
+                        <div>
+                            <input
+                                className="border-red-500 text-gray-700 focus:shadow-outline mb-3 w-full appearance-none rounded border py-2 px-3 leading-tight shadow focus:outline-none"
+                                id="termInput"
+                                type="number"
+                                placeholder="Term"
+                            />
+                            <CCButton
+                                onClick={handleXenClaimRank}
+                                title="ClaimXenRank"
+                            >
+                                CLAIM RANK
+                            </CCButton>
+                        </div>
+                    ) : (
+                        <div>XEN Rank : {mintInfo.rank}</div>
+                    )}
                 </div>
-                <div>XEN FLEX SMART CONTRACT</div>
+                <div className="flex">
+                    <div>
+                        <div>XenFlex NFT - Mint Your Xen cRank as an NFT</div>
+                        <div>
+                            <a
+                                className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                target="_blank"
+                                href="https://etherscan.io/address/0x7b812443599ba2307c14b80825de0429ee0bae3d"
+                                rel="noopener noreferrer"
+                            >
+                                Etherscan
+                            </a>
+                        </div>
+                        <div>
+                            <a
+                                className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                target="_blank"
+                                href="https://www.xenflex.io/#/"
+                                rel="noopener noreferrer"
+                            >
+                                XenFlex DAPP
+                            </a>
+                        </div>
+                    </div>
+                    {mintInfo === undefined ? (
+                        <div>Claim Rank to Mint Xen Flex</div>
+                    ) : isRankMinted ? (
+                        <div>Rank {mintInfo.rank} Minted</div>
+                    ) : (
+                        <CCButton
+                            onClick={handleXenFlexMint}
+                            title="MintXenFlex"
+                        >
+                            MINT
+                        </CCButton>
+                    )}
+                </div>
             </div>
         </div>
     ) : (
