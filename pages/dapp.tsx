@@ -19,6 +19,8 @@ export default function dApp() {
     const [walletFound, setWalletFound] = useState<boolean>(false);
     const [mintInfo, setMintInfo] = useState<MintInfo>();
     const [isRankMinted, setIsRankMinted] = useState<boolean>(false);
+    const [maxTerm, setMaxTerm] = useState<number>(0);
+    const [term, setTerm] = useState<number>(0);
 
     useEffect(() => {
         if (walletExists()) {
@@ -39,6 +41,8 @@ export default function dApp() {
     }, []);
 
     useEffect(() => {
+        //setup async functions to use on init of dapp, not entirely sure if this will be bueno.
+        //I recall having issues doing this earlier, will need some testing no doubt.
         async function getMintInfo() {
             await getUserMintInfo();
         }
@@ -47,12 +51,18 @@ export default function dApp() {
             await queryXenFlexTokenId();
         }
 
+        async function getMaxT() {
+            await getMaxTerm();
+        }
+
         if (CCProvider?.ethereum !== undefined) {
             //setup initial account/balance values.
             //I made them a useState object because updating the CCProvider properties weren't triggering a component update.
             //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
             setAccount(CCProvider.account);
             setBalance(CCProvider.balance);
+
+            getMaxT();
 
             getMintInfo();
 
@@ -165,6 +175,26 @@ export default function dApp() {
         }
     }
 
+    async function getMaxTerm() {
+        const txResponse = await CCProvider?.callContract(
+            XEN_HHLOCAL,
+            account,
+            { function: "getCurrentMaxTerm()" }
+        );
+
+        if (txResponse !== undefined) {
+            //not 100% sure the format this will come back in, if its just one 32 byte string
+            //can decode and set max term?
+            //might need to add some more here.
+            setMaxTerm(
+                decode32ByteHexString(
+                    txResponse.slice(0, 2),
+                    "number"
+                ) as number
+            );
+        }
+    }
+
     async function queryXenFlexTokenId() {
         const txResponse = await CCProvider?.callContract(
             XENFLEX_HHLOCAL,
@@ -196,19 +226,22 @@ export default function dApp() {
 
     async function handleXenClaimRank() {
         //I don't think we need to do anything with the txHash returned from MetaMask
-        //await getUserMintInfo();
-        const success = await CCProvider?.sendContractTransaction(
-            XEN_HHLOCAL,
-            account,
-            {
-                function: "claimRank(uint256)",
-                termInDays: 100,
-            }
-        );
 
-        success
-            ? await getUserMintInfo()
-            : console.log("Xen Claim Rank Failed.");
+        if (0 < term && term <= maxTerm) {
+            const success = await CCProvider?.sendContractTransaction(
+                XEN_HHLOCAL,
+                account,
+                {
+                    function: "claimRank(uint256)",
+                    termInDays: term,
+                }
+            );
+            success
+                ? await getUserMintInfo()
+                : console.log("Xen Claim Rank Failed.");
+        } else {
+            //send out a pop up message somewhere, need to sort out how that will look still.
+        }
     }
 
     async function handleXenFlexMint() {
@@ -273,7 +306,10 @@ export default function dApp() {
                                 className="border-red-500 text-gray-700 focus:shadow-outline mb-3 w-full appearance-none rounded border py-2 px-3 leading-tight shadow focus:outline-none"
                                 id="termInput"
                                 type="number"
-                                placeholder="Term"
+                                value={term}
+                                onChange={(e) => {
+                                    setTerm(parseInt(e.currentTarget.value));
+                                }}
                             />
                             <CCButton
                                 onClick={handleXenClaimRank}
