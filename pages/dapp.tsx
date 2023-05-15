@@ -54,19 +54,22 @@ export default function dApp() {
         async function getMaxT() {
             await getMaxTerm();
         }
+        if (account !== "0x0") {
+            getMaxT();
 
+            getMintInfo();
+
+            if (mintInfo !== undefined) queryXenFlex();
+        }
+    }, [account]);
+
+    useEffect(() => {
         if (CCProvider?.ethereum !== undefined) {
             //setup initial account/balance values.
             //I made them a useState object because updating the CCProvider properties weren't triggering a component update.
             //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
             setAccount(CCProvider.account);
             setBalance(CCProvider.balance);
-
-            getMaxT();
-
-            getMintInfo();
-
-            if (mintInfo !== undefined) queryXenFlex();
 
             CCProvider.ethereum.on("accountsChanged", handleAccountsChanged);
         }
@@ -77,10 +80,6 @@ export default function dApp() {
             );
         };
     }, [CCProvider]);
-
-    useEffect(() => {
-        console.log(mintInfo);
-    }, [mintInfo]);
 
     function showDapp(): boolean {
         if (CCProvider !== undefined) {
@@ -163,15 +162,15 @@ export default function dApp() {
                 function: "getUserMint()",
             }
         );
-
+        //not sure if txResponse will ever be returned as undefined
         if (txResponse !== undefined) {
             //slice off initial 0x of hex string
             //then match every 64th character
             const responseValues = txResponse.slice(2).match(/.{64}/g);
+            //if first value in array is all 0's no mint info found.
+            if (/^0+$/.test(responseValues![0])) return;
 
-            if (responseValues === null) return;
-
-            setUserMintInfo(responseValues);
+            setUserMintInfo(responseValues!);
         }
     }
 
@@ -186,12 +185,12 @@ export default function dApp() {
             //not 100% sure the format this will come back in, if its just one 32 byte string
             //can decode and set max term?
             //might need to add some more here.
-            setMaxTerm(
-                decode32ByteHexString(
-                    txResponse.slice(0, 2),
-                    "number"
-                ) as number
-            );
+            const termInSeconds = decode32ByteHexString(
+                txResponse.slice(2),
+                "number"
+            ) as number;
+            //divide term in seconds by 86400 to get # of days.
+            setMaxTerm(termInSeconds / 86400);
         }
     }
 
@@ -261,22 +260,22 @@ export default function dApp() {
     ) : showDapp() ? (
         <div>
             <div className="flex space-x-8">
-                <div className="rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dt-back">
+                <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
                     {CCProvider!.chainName}
                 </div>
-                <div className="rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dt-back">
+                <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
                     ETH {balance.slice(0, balance.indexOf(".") + 4)}
                     ...
                 </div>
-                <div className="rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dt-back">
+                <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
                     {account.slice(0, 6)}...
                     {account.slice(CCProvider!.account.length - 4)}
                 </div>
             </div>
 
-            <div className="mt-10 flex-col rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dt-back">
-                <div className="flex">
-                    <div>
+            <div className="mt-10 flex-col space-y-4 rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dp-back">
+                <div className="flex items-center">
+                    <div className="grow">
                         <div>XEN Crypto</div>
                         <div>
                             <a
@@ -299,32 +298,47 @@ export default function dApp() {
                             </a>
                         </div>
                     </div>
-
-                    {mintInfo === undefined ? (
-                        <div>
-                            <input
-                                className="border-red-500 text-gray-700 focus:shadow-outline mb-3 w-full appearance-none rounded border py-2 px-3 leading-tight shadow focus:outline-none"
-                                id="termInput"
-                                type="number"
-                                value={term}
-                                onChange={(e) => {
-                                    setTerm(parseInt(e.currentTarget.value));
-                                }}
-                            />
-                            <CCButton
-                                onClick={handleXenClaimRank}
-                                title="ClaimXenRank"
-                            >
-                                CLAIM RANK
-                            </CCButton>
-                        </div>
-                    ) : (
-                        <div>XEN Rank : {mintInfo.rank}</div>
-                    )}
+                    <div className="px-4">
+                        {mintInfo === undefined ? (
+                            <div>
+                                <div>
+                                    <span className="text-base">
+                                        Term : (Max: {maxTerm} Days)
+                                    </span>
+                                </div>
+                                <input
+                                    className="focus:shadow-outline mb-3 w-full appearance-none rounded border bg-lt-back py-2 px-3 leading-tight shadow focus:outline-none dark:bg-ds-back"
+                                    id="termInput"
+                                    type="number"
+                                    value={term}
+                                    onChange={(e) => {
+                                        setTerm(
+                                            parseInt(e.currentTarget.value)
+                                        );
+                                    }}
+                                />
+                                <CCButton
+                                    onClick={handleXenClaimRank}
+                                    title="ClaimXenRank"
+                                    className="flex flex-row-reverse"
+                                >
+                                    CLAIM RANK
+                                </CCButton>
+                            </div>
+                        ) : (
+                            <div>XEN Rank : {mintInfo.rank}</div>
+                        )}
+                    </div>
                 </div>
+                <hr />{" "}
                 <div className="flex">
-                    <div>
-                        <div>XenFlex NFT - Mint Your Xen cRank as an NFT</div>
+                    <div className="grow">
+                        <div>
+                            XenFlex NFT <br />
+                            <span className="text-sm">
+                                Mint Your Xen cRank as an NFT
+                            </span>
+                        </div>
                         <div>
                             <a
                                 className="underline hover:text-dp-back hover:dark:text-ls-fore"
@@ -346,18 +360,20 @@ export default function dApp() {
                             </a>
                         </div>
                     </div>
-                    {mintInfo === undefined ? (
-                        <div>Claim Rank to Mint Xen Flex</div>
-                    ) : isRankMinted ? (
-                        <div>Rank {mintInfo.rank} Minted</div>
-                    ) : (
-                        <CCButton
-                            onClick={handleXenFlexMint}
-                            title="MintXenFlex"
-                        >
-                            MINT
-                        </CCButton>
-                    )}
+                    <div className="flex items-center px-4">
+                        {mintInfo === undefined ? (
+                            <div>No Rank</div>
+                        ) : isRankMinted ? (
+                            <div>Rank {mintInfo.rank} Minted</div>
+                        ) : (
+                            <CCButton
+                                onClick={handleXenFlexMint}
+                                title="MintXenFlex"
+                            >
+                                MINT cRank : {mintInfo.rank}
+                            </CCButton>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

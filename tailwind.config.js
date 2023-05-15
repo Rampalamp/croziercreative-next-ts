@@ -33,7 +33,7 @@ module.exports = {
             //light primary foreground amber-700
             "lp-fore": "#92400e",
             //light secondary background orange-500
-            "ls-back": "#f97316",
+            "ls-back": "#ecfccb",
             //light secondary foreground orange-50
             "ls-fore": "#fff7ed",
             //light tertiary background rose-100
