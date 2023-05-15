@@ -5,6 +5,7 @@ import { ThemeProvider } from "../components/context/ThemeProvider";
 import CodeOverlayProvider from "../components/context/CodeOverlayProvider";
 import Head from "next/head";
 import CCWeb3Provider from "../components/context/CCWeb3Provider";
+import CCToastProvider from "../components/context/CCToastProvider";
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
@@ -33,7 +34,9 @@ export default function App({ Component, pageProps }: AppProps) {
                         {/**Main body of app */}
 
                         <div className="m-auto p-3 px-6 text-lg font-bold sm:px-16 md:px-32 lg:px-40 xl:px-72 2xl:px-96">
-                            <Component {...pageProps} />
+                            <CCToastProvider>
+                                <Component {...pageProps} />
+                            </CCToastProvider>
                         </div>
 
                         {/**Eventual footer */}

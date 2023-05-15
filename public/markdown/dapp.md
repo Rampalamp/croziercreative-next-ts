@@ -1,3 +1,4 @@
+```typescript
 import { useContext, useEffect, useState } from "react";
 import CCButton from "../components/CCButton";
 import CCConnectButton from "../components/CCConnectButton";
@@ -363,8 +364,7 @@ export default function dApp() {
                                 )}
                             </div>
                         </div>
-                        <hr />{" "}
-                        <div className="flex">
+                        <hr /> <div className="flex">
                             <div className="grow">
                                 <div>
                                     XenFlex NFT <br />
@@ -419,3 +419,4 @@ export default function dApp() {
         </div>
     );
 }
+```

@@ -392,3 +392,425 @@ export default function Audits() {
 }
 </code></pre>
 `;
+export const DappCode: string = `<pre><code class="prettyprint language-typescript">import { useContext, useEffect, useState } from &quot;react&quot;;
+import CCButton from &quot;../components/CCButton&quot;;
+import CCConnectButton from &quot;../components/CCConnectButton&quot;;
+import CCToastProvider, {
+    CCToastContext,
+} from &quot;../components/context/CCToastProvider&quot;;
+import { CCWeb3Context, Wallet } from &quot;../components/context/CCWeb3Provider&quot;;
+import ShowCodeButton from &quot;../components/ShowCodeButton&quot;;
+import { XENFLEX_HHLOCAL, XEN_HHLOCAL } from &quot;../constants/SmartContracts&quot;;
+import { MintInfo } from &quot;../types/XENTypes&quot;;
+import { decode32ByteHexString } from &quot;../utils/EVMHelper&quot;;
+
+export default function dApp() {
+    const {
+        CCProvider,
+        connectProvider,
+        walletExists,
+        isWalletConnected,
+        isWalletUnlocked,
+    } = useContext(CCWeb3Context);
+    const { runToaster } = useContext(CCToastContext);
+    const [account, setAccount] = useState&lt;string&gt;(&quot;0x0&quot;);
+    const [balance, setBalance] = useState&lt;string&gt;(&quot;0&quot;);
+    const [walletFound, setWalletFound] = useState&lt;boolean&gt;(false);
+    const [mintInfo, setMintInfo] = useState&lt;MintInfo&gt;();
+    const [isRankMinted, setIsRankMinted] = useState&lt;boolean&gt;(false);
+    const [maxTerm, setMaxTerm] = useState&lt;number&gt;(0);
+    const [term, setTerm] = useState&lt;number&gt;(0);
+
+    useEffect(() =&gt; {
+        if (walletExists()) {
+            setWalletFound(true);
+
+            if (CCProvider === undefined) {
+                const connectedWallet: Wallet = isWalletConnected();
+
+                if (connectedWallet !== null) {
+                    isWalletUnlocked(connectedWallet)
+                        ? connectProvider(connectedWallet)
+                        : null;
+                }
+            }
+        } else {
+            setWalletFound(false);
+        }
+    }, []);
+
+    useEffect(() =&gt; {
+        //setup async functions to use on init of dapp, not entirely sure if this will be bueno.
+        //I recall having issues doing this earlier, will need some testing no doubt.
+        async function getMintInfo() {
+            await getUserMintInfo();
+        }
+
+        async function queryXenFlex() {
+            await queryXenFlexTokenId();
+        }
+
+        async function getMaxT() {
+            await getMaxTerm();
+        }
+        if (account !== &quot;0x0&quot;) {
+            getMaxT();
+
+            getMintInfo();
+
+            if (mintInfo !== undefined) queryXenFlex();
+        }
+    }, [account]);
+
+    useEffect(() =&gt; {
+        if (CCProvider?.ethereum !== undefined) {
+            //setup initial account/balance values.
+            //I made them a useState object because updating the CCProvider properties weren&#39;t triggering a component update.
+            //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
+            setAccount(CCProvider.account);
+            setBalance(CCProvider.balance);
+
+            CCProvider.ethereum.on(&quot;accountsChanged&quot;, handleAccountsChanged);
+        }
+        return () =&gt; {
+            CCProvider?.ethereum.removeListener(
+                &quot;accountsChanged&quot;,
+                handleAccountsChanged
+            );
+        };
+    }, [CCProvider]);
+
+    function showDapp(): boolean {
+        if (CCProvider !== undefined) {
+            //if no wallet connected dont display dapp
+            if (!isWalletConnected) return false;
+            //if connected wallet is not unlocked
+            if (!isWalletUnlocked(CCProvider.wallet)) return false;
+            //if it reaches here, should be safe to display dapp.
+            return true;
+        }
+
+        return false;
+    }
+    /**
+     * This iterates over the MintInfo property keys, populating a MintInfo object.
+     * It then calls the setMintInfo state function.
+     * Since our type MintInfo has exact same structure as the struct
+     * in XENCrypto.sol, we use data[i] as our data to decode.
+     * There is probably a more graceful way of doing this
+     * but this is okay for now.
+     * @param data array of 64 char long hex strings (32 byte hex strings)
+     */
+    function setUserMintInfo(data: string[]) {
+        //create local userMintInfo to populate
+        const userMintInfo: MintInfo = {
+            user: &quot;&quot;,
+            term: 0,
+            maturityTs: 0,
+            rank: 0,
+            amplifier: 0,
+            eaaRate: 0,
+        };
+
+        const props = Object.keys(userMintInfo) as (keyof MintInfo)[];
+
+        for (let i = 0; i &lt; props.length; i++) {
+            const prop: keyof MintInfo = props[i];
+            if (prop === &quot;user&quot;) {
+                userMintInfo.user = decode32ByteHexString(
+                    data[i],
+                    &quot;address&quot;
+                ) as string;
+            } else if (prop === &quot;term&quot;) {
+                userMintInfo[prop] = decode32ByteHexString(
+                    data[i],
+                    &quot;number&quot;
+                ) as number;
+            } else if (prop === &quot;maturityTs&quot;) {
+                userMintInfo[prop] = decode32ByteHexString(
+                    data[i],
+                    &quot;number&quot;
+                ) as number;
+            } else if (prop === &quot;rank&quot;) {
+                userMintInfo[prop] = decode32ByteHexString(
+                    data[i],
+                    &quot;number&quot;
+                ) as number;
+            } else if (prop === &quot;amplifier&quot;) {
+                userMintInfo[prop] = decode32ByteHexString(
+                    data[i],
+                    &quot;number&quot;
+                ) as number;
+            } else if (prop === &quot;eaaRate&quot;) {
+                userMintInfo[prop] = decode32ByteHexString(
+                    data[i],
+                    &quot;number&quot;
+                ) as number;
+            }
+        }
+
+        setMintInfo(userMintInfo);
+    }
+
+    async function getUserMintInfo() {
+        //tx response should be in 32 byte hex strings format.
+        const txResponse = await CCProvider?.callContract(
+            XEN_HHLOCAL,
+            account,
+            {
+                function: &quot;getUserMint()&quot;,
+            }
+        );
+        //not sure if txResponse will ever be returned as undefined
+        if (txResponse !== undefined) {
+            //slice off initial 0x of hex string
+            //then match every 64th character
+            const responseValues = txResponse.slice(2).match(/.{64}/g);
+            //if first value in array is all 0&#39;s no mint info found.
+            if (/^0+$/.test(responseValues![0])) return;
+
+            setUserMintInfo(responseValues!);
+        }
+    }
+
+    async function getMaxTerm() {
+        const txResponse = await CCProvider?.callContract(
+            XEN_HHLOCAL,
+            account,
+            { function: &quot;getCurrentMaxTerm()&quot; }
+        );
+
+        if (txResponse !== undefined) {
+            //not 100% sure the format this will come back in, if its just one 32 byte string
+            //can decode and set max term?
+            //might need to add some more here.
+            const termInSeconds = decode32ByteHexString(
+                txResponse.slice(2),
+                &quot;number&quot;
+            ) as number;
+            //divide term in seconds by 86400 to get # of days.
+            setMaxTerm(termInSeconds / 86400);
+        }
+    }
+
+    async function queryXenFlexTokenId() {
+        const txResponse = await CCProvider?.callContract(
+            XENFLEX_HHLOCAL,
+            account,
+            { function: &quot;ownerOf(uint256)&quot;, tokenId: mintInfo!.rank }
+        );
+
+        if (txResponse !== undefined) {
+            //this should just be an address, or an error. not entirely sure how this will test on HH local since its using an azure link for the base URI
+            //if Address exists, then the account has already minted their cRank
+            //if response returns an error or execution reverted, then invalid token
+            //can assume cRank has not been minted.
+
+            setIsRankMinted(true);
+        }
+    }
+
+    async function handleAccountsChanged() {
+        if (CCProvider !== undefined) {
+            //change values in provider AND local useState values for account/balance.
+            CCProvider.account = (await CCProvider.getAccounts())[0];
+            CCProvider.balance = await CCProvider.getBalance(
+                CCProvider.account
+            );
+            setAccount(CCProvider.account);
+            setBalance(CCProvider.balance);
+        }
+    }
+
+    async function handleXenClaimRank() {
+        //I don&#39;t think we need to do anything with the txHash returned from MetaMask
+
+        if (term &lt;= 0) {
+            runToaster(&quot;error&quot;, &quot;Term must be greater then 0&quot;);
+            return;
+        }
+
+        if (term &gt; maxTerm) {
+            runToaster(&quot;error&quot;, &quot;Max term exceeded : &quot; + maxTerm.toString());
+            return;
+        }
+
+        const success = await CCProvider?.sendContractTransaction(
+            XEN_HHLOCAL,
+            account,
+            {
+                function: &quot;claimRank(uint256)&quot;,
+                termInDays: term,
+            }
+        );
+        if (!success) {
+            console.log(&quot;Xen Claim Rank Failed.&quot;);
+            return;
+        }
+
+        await getUserMintInfo();
+
+        runToaster(&quot;success&quot;, &quot;Transaction Successful, Rank Claimed!&quot;);
+    }
+
+    async function handleXenFlexMint() {
+        const success = await CCProvider?.sendContractTransaction(
+            XENFLEX_HHLOCAL,
+            account,
+            { function: &quot;mintNft()&quot; }
+        );
+
+        if (!success) {
+            console.log(&quot;Xen Flex mint Failed.&quot;);
+            return;
+        }
+
+        runToaster(&quot;success&quot;, &quot;Transaction Successful, cRank Minted!&quot;);
+    }
+
+    return (
+        &lt;div className=&quot;flex-col space-y-5 &quot;&gt;
+            {!walletFound ? (
+                &lt;div className=&quot;rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back&quot;&gt;
+                    Please download either MetaMask or GameStop wallet.
+                &lt;/div&gt;
+            ) : showDapp() ? (
+                &lt;div&gt;
+                    &lt;div className=&quot;flex space-x-8&quot;&gt;
+                        &lt;div className=&quot;flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back&quot;&gt;
+                            {CCProvider!.chainName}
+                        &lt;/div&gt;
+                        &lt;div className=&quot;flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back&quot;&gt;
+                            ETH {balance.slice(0, balance.indexOf(&quot;.&quot;) + 4)}
+                            ...
+                        &lt;/div&gt;
+                        &lt;div className=&quot;flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back&quot;&gt;
+                            {account.slice(0, 6)}...
+                            {account.slice(CCProvider!.account.length - 4)}
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div className=&quot;mt-10 flex-col space-y-4 rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dp-back&quot;&gt;
+                        &lt;div className=&quot;flex items-center&quot;&gt;
+                            &lt;div className=&quot;grow&quot;&gt;
+                                &lt;div&gt;XEN Crypto&lt;/div&gt;
+                                &lt;div&gt;
+                                    &lt;a
+                                        className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                                        target=&quot;_blank&quot;
+                                        href=&quot;https://etherscan.io/token/0x06450dEe7FD2Fb8E39061434BAbCFC05599a6Fb8&quot;
+                                        rel=&quot;noopener noreferrer&quot;
+                                    &gt;
+                                        Etherscan
+                                    &lt;/a&gt;
+                                &lt;/div&gt;
+                                &lt;div&gt;
+                                    &lt;a
+                                        className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                                        target=&quot;_blank&quot;
+                                        href=&quot;https://xen.network/&quot;
+                                        rel=&quot;noopener noreferrer&quot;
+                                    &gt;
+                                        XEN DAPP
+                                    &lt;/a&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;div className=&quot;px-4&quot;&gt;
+                                {mintInfo === undefined ? (
+                                    &lt;div&gt;
+                                        &lt;div&gt;
+                                            &lt;span className=&quot;text-base&quot;&gt;
+                                                Term : (Max: {maxTerm} Days)
+                                            &lt;/span&gt;
+                                        &lt;/div&gt;
+                                        &lt;input
+                                            className=&quot;focus:shadow-outline mb-3 w-full appearance-none rounded border bg-lt-back py-2 px-3 leading-tight shadow focus:outline-none dark:bg-ds-back&quot;
+                                            id=&quot;termInput&quot;
+                                            type=&quot;number&quot;
+                                            value={term}
+                                            onChange={(e) =&gt; {
+                                                if (
+                                                    !Number.isNaN(
+                                                        e.currentTarget.value
+                                                    )
+                                                ) {
+                                                    setTerm(
+                                                        parseInt(
+                                                            e.currentTarget
+                                                                .value
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                        /&gt;
+                                        &lt;CCButton
+                                            onClick={handleXenClaimRank}
+                                            title=&quot;ClaimXenRank&quot;
+                                            className=&quot;flex flex-row-reverse&quot;
+                                        &gt;
+                                            CLAIM RANK
+                                        &lt;/CCButton&gt;
+                                    &lt;/div&gt;
+                                ) : (
+                                    &lt;div className=&quot;pr-3&quot;&gt;
+                                        XEN Rank : {mintInfo.rank}
+                                    &lt;/div&gt;
+                                )}
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;hr /&gt; &lt;div className=&quot;flex&quot;&gt;
+                            &lt;div className=&quot;grow&quot;&gt;
+                                &lt;div&gt;
+                                    XenFlex NFT &lt;br /&gt;
+                                    &lt;span className=&quot;text-sm&quot;&gt;
+                                        Mint Your Xen cRank as an NFT
+                                    &lt;/span&gt;
+                                &lt;/div&gt;
+                                &lt;div&gt;
+                                    &lt;a
+                                        className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                                        target=&quot;_blank&quot;
+                                        href=&quot;https://etherscan.io/address/0x7b812443599ba2307c14b80825de0429ee0bae3d&quot;
+                                        rel=&quot;noopener noreferrer&quot;
+                                    &gt;
+                                        Etherscan
+                                    &lt;/a&gt;
+                                &lt;/div&gt;
+                                &lt;div&gt;
+                                    &lt;a
+                                        className=&quot;underline hover:text-dp-back hover:dark:text-ls-fore&quot;
+                                        target=&quot;_blank&quot;
+                                        href=&quot;https://www.xenflex.io/#/&quot;
+                                        rel=&quot;noopener noreferrer&quot;
+                                    &gt;
+                                        XenFlex DAPP
+                                    &lt;/a&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;div className=&quot;flex items-center px-4&quot;&gt;
+                                {mintInfo === undefined ? (
+                                    &lt;div&gt;No Rank&lt;/div&gt;
+                                ) : isRankMinted ? (
+                                    &lt;div&gt;Rank {mintInfo.rank} Minted&lt;/div&gt;
+                                ) : (
+                                    &lt;CCButton
+                                        onClick={handleXenFlexMint}
+                                        title=&quot;MintXenFlex&quot;
+                                    &gt;
+                                        MINT NFT
+                                    &lt;/CCButton&gt;
+                                )}
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            ) : (
+                &lt;div className=&quot;mt-5 items-center text-center sm:mt-0&quot;&gt;
+                    &lt;CCConnectButton /&gt;
+                &lt;/div&gt;
+            )}
+            &lt;ShowCodeButton codeToShow=&quot;dapp&quot; className=&quot;flex justify-center&quot; /&gt;
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+`;

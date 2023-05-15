@@ -6,6 +6,7 @@ import {
     SkillsCode,
     SkillCloudCode,
     AuditsCode,
+    DappCode,
 } from "../../constants/CodeSnippets";
 import CCButton from "../CCButton";
 
@@ -15,6 +16,7 @@ export type CodeOverlay =
     | "skills"
     | "skillcloud"
     | "audits"
+    | "dapp"
     | null;
 
 type CodeOverlayContext = {
@@ -64,6 +66,10 @@ export default function CodeOverlayProvider({
                 setCodeText(AuditsCode);
                 break;
             }
+            case "dapp": {
+                setCodeText(DappCode);
+                break;
+            }
         }
         if (typeof document !== "undefined") {
             const script = document.createElement("script");
@@ -101,12 +107,12 @@ export default function CodeOverlayProvider({
             <div className="relative">
                 <div
                     ref={overlayDiv}
-                    className="absolute z-50 h-screen w-screen items-center justify-center backdrop-blur-md hidden"
+                    className="absolute z-50 hidden h-screen w-screen items-center justify-center backdrop-blur-md"
                 >
-                    <div className="flex flex-col h-screen min-w-[380px] p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
-                        <div className="flex space-x-3 justify-end">
+                    <div className="flex h-screen min-w-[380px] flex-col p-3 sm:p-14 md:py-24 md:px-28 xl:px-52 2xl:py-24 2xl:px-80">
+                        <div className="flex justify-end space-x-3">
                             <div
-                                className={`rounded-md shadow-lg p-3 bg-opacity-90 dark:bg-opacity-90 bg-ls-back dark:bg-dt-back transition-all duration-[1500ms] ease-out	 ${
+                                className={`rounded-md bg-ls-back bg-opacity-90 p-3 shadow-lg transition-all duration-[1500ms] ease-out dark:bg-dt-back dark:bg-opacity-90	 ${
                                     copied ? "opacity-100" : "opacity-0"
                                 }`}
                                 onTransitionEnd={() => setCopied(false)}
@@ -134,7 +140,7 @@ export default function CodeOverlayProvider({
                                 />
                             </CCButton>
                         </div>
-                        <div className="mt-3 overflow-scroll p-4 rounded-md shadow-2xl bg-dp-back dark:bg-dt-back">
+                        <div className="mt-3 overflow-scroll rounded-md bg-dp-back p-4 shadow-2xl dark:bg-dt-back">
                             <div
                                 ref={codeDiv}
                                 dangerouslySetInnerHTML={{

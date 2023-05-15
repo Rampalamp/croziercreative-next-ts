@@ -1,5 +1,4 @@
 import keccak256 from "keccak256";
-import { Type } from "typescript";
 /**
  * Considered making a decoder function for when calling view functions
  * on smart contracts. It would likely follow some pattern similar
