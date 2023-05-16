@@ -13,7 +13,7 @@ export default function Skills() {
                     am also experienced working in agile development
                     environments and am skilled at communicating with both
                     technical and non-technical stakeholders. Click on the
-                    skills below to see specifics!{" "}
+                    skills below to see more specifics!{" "}
                     <ShowCodeButton codeToShow="skills" className="inline" />
                 </div>
                 <div className="mt-20">

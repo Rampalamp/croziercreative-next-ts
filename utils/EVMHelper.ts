@@ -241,7 +241,6 @@ export function decode32ByteHexString(
     //it would be a series of 32 byte hex strings, first one being length
     //of the string, second one being the actual ascii hex values.
     const trimmedHex = hexString.replace(/^0+(?!$)/, "");
-    console.log(trimmedHex);
     switch (dataType) {
         case "number":
             return parseInt(trimmedHex, 16);

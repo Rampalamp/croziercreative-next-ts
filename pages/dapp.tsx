@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import CCButton from "../components/CCButton";
 import CCConnectButton from "../components/CCConnectButton";
-import CCToastProvider, {
-    CCToastContext,
-} from "../components/context/CCToastProvider";
+import { CCToastContext } from "../components/context/CCToastProvider";
 import { CCWeb3Context, Wallet } from "../components/context/CCWeb3Provider";
 import ShowCodeButton from "../components/ShowCodeButton";
 import { XENFLEX_HHLOCAL, XEN_HHLOCAL } from "../constants/SmartContracts";
@@ -15,7 +13,7 @@ export default function dApp() {
         CCProvider,
         connectProvider,
         walletExists,
-        isWalletConnected,
+        isAccountConnected,
         isWalletUnlocked,
     } = useContext(CCWeb3Context);
     const { runToaster } = useContext(CCToastContext);
@@ -27,17 +25,17 @@ export default function dApp() {
     const [maxTerm, setMaxTerm] = useState<number>(0);
     const [term, setTerm] = useState<number>(0);
 
+    //Initial effect on load to handle wallet checks.
     useEffect(() => {
         if (walletExists()) {
             setWalletFound(true);
 
             if (CCProvider === undefined) {
-                const connectedWallet: Wallet = isWalletConnected();
-
-                if (connectedWallet !== null) {
-                    isWalletUnlocked(connectedWallet)
-                        ? connectProvider(connectedWallet)
-                        : null;
+                //check for unlocked metamask first, then gamestop.
+                if (isWalletUnlocked("metamask")) {
+                    connectProvider("metamask");
+                } else if (isWalletUnlocked("gamestop")) {
+                    connectProvider("gamestop");
                 }
             }
         } else {
@@ -45,29 +43,37 @@ export default function dApp() {
         }
     }, []);
 
+    //account based effects, when account has been set, call some smart contracts for information.
     useEffect(() => {
-        //setup async functions to use on init of dapp, not entirely sure if this will be bueno.
-        //I recall having issues doing this earlier, will need some testing no doubt.
+        //setup async functions to use on init of dapp
         async function getMintInfo() {
             await getUserMintInfo();
-        }
-
-        async function queryXenFlex() {
-            await queryXenFlexTokenId();
         }
 
         async function getMaxT() {
             await getMaxTerm();
         }
+        //if account is set, get MaxTerm and check to see if MintInfo exists for address.
         if (account !== "0x0") {
-            getMaxT();
+            if (maxTerm === 0) getMaxT();
 
             getMintInfo();
-
-            if (mintInfo !== undefined) queryXenFlex();
         }
     }, [account]);
 
+    //mintInfo based effects, when mintInfo has been set query xenFlex to check if cRank has been minted.
+    useEffect(() => {
+        async function queryXenFlex() {
+            await queryXenFlexTokenId();
+        }
+        if (mintInfo !== undefined) {
+            queryXenFlex();
+        } else {
+            setIsRankMinted(false);
+        }
+    }, [mintInfo]);
+
+    //Initial set of CCProvider, when its set grab accounts and balances, and setup an event for accounts changed.
     useEffect(() => {
         if (CCProvider?.ethereum !== undefined) {
             //setup initial account/balance values.
@@ -85,19 +91,6 @@ export default function dApp() {
             );
         };
     }, [CCProvider]);
-
-    function showDapp(): boolean {
-        if (CCProvider !== undefined) {
-            //if no wallet connected dont display dapp
-            if (!isWalletConnected) return false;
-            //if connected wallet is not unlocked
-            if (!isWalletUnlocked(CCProvider.wallet)) return false;
-            //if it reaches here, should be safe to display dapp.
-            return true;
-        }
-
-        return false;
-    }
     /**
      * This iterates over the MintInfo property keys, populating a MintInfo object.
      * It then calls the setMintInfo state function.
@@ -157,7 +150,10 @@ export default function dApp() {
 
         setMintInfo(userMintInfo);
     }
-
+    /**
+     * Calls XENCrypto getUserMint() function, if mint found, calls setUserMintInfo
+     * @returns
+     */
     async function getUserMintInfo() {
         //tx response should be in 32 byte hex strings format.
         const txResponse = await CCProvider?.callContract(
@@ -173,12 +169,19 @@ export default function dApp() {
             //then match every 64th character
             const responseValues = txResponse.slice(2).match(/.{64}/g);
             //if first value in array is all 0's no mint info found.
-            if (/^0+$/.test(responseValues![0])) return;
+            if (/^0+$/.test(responseValues![0])) {
+                //set mintInfo back to undefined if enters here.
+                setMintInfo(undefined);
+                return;
+            }
 
             setUserMintInfo(responseValues!);
         }
     }
 
+    /**
+     * Calls XENCrypto getCurrentMaxTerm() and then calls setMaxTerm state with retrieved value.
+     */
     async function getMaxTerm() {
         const txResponse = await CCProvider?.callContract(
             XEN_HHLOCAL,
@@ -199,23 +202,27 @@ export default function dApp() {
         }
     }
 
+    /**
+     * Calls XenFlex ownerOf(uint256) to see if cRank has already been minted.
+     */
     async function queryXenFlexTokenId() {
         const txResponse = await CCProvider?.callContract(
             XENFLEX_HHLOCAL,
             account,
             { function: "ownerOf(uint256)", tokenId: mintInfo!.rank }
         );
-
+        //if contract call errors ie ownerOf gets given an invalid token ID
+        //txResponse will be indeed undefined, and console would have errors logged in them.
         if (txResponse !== undefined) {
-            //this should just be an address, or an error. not entirely sure how this will test on HH local since its using an azure link for the base URI
-            //if Address exists, then the account has already minted their cRank
-            //if response returns an error or execution reverted, then invalid token
-            //can assume cRank has not been minted.
-
+            //in this case if txResponse is not undefined, then it will be an 20 byte address object
+            //don't need to do anything with the response though, just confirms the cRank is minted.
             setIsRankMinted(true);
         }
     }
 
+    /**
+     * Handles account changes on wallet and sets various state objects accordingly.
+     */
     async function handleAccountsChanged() {
         if (CCProvider !== undefined) {
             //change values in provider AND local useState values for account/balance.
@@ -227,10 +234,12 @@ export default function dApp() {
             setBalance(CCProvider.balance);
         }
     }
-
+    /**
+     * Calls XENCrypto claimRank(uint256)
+     * @returns
+     */
     async function handleXenClaimRank() {
         //I don't think we need to do anything with the txHash returned from MetaMask
-
         if (term <= 0) {
             runToaster("error", "Term must be greater then 0");
             return;
@@ -258,7 +267,10 @@ export default function dApp() {
 
         runToaster("success", "Transaction Successful, Rank Claimed!");
     }
-
+    /**
+     * Calls XenFlex mintNft()
+     * @returns
+     */
     async function handleXenFlexMint() {
         const success = await CCProvider?.sendContractTransaction(
             XENFLEX_HHLOCAL,
@@ -271,7 +283,31 @@ export default function dApp() {
             return;
         }
 
+        setIsRankMinted(true);
+
         runToaster("success", "Transaction Successful, cRank Minted!");
+    }
+
+    /**
+     * Basic function determining whether or not to show the dapp to user.
+     * @returns
+     */
+    function showDapp(): boolean {
+        console.log("Checking show dapp");
+        if (CCProvider !== undefined) {
+            console.log("CCProvider !== undefined");
+            if (!isWalletUnlocked(CCProvider.wallet)) return false;
+            console.log("passed isWalletUnlocked.");
+            //if no wallet connected dont display dapp
+            if (!isAccountConnected(CCProvider.wallet)) return false;
+            console.log("Passed isWalletConnected");
+            //if connected wallet is not unlocked
+
+            //if it reaches here, should be safe to display dapp.
+            return true;
+        }
+
+        return false;
     }
 
     return (
@@ -320,7 +356,7 @@ export default function dApp() {
                                     </a>
                                 </div>
                             </div>
-                            <div className="px-4">
+                            <div className="flex justify-end px-2">
                                 {mintInfo === undefined ? (
                                     <div>
                                         <div>
@@ -332,19 +368,20 @@ export default function dApp() {
                                             className="focus:shadow-outline mb-3 w-full appearance-none rounded border bg-lt-back py-2 px-3 leading-tight shadow focus:outline-none dark:bg-ds-back"
                                             id="termInput"
                                             type="number"
-                                            value={term}
                                             onChange={(e) => {
                                                 if (
                                                     !Number.isNaN(
-                                                        e.currentTarget.value
+                                                        e.currentTarget
+                                                            .valueAsNumber
                                                     )
                                                 ) {
                                                     setTerm(
-                                                        parseInt(
-                                                            e.currentTarget
-                                                                .value
-                                                        )
+                                                        e.currentTarget
+                                                            .valueAsNumber
                                                     );
+                                                } else {
+                                                    //if current value is not a number, set term to 0.
+                                                    setTerm(0);
                                                 }
                                             }}
                                         />
@@ -357,9 +394,7 @@ export default function dApp() {
                                         </CCButton>
                                     </div>
                                 ) : (
-                                    <div className="pr-3">
-                                        XEN Rank : {mintInfo.rank}
-                                    </div>
+                                    <div>XEN Rank : {mintInfo.rank}</div>
                                 )}
                             </div>
                         </div>
@@ -369,7 +404,7 @@ export default function dApp() {
                                 <div>
                                     XenFlex NFT <br />
                                     <span className="text-sm">
-                                        Mint Your Xen cRank as an NFT
+                                        Mint Xen cRank as NFT
                                     </span>
                                 </div>
                                 <div>
@@ -393,7 +428,7 @@ export default function dApp() {
                                     </a>
                                 </div>
                             </div>
-                            <div className="flex items-center px-4">
+                            <div className="flex items-center justify-end px-2">
                                 {mintInfo === undefined ? (
                                     <div>No Rank</div>
                                 ) : isRankMinted ? (

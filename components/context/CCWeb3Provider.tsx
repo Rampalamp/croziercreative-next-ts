@@ -9,7 +9,7 @@ type CCWeb3Context = {
     connectProvider: (wallet: Wallet) => Promise<boolean>;
     toggleWalletModal: () => void;
     walletExists: () => boolean;
-    isWalletConnected: () => Wallet | null;
+    isAccountConnected: (wallet: Wallet) => boolean;
     isWalletUnlocked: (wallet: Wallet) => boolean;
     CCProvider: CCP | undefined;
 };
@@ -75,21 +75,23 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         return false;
     }
 
-    function isWalletConnected(): Wallet | null {
-        if ((window as any).gamestop.isConnected()) {
-            return "gamestop";
-        } else if ((window as any).ethereum.isConnected()) {
-            return "metamask";
+    function isAccountConnected(wallet: Wallet): boolean {
+        if (wallet === "gamestop") {
+            (window as any).gamestop.selectedAddress !== null ? true : false;
+        } else if (wallet === "metamask") {
+            (window as any).ethereum.selectedAddress !== null ? true : false;
         }
-        return null;
+        return false;
     }
 
     function isWalletUnlocked(wallet: Wallet): boolean {
+        //return first unlocked wallet.
         if (wallet === "metamask") {
-            return (window as any).ethereum._state.isUnlocked ? true : false;
+            return (window as any).ethereum._state.isUnlocked;
         } else if (wallet === "gamestop") {
-            return (window as any).gamestop.isUnlocked ? true : false;
+            return (window as any).gamestop.isUnlocked;
         }
+
         return false;
     }
 
@@ -103,7 +105,7 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
                 connectProvider,
                 toggleWalletModal,
                 walletExists,
-                isWalletConnected,
+                isAccountConnected,
                 isWalletUnlocked,
                 CCProvider,
             }}
