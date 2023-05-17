@@ -50,12 +50,17 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         if (ccProvider !== undefined) {
             try {
                 if (
-                    !ccProvider.ethereum.isConnected() ||
+                    !isAccountConnected(ccProvider.wallet) ||
                     !isWalletUnlocked(ccProvider.wallet)
                 ) {
                     await ccProvider.connect();
                 }
-                await ccProvider.initializeProvider();
+                if (
+                    isAccountConnected(ccProvider.wallet) &&
+                    isWalletUnlocked(ccProvider.wallet)
+                ) {
+                    await ccProvider.initializeProvider();
+                }
                 setCCProvider(ccProvider);
             } catch (error) {
                 console.log(error);
@@ -77,9 +82,13 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
 
     function isAccountConnected(wallet: Wallet): boolean {
         if (wallet === "gamestop") {
-            (window as any).gamestop.selectedAddress !== null ? true : false;
+            return (window as any).gamestop.selectedAddress !== null
+                ? true
+                : false;
         } else if (wallet === "metamask") {
-            (window as any).ethereum.selectedAddress !== null ? true : false;
+            return (window as any).ethereum.selectedAddress !== null
+                ? true
+                : false;
         }
         return false;
     }

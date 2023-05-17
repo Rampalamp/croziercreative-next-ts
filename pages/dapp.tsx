@@ -4,7 +4,12 @@ import CCConnectButton from "../components/CCConnectButton";
 import { CCToastContext } from "../components/context/CCToastProvider";
 import { CCWeb3Context, Wallet } from "../components/context/CCWeb3Provider";
 import ShowCodeButton from "../components/ShowCodeButton";
-import { XENFLEX_HHLOCAL, XEN_HHLOCAL } from "../constants/SmartContracts";
+import {
+    XENFLEX_HHLOCAL,
+    XENFLEX_MAINNET,
+    XEN_HHLOCAL,
+    XEN_MAINNET,
+} from "../constants/SmartContracts";
 import { MintInfo } from "../types/XENTypes";
 import { decode32ByteHexString } from "../utils/EVMHelper";
 
@@ -19,6 +24,7 @@ export default function dApp() {
     const { runToaster } = useContext(CCToastContext);
     const [account, setAccount] = useState<string>("0x0");
     const [balance, setBalance] = useState<string>("0");
+    const [chainName, setChainName] = useState<string>("");
     const [walletFound, setWalletFound] = useState<boolean>(false);
     const [mintInfo, setMintInfo] = useState<MintInfo>();
     const [isRankMinted, setIsRankMinted] = useState<boolean>(false);
@@ -81,16 +87,63 @@ export default function dApp() {
             //I thought this useEffect would trigger when the properties of CCProvider change, but it seems not.
             setAccount(CCProvider.account);
             setBalance(CCProvider.balance);
+            setChainName(CCProvider.chainName);
 
             CCProvider.ethereum.on("accountsChanged", handleAccountsChanged);
+            CCProvider.ethereum.on("chainChanged", handleChainChanged);
         }
         return () => {
             CCProvider?.ethereum.removeListener(
                 "accountsChanged",
                 handleAccountsChanged
             );
+            CCProvider?.ethereum.removeListener(
+                "chainChanged",
+                handleChainChanged
+            );
         };
     }, [CCProvider]);
+
+    /**
+     * Handles account changes on wallet and sets various state objects accordingly.
+     */
+    async function handleAccountsChanged() {
+        if (CCProvider !== undefined) {
+            //change values in provider AND local useState values for account/balance.
+
+            CCProvider.account = CCProvider.ethereum.selectedAddress;
+            //if CCProvider.account === null, assume all accounts are disconnected
+            //setAccount and setBalance accordingly.
+            if (CCProvider.account === null) {
+                setAccount("0x0");
+                setBalance("0");
+                return;
+            }
+
+            //if CCProvider.account !== null get balance and set account/balance.
+            CCProvider.balance = await CCProvider.getBalance(
+                CCProvider.account
+            );
+
+            setAccount(CCProvider.account);
+            setBalance(CCProvider.balance);
+        }
+    }
+    /**
+     * Handles change of chains, only acceptable chains currently
+     * are Ethereum Mainnet and Hardhat Local Node
+     */
+    async function handleChainChanged() {
+        if (CCProvider !== undefined) {
+            CCProvider.chainId = await CCProvider.getChainId();
+            CCProvider.chainName = await CCProvider.getChainName(
+                CCProvider.chainId
+            );
+
+            setChainName(CCProvider.chainName);
+        }
+    }
+
     /**
      * This iterates over the MintInfo property keys, populating a MintInfo object.
      * It then calls the setMintInfo state function.
@@ -155,9 +208,13 @@ export default function dApp() {
      * @returns
      */
     async function getUserMintInfo() {
+        //if chainId is 1, set to XEN_MAINNET
+        //if chain is anything else but 1, set to XEN_HHLOCAL
+        const contractAddress =
+            CCProvider?.chainId === 1 ? XEN_MAINNET : XEN_HHLOCAL;
         //tx response should be in 32 byte hex strings format.
         const txResponse = await CCProvider?.callContract(
-            XEN_HHLOCAL,
+            contractAddress,
             account,
             {
                 function: "getUserMint()",
@@ -183,8 +240,11 @@ export default function dApp() {
      * Calls XENCrypto getCurrentMaxTerm() and then calls setMaxTerm state with retrieved value.
      */
     async function getMaxTerm() {
+        const contractAddress =
+            CCProvider?.chainId === 1 ? XEN_MAINNET : XEN_HHLOCAL;
+
         const txResponse = await CCProvider?.callContract(
-            XEN_HHLOCAL,
+            contractAddress,
             account,
             { function: "getCurrentMaxTerm()" }
         );
@@ -206,8 +266,11 @@ export default function dApp() {
      * Calls XenFlex ownerOf(uint256) to see if cRank has already been minted.
      */
     async function queryXenFlexTokenId() {
+        const contractAddress =
+            CCProvider?.chainId === 1 ? XENFLEX_MAINNET : XENFLEX_HHLOCAL;
+
         const txResponse = await CCProvider?.callContract(
-            XENFLEX_HHLOCAL,
+            contractAddress,
             account,
             { function: "ownerOf(uint256)", tokenId: mintInfo!.rank }
         );
@@ -220,20 +283,6 @@ export default function dApp() {
         }
     }
 
-    /**
-     * Handles account changes on wallet and sets various state objects accordingly.
-     */
-    async function handleAccountsChanged() {
-        if (CCProvider !== undefined) {
-            //change values in provider AND local useState values for account/balance.
-            CCProvider.account = (await CCProvider.getAccounts())[0];
-            CCProvider.balance = await CCProvider.getBalance(
-                CCProvider.account
-            );
-            setAccount(CCProvider.account);
-            setBalance(CCProvider.balance);
-        }
-    }
     /**
      * Calls XENCrypto claimRank(uint256)
      * @returns
@@ -250,14 +299,18 @@ export default function dApp() {
             return;
         }
 
+        const contractAddress =
+            CCProvider?.chainId === 1 ? XEN_MAINNET : XEN_HHLOCAL;
+
         const success = await CCProvider?.sendContractTransaction(
-            XEN_HHLOCAL,
+            contractAddress,
             account,
             {
                 function: "claimRank(uint256)",
                 termInDays: term,
             }
         );
+
         if (!success) {
             console.log("Xen Claim Rank Failed.");
             return;
@@ -272,8 +325,11 @@ export default function dApp() {
      * @returns
      */
     async function handleXenFlexMint() {
+        const contractAddress =
+            CCProvider?.chainId === 1 ? XENFLEX_MAINNET : XENFLEX_HHLOCAL;
+
         const success = await CCProvider?.sendContractTransaction(
-            XENFLEX_HHLOCAL,
+            contractAddress,
             account,
             { function: "mintNft()" }
         );
@@ -293,19 +349,21 @@ export default function dApp() {
      * @returns
      */
     function showDapp(): boolean {
-        console.log("Checking show dapp");
         if (CCProvider !== undefined) {
-            console.log("CCProvider !== undefined");
             if (!isWalletUnlocked(CCProvider.wallet)) return false;
-            console.log("passed isWalletUnlocked.");
             //if no wallet connected dont display dapp
             if (!isAccountConnected(CCProvider.wallet)) return false;
-            console.log("Passed isWalletConnected");
-            //if connected wallet is not unlocked
-
             //if it reaches here, should be safe to display dapp.
             return true;
         }
+
+        return false;
+    }
+
+    function isChainGood(): boolean {
+        if (chainName === "Ethereum Mainnet") return true;
+
+        if (chainName === "Hardhat Local Node") return true;
 
         return false;
     }
@@ -317,134 +375,140 @@ export default function dApp() {
                     Please download either MetaMask or GameStop wallet.
                 </div>
             ) : showDapp() ? (
-                <div>
-                    <div className="flex space-x-8">
-                        <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
-                            {CCProvider!.chainName}
-                        </div>
-                        <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
-                            ETH {balance.slice(0, balance.indexOf(".") + 4)}
-                            ...
-                        </div>
-                        <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
-                            {account.slice(0, 6)}...
-                            {account.slice(CCProvider!.account.length - 4)}
-                        </div>
-                    </div>
-                    <div className="mt-10 flex-col space-y-4 rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dp-back">
-                        <div className="flex items-center">
-                            <div className="grow">
-                                <div>XEN Crypto</div>
-                                <div>
-                                    <a
-                                        className="underline hover:text-dp-back hover:dark:text-ls-fore"
-                                        target="_blank"
-                                        href="https://etherscan.io/token/0x06450dEe7FD2Fb8E39061434BAbCFC05599a6Fb8"
-                                        rel="noopener noreferrer"
-                                    >
-                                        Etherscan
-                                    </a>
-                                </div>
-                                <div>
-                                    <a
-                                        className="underline hover:text-dp-back hover:dark:text-ls-fore"
-                                        target="_blank"
-                                        href="https://xen.network/"
-                                        rel="noopener noreferrer"
-                                    >
-                                        XEN DAPP
-                                    </a>
-                                </div>
+                isChainGood() ? (
+                    <div>
+                        <div className="flex space-x-8">
+                            <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
+                                {CCProvider!.chainName}
                             </div>
-                            <div className="flex justify-end px-2">
-                                {mintInfo === undefined ? (
+                            <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
+                                ETH {balance.slice(0, balance.indexOf(".") + 4)}
+                                ...
+                            </div>
+                            <div className="flex flex-auto items-center rounded-lg bg-lt-back p-3 shadow-2xl dark:bg-dp-back">
+                                {account.slice(0, 6)}...
+                                {account.slice(CCProvider!.account.length - 4)}
+                            </div>
+                        </div>
+                        <div className="mt-10 flex-col space-y-4 rounded-lg bg-lt-back p-10 shadow-2xl dark:bg-dp-back">
+                            <div className="flex items-center">
+                                <div className="grow">
+                                    <div>XEN Crypto</div>
                                     <div>
-                                        <div>
-                                            <span className="text-base">
-                                                Term : (Max: {maxTerm} Days)
-                                            </span>
-                                        </div>
-                                        <input
-                                            className="focus:shadow-outline mb-3 w-full appearance-none rounded border bg-lt-back py-2 px-3 leading-tight shadow focus:outline-none dark:bg-ds-back"
-                                            id="termInput"
-                                            type="number"
-                                            onChange={(e) => {
-                                                if (
-                                                    !Number.isNaN(
-                                                        e.currentTarget
-                                                            .valueAsNumber
-                                                    )
-                                                ) {
-                                                    setTerm(
-                                                        e.currentTarget
-                                                            .valueAsNumber
-                                                    );
-                                                } else {
-                                                    //if current value is not a number, set term to 0.
-                                                    setTerm(0);
-                                                }
-                                            }}
-                                        />
-                                        <CCButton
-                                            onClick={handleXenClaimRank}
-                                            title="ClaimXenRank"
-                                            className="flex flex-row-reverse"
+                                        <a
+                                            className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                            target="_blank"
+                                            href="https://etherscan.io/token/0x06450dEe7FD2Fb8E39061434BAbCFC05599a6Fb8"
+                                            rel="noopener noreferrer"
                                         >
-                                            CLAIM RANK
-                                        </CCButton>
+                                            Etherscan
+                                        </a>
                                     </div>
-                                ) : (
-                                    <div>XEN Rank : {mintInfo.rank}</div>
-                                )}
+                                    <div>
+                                        <a
+                                            className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                            target="_blank"
+                                            href="https://xen.network/"
+                                            rel="noopener noreferrer"
+                                        >
+                                            XEN DAPP
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="flex justify-end px-2">
+                                    {mintInfo === undefined ? (
+                                        <div>
+                                            <div>
+                                                <span className="text-base">
+                                                    Term : (Max: {maxTerm} Days)
+                                                </span>
+                                            </div>
+                                            <input
+                                                className="focus:shadow-outline mb-3 w-full appearance-none rounded border bg-lt-back py-2 px-3 leading-tight shadow focus:outline-none dark:bg-ds-back"
+                                                id="termInput"
+                                                type="number"
+                                                onChange={(e) => {
+                                                    if (
+                                                        !Number.isNaN(
+                                                            e.currentTarget
+                                                                .valueAsNumber
+                                                        )
+                                                    ) {
+                                                        setTerm(
+                                                            e.currentTarget
+                                                                .valueAsNumber
+                                                        );
+                                                    } else {
+                                                        //if current value is not a number, set term to 0.
+                                                        setTerm(0);
+                                                    }
+                                                }}
+                                            />
+                                            <CCButton
+                                                onClick={handleXenClaimRank}
+                                                title="ClaimXenRank"
+                                                className="flex flex-row-reverse"
+                                            >
+                                                CLAIM RANK
+                                            </CCButton>
+                                        </div>
+                                    ) : (
+                                        <div>XEN Rank : {mintInfo.rank}</div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <hr />{" "}
-                        <div className="flex">
-                            <div className="grow">
-                                <div>
-                                    XenFlex NFT <br />
-                                    <span className="text-sm">
-                                        Mint Xen cRank as NFT
-                                    </span>
+                            <hr />{" "}
+                            <div className="flex">
+                                <div className="grow">
+                                    <div>
+                                        XenFlex NFT <br />
+                                        <span className="text-sm">
+                                            Mint Xen cRank as NFT
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <a
+                                            className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                            target="_blank"
+                                            href="https://etherscan.io/address/0x7b812443599ba2307c14b80825de0429ee0bae3d"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Etherscan
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a
+                                            className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                                            target="_blank"
+                                            href="https://www.xenflex.io/#/"
+                                            rel="noopener noreferrer"
+                                        >
+                                            XenFlex DAPP
+                                        </a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a
-                                        className="underline hover:text-dp-back hover:dark:text-ls-fore"
-                                        target="_blank"
-                                        href="https://etherscan.io/address/0x7b812443599ba2307c14b80825de0429ee0bae3d"
-                                        rel="noopener noreferrer"
-                                    >
-                                        Etherscan
-                                    </a>
+                                <div className="flex items-center justify-end px-2">
+                                    {mintInfo === undefined ? (
+                                        <div>No Rank</div>
+                                    ) : isRankMinted ? (
+                                        <div>Rank {mintInfo.rank} Minted</div>
+                                    ) : (
+                                        <CCButton
+                                            onClick={handleXenFlexMint}
+                                            title="MintXenFlex"
+                                        >
+                                            MINT NFT
+                                        </CCButton>
+                                    )}
                                 </div>
-                                <div>
-                                    <a
-                                        className="underline hover:text-dp-back hover:dark:text-ls-fore"
-                                        target="_blank"
-                                        href="https://www.xenflex.io/#/"
-                                        rel="noopener noreferrer"
-                                    >
-                                        XenFlex DAPP
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="flex items-center justify-end px-2">
-                                {mintInfo === undefined ? (
-                                    <div>No Rank</div>
-                                ) : isRankMinted ? (
-                                    <div>Rank {mintInfo.rank} Minted</div>
-                                ) : (
-                                    <CCButton
-                                        onClick={handleXenFlexMint}
-                                        title="MintXenFlex"
-                                    >
-                                        MINT NFT
-                                    </CCButton>
-                                )}
                             </div>
                         </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="rounded-md bg-ls-back p-3 text-center  shadow-md dark:bg-dt-back">
+                        Chain must be Ethereum Mainnet or Hardhat Local Node.
+                    </div>
+                )
             ) : (
                 <div className="mt-5 items-center text-center sm:mt-0">
                     <CCConnectButton />
