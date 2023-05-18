@@ -288,7 +288,6 @@ export default function dApp() {
      * @returns
      */
     async function handleXenClaimRank() {
-        //I don't think we need to do anything with the txHash returned from MetaMask
         if (term <= 0) {
             runToaster("error", "Term must be greater then 0");
             return;
@@ -448,6 +447,7 @@ export default function dApp() {
                                                 onClick={handleXenClaimRank}
                                                 title="ClaimXenRank"
                                                 className="flex flex-row-reverse"
+                                                useProgress={true}
                                             >
                                                 CLAIM RANK
                                             </CCButton>
@@ -496,6 +496,7 @@ export default function dApp() {
                                         <CCButton
                                             onClick={handleXenFlexMint}
                                             title="MintXenFlex"
+                                            useProgress={true}
                                         >
                                             MINT NFT
                                         </CCButton>

@@ -160,14 +160,22 @@ export class CCProvider {
                 method: "eth_sendTransaction",
                 params: [transactionParameters],
             });
-            //the eth_getTransactionReceipt is essentially our wait for block mining
-            //Currently no need to do anything with the txReceipt object...yet.
-            const txReceipt = await this.ethereum.request({
-                method: "eth_getTransactionReceipt",
-                params: [txHash],
-            });
 
-            return true;
+            let txReceipt = null;
+            //enter while loop to wait for transaction receipt to be confirmed
+            while (!txReceipt) {
+                // Wait for 2 seconds before checking
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                txReceipt = await this.ethereum.request({
+                    method: "eth_getTransactionReceipt",
+                    params: [txHash],
+                });
+            }
+
+            if (txReceipt.status === "0x1") return true;
+            //if status code is not 0x1 assume something has gone wrong
+            return false;
         } catch (error) {
             console.log(error);
             return false;
