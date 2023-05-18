@@ -5,7 +5,7 @@ interface ICCButtonProps
         React.HTMLAttributes<HTMLButtonElement>,
         HTMLButtonElement
     > {
-    useProgress?: boolean;
+    useLoadingCircle?: boolean;
 }
 
 export default function CCButton({
@@ -13,13 +13,13 @@ export default function CCButton({
     onClick,
     children,
     title,
-    useProgress,
+    useLoadingCircle,
 }: ICCButtonProps) {
     const [showLoading, setShowLoading] = useState<boolean>(false);
     const handleClick = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
-        if (onClick && useProgress) {
+        if (onClick && useLoadingCircle) {
             setShowLoading(true);
             try {
                 await onClick(event);

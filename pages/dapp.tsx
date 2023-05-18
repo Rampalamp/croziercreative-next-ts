@@ -447,7 +447,7 @@ export default function dApp() {
                                                 onClick={handleXenClaimRank}
                                                 title="ClaimXenRank"
                                                 className="flex flex-row-reverse"
-                                                useProgress={true}
+                                                useLoadingCircle={true}
                                             >
                                                 CLAIM RANK
                                             </CCButton>
@@ -496,7 +496,7 @@ export default function dApp() {
                                         <CCButton
                                             onClick={handleXenFlexMint}
                                             title="MintXenFlex"
-                                            useProgress={true}
+                                            useLoadingCircle={true}
                                         >
                                             MINT NFT
                                         </CCButton>
