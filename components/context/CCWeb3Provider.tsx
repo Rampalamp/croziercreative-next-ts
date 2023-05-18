@@ -50,14 +50,14 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         if (ccProvider !== undefined) {
             try {
                 if (
-                    !isAccountConnected(ccProvider.wallet) ||
-                    !isWalletUnlocked(ccProvider.wallet)
+                    !isWalletUnlocked(ccProvider.wallet) ||
+                    !isAccountConnected(ccProvider.wallet)
                 ) {
                     await ccProvider.connect();
                 }
                 if (
-                    isAccountConnected(ccProvider.wallet) &&
-                    isWalletUnlocked(ccProvider.wallet)
+                    isWalletUnlocked(ccProvider.wallet) &&
+                    isAccountConnected(ccProvider.wallet)
                 ) {
                     await ccProvider.initializeProvider();
                 }
@@ -81,10 +81,11 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
     }
 
     function isAccountConnected(wallet: Wallet): boolean {
+        //gamestop works a bit differently, can't just check selectedAddress
+        //it returns an error, works fine for metamask though
+        //the two wallets seem to use the connected/IsConnected() feature/events differently
         if (wallet === "gamestop") {
-            return (window as any).gamestop.selectedAddress !== null
-                ? true
-                : false;
+            return (window as any).gamestop.connected as boolean;
         } else if (wallet === "metamask") {
             return (window as any).ethereum.selectedAddress !== null
                 ? true
@@ -98,6 +99,9 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         if (wallet === "metamask") {
             return (window as any).ethereum._state.isUnlocked;
         } else if (wallet === "gamestop") {
+            //gamestop wallet seems to not actually update the embedded window object
+            //so after locking it, gamestop.isUnlocked will return true still
+            //until the window is refreshed.
             return (window as any).gamestop.isUnlocked;
         }
 

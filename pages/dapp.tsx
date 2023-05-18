@@ -51,19 +51,11 @@ export default function dApp() {
 
     //account based effects, when account has been set, call some smart contracts for information.
     useEffect(() => {
-        //setup async functions to use on init of dapp
-        async function getMintInfo() {
-            await getUserMintInfo();
-        }
-
-        async function getMaxT() {
-            await getMaxTerm();
-        }
         //if account is set, get MaxTerm and check to see if MintInfo exists for address.
         if (account !== "0x0") {
-            if (maxTerm === 0) getMaxT();
+            getMaxTerm();
 
-            getMintInfo();
+            getUserMintInfo();
         }
     }, [account]);
 
@@ -91,6 +83,9 @@ export default function dApp() {
 
             CCProvider.ethereum.on("accountsChanged", handleAccountsChanged);
             CCProvider.ethereum.on("chainChanged", handleChainChanged);
+            if (CCProvider.wallet === "gamestop") {
+                CCProvider.ethereum.on("disconnect", handleDisconnect);
+            }
         }
         return () => {
             CCProvider?.ethereum.removeListener(
@@ -101,8 +96,27 @@ export default function dApp() {
                 "chainChanged",
                 handleChainChanged
             );
+            if (CCProvider?.wallet === "gamestop") {
+                CCProvider.ethereum.removeListener(
+                    "disconnect",
+                    handleDisconnect
+                );
+            }
         };
     }, [CCProvider]);
+    /**
+     * Handles disconnect event, this is primarily just for gamestop wallet
+     * as far as I can tell. Metamask handles disconnects a little differently.
+     * With metamask we can just check if there is a selectedAddress.
+     * With gamestop the selectedAddress turns into an error, metamask its just null.
+     * the disconnect event for metamask is due to no connection to the RPC url.
+     */
+    async function handleDisconnect() {
+        CCProvider!.account = "0x0";
+
+        setAccount("0x0");
+        setBalance("0");
+    }
 
     /**
      * Handles account changes on wallet and sets various state objects accordingly.
@@ -288,6 +302,11 @@ export default function dApp() {
      * @returns
      */
     async function handleXenClaimRank() {
+        if (!isAccountConnected(CCProvider!.wallet)) {
+            console.log(CCProvider);
+            console.log("ENTERED ESCAPING");
+            return;
+        }
         if (term <= 0) {
             runToaster("error", "Term must be greater then 0");
             return;
@@ -345,7 +364,7 @@ export default function dApp() {
 
     /**
      * Basic function determining whether or not to show the dapp to user.
-     * @returns
+     * @returns boolean
      */
     function showDapp(): boolean {
         if (CCProvider !== undefined) {
@@ -358,7 +377,10 @@ export default function dApp() {
 
         return false;
     }
-
+    /**
+     * Checks that the chainName is either Ethereum Mainnet or Hardhat Local Node
+     * @returns boolean
+     */
     function isChainGood(): boolean {
         if (chainName === "Ethereum Mainnet") return true;
 
