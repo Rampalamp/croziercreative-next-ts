@@ -33,12 +33,12 @@ const SkillComponents: Map<Skill, React.ReactNode> = new Map<
     Skill,
     React.ReactNode
 >([
-    ["blockchain", <Blockchain />],
-    ["graph", <Graph />],
-    ["sql", <MySql />],
-    ["azure", <MicrosoftAzure />],
-    ["cs", <CS />],
-    ["ts", <TS />],
+    ["blockchain", <Blockchain key="blockchain" />],
+    ["graph", <Graph key="graph" />],
+    ["sql", <MySql key="sql" />],
+    ["azure", <MicrosoftAzure key="azure" />],
+    ["cs", <CS key="cs" />],
+    ["ts", <TS key="ts" />],
 ]);
 
 export const SkillsContext = createContext<SkillsContext>({} as SkillsContext);

@@ -36,7 +36,7 @@ export default function Home() {
             <br />
             <div>
                 <span className="text-xl font-extrabold ">
-                    My name is Matthew, that's my dog Zuko, and this is my
+                    My name is Matthew, that&apos;s my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
                     <ShowCodeButton codeToShow="index" className="inline" /> to
                     view some components source code, to see everything visit my{" "}
@@ -61,7 +61,7 @@ export default function Home() {
                 </Link>{" "}
                 for more specific experience. With a strong foundation in
                 software engineering and a desire to constantly learn and
-                improve, I have set my phasers to 'love me'
+                improve, I have set my phasers to &apos;love me&apos;
                 <span className="italic"> as well as </span>
                 blockchain development / technologies. Feel free to connect and
                 play around in the{" "}

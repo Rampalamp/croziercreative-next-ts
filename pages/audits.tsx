@@ -40,7 +40,7 @@ export default function Audits() {
             requires back and forth between the developer and auditor. It is
             paramount that I understand exactly what you want your code to do to
             perform a proper audit. Depending the size of the project I may also
-            request unit tests be written, if they weren't already.
+            request unit tests be written, if they weren&apos;t already.
             <br />
             <br />
             <ShowCodeButton codeToShow="audits" />

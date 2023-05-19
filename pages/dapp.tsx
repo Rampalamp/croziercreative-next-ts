@@ -13,7 +13,7 @@ import {
 import { MintInfo } from "../types/XENTypes";
 import { decode32ByteHexString } from "../utils/EVMHelper";
 
-export default function dApp() {
+export default function Dapp() {
     const {
         CCProvider,
         connectProvider,
@@ -47,6 +47,7 @@ export default function dApp() {
         } else {
             setWalletFound(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     //account based effects, when account has been set, call some smart contracts for information.
@@ -57,6 +58,7 @@ export default function dApp() {
 
             getUserMintInfo();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account]);
 
     //mintInfo based effects, when mintInfo has been set query xenFlex to check if cRank has been minted.
@@ -69,6 +71,7 @@ export default function dApp() {
         } else {
             setIsRankMinted(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mintInfo]);
 
     //Initial set of CCProvider, when its set grab accounts and balances, and setup an event for accounts changed.
@@ -103,6 +106,7 @@ export default function dApp() {
                 );
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [CCProvider]);
     /**
      * Handles disconnect event, this is primarily just for gamestop wallet
