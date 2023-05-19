@@ -8,7 +8,7 @@ import {
     Azure,
     CSharp,
     TypeScript,
-} from "./constants/Svgs";
+} from "../constants/Svgs";
 import ShowCodeButton from "./ShowCodeButton";
 import { SkillsContext, Skill } from "./context/SkillsProvider";
 import { useContext } from "react";
@@ -27,52 +27,52 @@ export default function SkillCloud() {
         <div className="grid grid-cols-3 grid-rows-3">
             {/* Supposedly applying padding to the any grid element applies it to all */}
             <div
-                className="m-auto p-5 myOrbit speedFast"
+                className="myOrbit speedFast m-auto p-5"
                 onClick={() => ShowSkill("blockchain")}
             >
                 <HardHat />
             </div>
             <div
-                className="m-auto myOrbit speedSlow"
+                className="myOrbit speedSlow m-auto"
                 onClick={() => ShowSkill("blockchain")}
             >
                 <Solidity />
             </div>
             <div
-                className="m-auto myOrbit speedMedium"
+                className="myOrbit speedMedium m-auto"
                 onClick={() => ShowSkill("blockchain")}
             >
                 <Ethereum />
             </div>
             <div
-                className="m-auto myOrbit speedSlow"
+                className="myOrbit speedSlow m-auto"
                 onClick={() => ShowSkill("graph")}
             >
                 <GraphQL />
             </div>
-            <div className="m-auto myOrbit speedFast">
+            <div className="myOrbit speedFast m-auto">
                 <ShowCodeButton codeToShow="skillcloud" />
             </div>
             <div
-                className="m-auto p-5 myOrbit speedFast"
+                className="myOrbit speedFast m-auto p-5"
                 onClick={() => ShowSkill("sql")}
             >
                 <SQL />
             </div>
             <div
-                className="m-auto myOrbit speedFast"
+                className="myOrbit speedFast m-auto"
                 onClick={() => ShowSkill("azure")}
             >
                 <Azure />
             </div>
             <div
-                className="m-auto myOrbit speedMedium"
+                className="myOrbit speedMedium m-auto"
                 onClick={() => ShowSkill("cs")}
             >
                 <CSharp />
             </div>
             <div
-                className="m-auto myOrbit speedSlow"
+                className="myOrbit speedSlow m-auto"
                 onClick={() => ShowSkill("ts")}
             >
                 <TypeScript />

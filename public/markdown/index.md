@@ -5,26 +5,26 @@ import ShowCodeButton from "../components/ShowCodeButton";
 
 export default function Home() {
     return (
-        <div className="mt-5 sm:mt-0 text-center items-center ">
+        <div className="mt-5 items-center text-center sm:mt-0 ">
             <div>
                 <div className="grid grid-cols-2 p-3">
-                    <div className="text-left skew-y-12 m-auto">
+                    <div className="m-auto skew-y-12 text-left">
                         {/**make-transparent is not a tailwind class, it is my work around, exists in globals.css */}
-                        <span className="make-transparent text-6xl sm:text-8xl lg:text-9xl uppercase bg-clip-text bg-gradient-to-r from-dp-back to-dp-fore dark:from-lp-back dark:to-lp-fore">
+                        <span className="make-transparent bg-gradient-to-r from-dp-back to-dp-fore bg-clip-text text-6xl uppercase dark:from-lp-back dark:to-lp-fore sm:text-8xl lg:text-9xl">
                             Hey.
                         </span>
                         <br />
-                        <span className="make-transparent text-5xl sm:text-7xl lg:text-8xl uppercase bg-clip-text bg-gradient-to-r from-ds-fore to-ds-back dark:from-ls-back dark:to-ls-fore">
+                        <span className="make-transparent bg-gradient-to-r from-ds-fore to-ds-back bg-clip-text text-5xl uppercase dark:from-ls-back dark:to-ls-fore sm:text-7xl lg:text-8xl">
                             Hello.
                         </span>
                         <br />
-                        <span className="make-transparent text-4xl sm:text-6xl lg:text-7xl uppercase whitespace-nowrap bg-clip-text bg-gradient-to-r from-dt-back to-dt-fore dark:from-lt-back dark:to-lt-fore">
+                        <span className="make-transparent whitespace-nowrap bg-gradient-to-r from-dt-back to-dt-fore bg-clip-text text-4xl uppercase dark:from-lt-back dark:to-lt-fore sm:text-6xl lg:text-7xl">
                             Hi there.
                         </span>
                     </div>
-                    <div className="m-auto">
+                    <div className="mt-auto mb-auto ml-6 xs:m-auto">
                         <Image
-                            className="rounded-full w-auto h-auto"
+                            className="h-auto w-auto rounded-full"
                             src="/zuko.png"
                             width={250}
                             height={250}
@@ -36,7 +36,7 @@ export default function Home() {
             <br />
             <br />
             <div>
-                <span className="font-extrabold text-xl ">
+                <span className="text-xl font-extrabold ">
                     My name is Matthew, that's my dog Zuko, and this is my
                     website. I hope you enjoy and interact (Look for{" "}
                     <ShowCodeButton codeToShow="index" className="inline" /> to

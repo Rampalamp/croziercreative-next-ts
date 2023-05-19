@@ -17,13 +17,18 @@ export class CCProvider {
         this.wallet = wallet;
     }
 
+    /**
+     * Initializes the CCProvider class.
+     */
     async initializeProvider() {
         this.account = (await this.getAccounts())[0];
         this.chainId = await this.getChainId();
         this.balance = await this.getBalance(this.account);
         this.chainName = await this.getChainName(this.chainId);
     }
-
+    /**
+     * Calls the eth_requestAccounts method for permission
+     */
     async connect() {
         try {
             await this.ethereum.request({ method: "eth_requestAccounts" });
@@ -36,7 +41,11 @@ export class CCProvider {
             }
         }
     }
-
+    /**
+     * Calls eth_getBalance method using given address and latest parameters
+     * @param address Address to retrieve balance from
+     * @returns Returns formatted ETH balance of address
+     */
     async getBalance(address: string): Promise<string> {
         let balance: BigNumber = BigNumber.from(0);
 
@@ -53,7 +62,10 @@ export class CCProvider {
         }
         return ethers.utils.formatUnits(balance, "ether");
     }
-
+    /**
+     * Calls eth_chainId to get current chain wallet is connected
+     * @returns Number of chainId
+     */
     async getChainId(): Promise<number> {
         let chainId: string = "0";
         try {
@@ -64,7 +76,10 @@ export class CCProvider {
 
         return parseInt(chainId, 16);
     }
-
+    /**
+     * Calls eth_accounts to get list of connected accounts from wallet
+     * @returns Array of accounts
+     */
     async getAccounts(): Promise<string[]> {
         let accounts: string[] = [];
 
@@ -78,7 +93,11 @@ export class CCProvider {
 
         return accounts;
     }
-
+    /**
+     * switch statement setup to handle 6 different chainNames
+     * @param chainId chainId to get name of
+     * @returns string of chainIds name.
+     */
     async getChainName(chainId: number): Promise<string> {
         let chainName;
 
@@ -108,7 +127,13 @@ export class CCProvider {
 
         return chainName;
     }
-
+    /**
+     * Calls eth_call method using the given parameters.
+     * @param address To address
+     * @param sender From address
+     * @param params Object containing parameters for the data param of eth_call
+     * @returns txResponse of the smart contract called, this will be 32byte or more hex strings
+     */
     async callContract(
         address: string,
         sender: string,
@@ -135,7 +160,13 @@ export class CCProvider {
             return undefined;
         }
     }
-
+    /**
+     * Calls eth_sendTransaction method using the given parameters.
+     * @param address To address
+     * @param sender From address
+     * @param params Object containing parameters for the data param of eth_sendTransaction
+     * @returns true/false depending whether or not the transaction was successful
+     */
     async sendContractTransaction(
         address: string,
         sender: string,

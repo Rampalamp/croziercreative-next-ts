@@ -24,7 +24,12 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
     const [CCProvider, setCCProvider] = useState<CCP>();
 
     const walletsDiv = useRef<HTMLDivElement>(null);
-
+    /**
+     * Takes a wallet type and attempts to create a CCProvider and connect/request
+     * permissions from specified wallet. Only setup for gamestop or metamask currently.
+     * @param wallet Wallet type, gamestop or metamask
+     * @returns true/false if successfully connected or not
+     */
     async function connectProvider(wallet: Wallet): Promise<boolean> {
         let ccProvider: CCP | undefined = undefined;
         switch (wallet) {
@@ -38,7 +43,6 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
             }
             case "gamestop": {
                 if (typeof (window as any).gamestop !== "undefined") {
-                    //const gs = (window as any).gamestop;
                     ccProvider = new CCP((window as any).gamestop, wallet);
                 } else {
                     return false;
@@ -70,6 +74,10 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         return true;
     }
 
+    /**
+     * Checks to see if a gamestop or ethereum injected object exists in the window browser
+     * @returns Returns true if either a window.gamestop or window.ethereum object exists
+     */
     function walletExists(): boolean {
         if (
             typeof (window as any).ethereum !== "undefined" ||
@@ -79,7 +87,13 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         }
         return false;
     }
-
+    /**
+     * Checks if the parameter wallet is connected to the dapp
+     * gamestop checks the .connected property
+     * metamask just checks if a selectedAddress exists or not null.
+     * @param wallet Type of wallet to check
+     * @returns true/false if checked wallet is connected
+     */
     function isAccountConnected(wallet: Wallet): boolean {
         //gamestop works a bit differently, can't just check selectedAddress
         //it returns an error, works fine for metamask though
@@ -94,6 +108,11 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
         return false;
     }
 
+    /**
+     * Checks if the parameter wallet is unlocked for use by the dapp.
+     * @param wallet Type of wallet to check
+     * @returns true/false if checked wallet is unlocked
+     */
     function isWalletUnlocked(wallet: Wallet): boolean {
         //return first unlocked wallet.
         if (wallet === "metamask") {
@@ -107,7 +126,9 @@ export default function CCWeb3Provider({ children }: ICCWeb3ProviderProps) {
 
         return false;
     }
-
+    /**
+     * Shows or hides the wallet modal to select from.
+     */
     function toggleWalletModal() {
         walletsDiv.current!.classList.toggle("hidden");
     }

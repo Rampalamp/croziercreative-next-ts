@@ -5,7 +5,7 @@ import ShowCodeButton from "../components/ShowCodeButton";
 
 export default function Skills() {
     return (
-        <div className="mt-5 sm:mt-0 text-center items-center">
+        <div className="mt-5 items-center text-center sm:mt-0">
             <SkillsProvider>
                 <div className="">
                     I am comfortable working on both the front-end and back-end
@@ -14,7 +14,7 @@ export default function Skills() {
                     am also experienced working in agile development
                     environments and am skilled at communicating with both
                     technical and non-technical stakeholders. Click on the
-                    skills below to see specifics!{" "}
+                    skills below to see more specifics!{" "}
                     <ShowCodeButton codeToShow="skills" className="inline" />
                 </div>
                 <div className="mt-20">
