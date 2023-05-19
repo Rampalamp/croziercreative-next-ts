@@ -35,4 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# docker images/builds
+croziercreative-next-ts.tar
+
 .vscode

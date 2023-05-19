@@ -4,5 +4,6 @@ services:
         build:
             context: .
             dockerfile: dockerfile
+        image: croziercreative-next-ts:latest
         ports:
             - 3000:3000
