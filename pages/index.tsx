@@ -36,8 +36,18 @@ export default function Home() {
             <br />
             <div>
                 <span className="text-xl font-extrabold ">
-                    My name is Matthew, that&apos;s my dog Zuko, and this is my
-                    website. I hope you enjoy and interact (Look for{" "}
+                    My name is Matthew, that&apos;s my dog Zuko, this is my
+                    website, and here is my{" "}
+                    <a
+                        className="underline hover:text-dp-back hover:dark:text-ls-fore"
+                        target="_blank"
+                        href="/matthew-cv-2023.pdf"
+                        rel="noopener noreferrer"
+                        download={true}
+                    >
+                        CV
+                    </a>
+                    . I hope you enjoy and interact (Look for{" "}
                     <ShowCodeButton codeToShow="index" className="inline" /> to
                     view some components source code, to see everything visit my{" "}
                     <a
