@@ -24,7 +24,7 @@ export default function Home() {
                     <div className="mt-auto mb-auto ml-6 xs:m-auto">
                         <Image
                             className="h-auto w-auto rounded-full"
-                            src="/zuko.png"
+                            src="/zuko.webp"
                             width={250}
                             height={250}
                             alt="Menu drop down"
